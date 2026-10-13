@@ -1,0 +1,121 @@
+name: Astro CI/CD
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: 🏗 Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: 🏗 Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+          cache: npm
+          check-latest: true
+
+      - name: 📦 Install dependencies
+        run: npm ci --no-audit
+
+      - name: 🧪 Run Astro check
+        run: npm run check
+
+      - name: 🧹 Run ESLint
+        run: npm run lint
+
+      - name: 🎨 Run Prettier check
+        run: npm run format
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - name: 🏗 Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: 🏗 Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+          cache: npm
+          check-latest: true
+
+      - name: 📦 Install dependencies
+        run: npm ci --no-audit
+
+      - name: 📦 Configure GitHub Pages
+        id: setup
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - name: 🏗️ Build
+        env:
+          SITE_URL: ${{ steps.setup.outputs.origin }}
+          BASE_PATH: ${{ steps.setup.outputs.base_path }}
+        run: npm run build
+
+      - name: 📦 Upload build artifacts to GitHub
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        id: upload
+        with:
+          name: output
+          if-no-files-found: error
+          path: dist
+          retention-days: 7
+
+  page:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    timeout-minutes: 5
+    needs: build
+    permissions:
+      contents: write
+    steps:
+      - name: 🏗 Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: 📦 Download page files
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        id: download
+        with:
+          artifact-ids: ${{ needs.build.outputs.artifact-id }}
+          path: build
+
+      - name: 🏗️ Add .gitignore
+        run: cp .gitignore build/.gitignore
+
+      - name: 📦 Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4.9.0
+        with:
+          folder: ${{ steps.download.outputs.download-path }}
+          branch: gh-pages
+          clean-exclude: pr-preview
+          force: false
+
+  collect:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    name: Final Results
+    timeout-minutes: 2
+    needs:
+      - test
+      - build
+      - page
+    steps:
+      - name: ✔️ Fail if any dependency failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1

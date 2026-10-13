@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices",
+    "helpers:disableTypesNodeMajor",
+    "helpers:pinGitHubActionDigestsToSemver",
+    ":semanticCommits",
+    ":timezone(Pacific/Auckland)",
+
+    ":assignAndReview(BozhanL)",
+
+    "local>BozhanL/COMP703-Worklog//.github/renovate/minimumReleaseAge",
+    "local>BozhanL/COMP703-Worklog//.github/renovate/automerge"
+  ],
+  "ignorePresets": ["security:minimumReleaseAgeNpm"],
+
+  "labels": ["dependencies", "{{{manager}}}"],
+  "postUpdateOptions": ["npmDedupe", "npmInstallTwice"]
+}
