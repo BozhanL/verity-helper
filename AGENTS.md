@@ -11,7 +11,12 @@ astro dev --background
 Manage the background server with `astro dev stop`, `astro dev status`, and
 `astro dev logs`.
 
-Before handing the work back to the user, run `npm run check-all:par`.
+If you changed any project files during the task, run `npm run check-all:par`
+before handing the work back to the user. Skip it if you made no file changes.
+
+After completing a task that changes files and passing the required checks,
+ask the user whether to create a Git commit unless they have already requested
+or declined a commit for that task.
 
 Use Conventional Commits for commit messages. The Husky `commit-msg` hook runs
 commitlint; `npm run commit` opens the Commitizen prompt.
