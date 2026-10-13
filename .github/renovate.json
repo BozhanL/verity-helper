@@ -7,10 +7,13 @@
     ":semanticCommits",
     ":timezone(Pacific/Auckland)",
 
+    "customManagers:dockerfileVersions",
+    "customManagers:githubActionsVersions",
+
     ":assignAndReview(BozhanL)",
 
-    "local>BozhanL/COMP703-Worklog//.github/renovate/minimumReleaseAge",
-    "local>BozhanL/COMP703-Worklog//.github/renovate/automerge"
+    "local>BozhanL/verity-helper//.github/renovate/minimumReleaseAge",
+    "local>BozhanL/verity-helper//.github/renovate/automerge"
   ],
   "ignorePresets": ["security:minimumReleaseAgeNpm"],
 
