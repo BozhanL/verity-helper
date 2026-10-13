@@ -13,7 +13,28 @@ Manage the background server with `astro dev stop`, `astro dev status`, and
 
 Before handing the work back to the user, run `npm run check-all:par`.
 
+Use Conventional Commits for commit messages. The Husky `commit-msg` hook runs
+commitlint; `npm run commit` opens the Commitizen prompt.
+
+## Project structure and UI
+
+- Use Astro for routes and layouts, and React islands for interactive tools.
+- Keep puzzle rules in `src/lib/verity.ts` and exercise state in
+  `src/lib/practice.ts`; reuse them across both tools.
+- Update English and Simplified Chinese together in `src/i18n/messages.ts`.
+  Generate navigation with Astro's i18n helpers so `BASE_PATH` is respected.
+- Prefer shape diagrams and short labels. Give diagrams localized accessible
+  descriptions, and retain accessible names on controls.
+- Treat exercise rounds as unaided practice: show the given inside symbols and
+  outside solids without solution hints, target mappings, or shape breakdowns.
+- Add shared styles to `@layer components` in `src/styles/global.css` so the
+  Tailwind lint configuration recognizes them.
+- Update relevant Vitest tests and both README files when behavior changes.
+
 ## Documentation
+
+Update this file when project structure, workflows, or conventions change, or
+when new guidance is needed for future tasks.
 
 Full documentation: <https://docs.astro.build>
 

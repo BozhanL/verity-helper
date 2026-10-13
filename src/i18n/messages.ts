@@ -1,0 +1,146 @@
+import type { Excise } from "../lib/verity";
+
+export type Locale = "en" | "zh";
+export type Page = "calculator" | "exercise";
+
+const en = {
+  brand: "Verity",
+  subtitle: "Salvation’s Edge",
+  navigation: "Main navigation",
+  calculator: "Calculator",
+  exercise: "Exercise",
+  language: "Language",
+  skip: "Skip to content",
+  calculatorTitle: "Dissection calculator",
+  calculatorDescription:
+    "Read the room. Find the shortest dissection sequence.",
+  exerciseTitle: "Dissection practice",
+  exerciseDescription:
+    "Practice outside dissection. Three statues. Three minutes, thirty seconds.",
+  encounter: "DESTINY 2 / ENCOUNTER 04",
+  inside: "Inside statues",
+  outside: "Outside solids",
+  inferred: "Auto",
+  inferenceError: "Invalid combination",
+  chooseTwo: "Choose the first two",
+  reset: "Reset selections",
+  resetShort: "Reset",
+  shapeBudget: "Exactly two circles, two triangles, and two squares.",
+  resetInside: "Reset inside",
+  resetOutside: "Reset outside",
+  solution: "Dissection sequence",
+  incomplete: "Select your room",
+  invalid: "Invalid room",
+  solved: "Already aligned.",
+  swap: "Swap",
+  swaps: "swaps",
+  excisions: "excisions",
+  afterSwap: "After this swap",
+  target: "Target",
+  excise: "Excise",
+  cutInstruction: "Excise {shape} from {position}",
+  start: "Start exercise",
+  newExercise: "New exercise",
+  ready: "Ready when you are.",
+  running: "Dissect the outside statues.",
+  won: "Room aligned. Well played.",
+  expired: "Time’s up.",
+  currentShape: "Current shape",
+  remaining: "Time remaining",
+  completedSwaps: "Completed swaps",
+  cancel: "Cancel selection",
+  selected: "Selected",
+  rulesTitle: "Inside → Outside",
+  noScript:
+    "JavaScript is needed to use the calculator and exercise. Enable it, then reload this page.",
+  footer: "An independent Destiny 2 encounter tool.",
+  references: "References",
+  referenceCalculator: "Original calculator",
+  referenceExercise: "Original exercise",
+  positions: { 0: "Left", 1: "Middle", 2: "Right" },
+  shapes: { circle: "Circle", triangle: "Triangle", square: "Square" },
+  solids: {
+    sphere: "Sphere",
+    pyramid: "Pyramid",
+    cube: "Cube",
+    cone: "Cone",
+    cylinder: "Cylinder",
+    prism: "Prism",
+  },
+};
+
+const zh: typeof en = {
+  brand: "真理",
+  subtitle: "救赎边缘",
+  navigation: "主导航",
+  calculator: "计算器",
+  exercise: "练习",
+  language: "语言",
+  skip: "跳转到主要内容",
+  calculatorTitle: "剖切计算器",
+  calculatorDescription: "观察雕像，找到最少步骤的剖切方案。",
+  exerciseTitle: "剖切练习",
+  exerciseDescription: "练习外场剖切：三座雕像，三分三十秒。",
+  encounter: "命运 2 / 第四关",
+  inside: "内场雕像",
+  outside: "外场立体图形",
+  inferred: "自动",
+  inferenceError: "图形组合无效",
+  chooseTwo: "请先选择前两个图形",
+  reset: "重置选择",
+  resetShort: "重置",
+  shapeBudget: "恰好两个圆形、两个三角形和两个正方形。",
+  resetInside: "重置内场",
+  resetOutside: "重置外场",
+  solution: "剖切步骤",
+  incomplete: "请选择房间图形",
+  invalid: "图形组合无效",
+  solved: "图形已经正确。",
+  swap: "交换",
+  swaps: "次交换",
+  excisions: "次剖切",
+  afterSwap: "交换后",
+  target: "目标图形",
+  excise: "剖切",
+  cutInstruction: "从{position}雕像剖切{shape}",
+  start: "开始练习",
+  newExercise: "新练习",
+  ready: "准备好就开始吧。",
+  running: "剖切外场雕像。",
+  won: "图形正确，完成！",
+  expired: "时间到。",
+  currentShape: "当前图形",
+  remaining: "剩余时间",
+  completedSwaps: "已完成交换",
+  cancel: "取消选择",
+  selected: "已选择",
+  rulesTitle: "内场 → 外场",
+  noScript: "计算器和练习需要 JavaScript。请启用后刷新页面。",
+  footer: "非官方的《命运 2》关卡辅助工具。",
+  references: "参考来源",
+  referenceCalculator: "原版计算器",
+  referenceExercise: "原版练习",
+  positions: { 0: "左侧", 1: "中间", 2: "右侧" },
+  shapes: { circle: "圆形", triangle: "三角形", square: "正方形" },
+  solids: {
+    sphere: "球体",
+    pyramid: "三角锥",
+    cube: "立方体",
+    cone: "圆锥",
+    cylinder: "圆柱",
+    prism: "三棱柱",
+  },
+};
+
+export type Messages = typeof en;
+
+export function getMessages(locale: Locale): Messages {
+  return locale === "zh" ? zh : en;
+}
+
+export function describeExcise(locale: Locale, selection: Excise): string {
+  const messages = getMessages(locale);
+  return messages.cutInstruction
+    .replace("{shape}", messages.shapes[selection.shape])
+    .replace("{position}", messages.positions[selection.statue]);
+}

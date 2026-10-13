@@ -7,6 +7,8 @@ import { configs as sonarjs } from "eslint-plugin-sonarjs";
 import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
 
+const tsfiles = ["**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx,astro}"];
+
 export default defineConfig([
   // Ignore folders globally
   globalIgnores(["node_modules/**", ".astro/**", "build/**", "dist/**"]),
@@ -15,7 +17,7 @@ export default defineConfig([
 
   // TypeScript
   {
-    files: ["**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}"],
+    files: tsfiles,
     languageOptions: {
       parserOptions: {
         projectService: true,
@@ -27,7 +29,7 @@ export default defineConfig([
     ],
   },
   {
-    files: ["**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}"],
+    files: tsfiles,
     rules: {
       "@typescript-eslint/no-import-type-side-effects": "error",
       "@typescript-eslint/consistent-type-imports": [
@@ -52,7 +54,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}"],
+    files: tsfiles,
     // This check will cause linter halt.
     // Maybe related to https://github.com/typescript-eslint/typescript-eslint/pull/11605
     rules: {
@@ -60,7 +62,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}"],
+    files: tsfiles,
     // https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-import
     rules: {
       "import/named": "off",
@@ -70,7 +72,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}"],
+    files: tsfiles,
     rules: {
       // Duplicate of @typescript-eslint/no-unused-vars
       "sonarjs/no-unused-vars": "off",
@@ -96,7 +98,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}"],
+    files: tsfiles,
     rules: {
       eqeqeq: ["error", "always"],
       "func-style": ["error", "declaration"],
@@ -144,7 +146,7 @@ export default defineConfig([
   //
   eslintConfigPrettier,
   {
-    files: ["**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}"],
+    files: tsfiles,
     // These configs are disabled by eslint-config-prettier, but we want to enable them.
     rules: {
       // https://github.com/prettier/eslint-config-prettier#curly

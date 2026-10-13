@@ -10,13 +10,23 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check-all:par": "concurrently --kill-others-on-fail npm:check npm:lint npm:format",
+    "check-all:par": "concurrently --kill-others-on-fail npm:check npm:lint npm:format npm:test",
     "check-all": "npm run check-all:par -- -m 1",
     "check": "astro check --minimumFailingSeverity hint",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "lint": "eslint --max-warnings 0 .",
-    "lint:fix": "eslint --max-warnings 0 --fix ."
+    "lint:fix": "eslint --max-warnings 0 --fix .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepare": "husky",
+    "commitlint": "commitlint",
+    "commit": "cz"
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
+    }
   },
   "engines": {
     "node": "^24",
@@ -32,9 +42,14 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
+    "@commitlint/cli": "21.2.3",
+    "@commitlint/config-conventional": "21.2.3",
+    "@commitlint/cz-commitlint": "21.2.3",
+    "@testing-library/react": "16.3.3",
     "@types/node": "24.19.1",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
+    "commitizen": "4.3.2",
     "concurrently": "10.0.5",
     "eslint": "10.12.0",
     "eslint-config-prettier": "10.1.8",
@@ -43,7 +58,9 @@
     "eslint-plugin-jsx-a11y-x": "0.2.0",
     "eslint-plugin-markdownlint": "1.0.0",
     "eslint-plugin-sonarjs": "4.2.2",
+    "husky": "9.1.7",
     "jiti": "2.7.0",
+    "jsdom": "30.1.2",
     "prettier": "3.9.9",
     "prettier-plugin-astro": "1.1.0",
     "prettier-plugin-organize-imports": "4.3.0",

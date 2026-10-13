@@ -1,0 +1,66 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { getMessages, type Locale, type Page } from "../i18n/messages";
+import Layout from "../layouts/Layout.astro";
+import { SHAPES } from "../lib/verity";
+import { GoalBoard } from "./Board";
+import Calculator from "./Calculator";
+import Exercise from "./Exercise";
+import SiteHeader from "./SiteHeader";
+
+interface Props {
+  locale: Locale;
+  page: Page;
+}
+
+const { locale, page } = Astro.props;
+const messages = getMessages(locale);
+const title = page === "calculator" ? messages.calculator : messages.exercise;
+const description =
+  page === "calculator"
+    ? messages.calculatorDescription
+    : messages.exerciseDescription;
+const path = page === "exercise" ? "exercise" : undefined;
+const links = {
+  calculator: getRelativeLocaleUrl(locale),
+  exercise: getRelativeLocaleUrl(locale, "exercise"),
+  en: getRelativeLocaleUrl("en", path),
+  zh: getRelativeLocaleUrl("zh", path),
+};
+---
+
+<Layout locale={locale} page={page} title={title} description={description}>
+  <SiteHeader locale={locale} page={page} links={links} />
+  <main id="main">
+    <header class="hero">
+      <p class="eyebrow">{messages.encounter}</p>
+      <h1>
+        {page === "calculator"
+          ? messages.calculatorTitle
+          : messages.exerciseTitle}
+      </h1>
+    </header>
+    {page === "calculator" ? (
+      <Calculator locale={locale} client:load />
+    ) : (
+      <Exercise locale={locale} client:load />
+    )}
+    {page === "calculator" && (
+      <aside class="rule-note">
+        <h2>{messages.rulesTitle}</h2>
+        <GoalBoard inside={SHAPES} locale={locale} showPositions={false} />
+      </aside>
+    )}
+  </main>
+  <footer class="site-footer">
+    <p>{messages.footer}</p>
+    <nav class="reference-links" aria-label={messages.references}>
+      <a href="https://yugnar.com/verityCalculator/">
+        {messages.referenceCalculator}
+      </a>
+      <a href="https://static.19970301.xyz/the_final_shape/dist/index.html#/">
+        {messages.referenceExercise}
+      </a>
+    </nav>
+  </footer>
+</Layout>

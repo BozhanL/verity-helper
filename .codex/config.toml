@@ -1,0 +1,3 @@
+[mcp_servers.astro_docs]
+enabled = true
+url = "https://mcp.docs.astro.build/mcp"

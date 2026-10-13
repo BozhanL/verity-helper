@@ -1,48 +1,127 @@
-# Astro Starter Kit: Basics
+# Verity Helper
+
+[简体中文](README.zh-CN.md)
+
+A bilingual calculator and practice tool for outside dissection in the Verity
+encounter of Destiny 2’s Salvation’s Edge raid. Built with Astro, React, and
+TypeScript, with a shared interface for both tools.
+
+This project was created by OpenAI Codex, guided by the project owner's
+requirements and feedback.
+
+## Pages
+
+| Tool       | English      | Simplified Chinese |
+| ---------- | ------------ | ------------------ |
+| Calculator | `/`          | `/zh/`             |
+| Exercise   | `/exercise/` | `/zh/exercise/`    |
+
+The calculator is the home page. The header switches tools without changing the
+language; the language links keep you on the same tool. All paths include the
+configured `BASE_PATH` when deployed in a subdirectory.
+
+## Calculator
+
+Choose the left and middle inside symbols and outside solids. The right statue
+is inferred. Select the same solid in both pickers when needed. Sphere, Pyramid,
+and Cube share a row or column; Cone, Cylinder, and Prism form the other group.
+The solver finds the fewest swaps. Invalid rooms are rejected; valid rooms
+contain two of each shape.
+
+Each swap shows three boxes in left–middle–right statue order. Excise the
+numbered shapes from their boxes; the unused box stays empty. Arrows link the
+swapping statues. The three solids below each swap show the resulting room;
+the last step shows the completed room.
+
+## Exercise
+
+Start a 3:30 round. Select a shape and excise it from a statue, then select a
+different shape on another statue. The second excision completes the exchange.
+Cancel a pending cut when needed. Practice shows only the given inside symbols
+and outside solids; infer their components and targets yourself.
+
+Each outside solid needs the two shapes different from its matching inside symbol.
+
+The timer stops on success and disables dissection at expiry. An absolute
+deadline prevents background tabs from extending a round. Navigation or a
+language change resets the exercise.
+
+## Development
+
+Use Node.js 24 and npm 11.11 or newer within the declared npm 11 range.
 
 ```sh
-npm create astro@latest -- --template basics
+npm install
+npm run dev -- --background
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+The local site is normally at <http://localhost:4321>. Manage the background server
+with `npm run astro -- dev status`, `npm run astro -- dev logs`, and
+`npm run astro -- dev stop`.
 
-## 🚀 Project Structure
+| Command                 | Purpose                                   |
+| ----------------------- | ----------------------------------------- |
+| `npm run check-all:par` | Type check, lint, format check, and tests |
+| `npm run check-all`     | Run those checks sequentially             |
+| `npm test`              | Run the unit and React interaction tests  |
+| `npm run test:watch`    | Run tests in watch mode                   |
+| `npm run format:fix`    | Format the project                        |
+| `npm run build`         | Generate the static site in `dist/`       |
+| `npm run preview`       | Preview the production build              |
 
-Inside of your Astro project, you'll see the following folders and files:
+Run `npm run check-all:par` before handing completed work back to the user.
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+The Husky `commit-msg` hook runs commitlint. Use `npm run commit` for the
+Commitizen prompt.
 
-To learn more about the folder structure of an Astro project, refer to
-[our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Deployment configuration
 
-## 🧞 Commands
+`astro.config.ts` reads two optional build-time environment variables:
 
-All commands are run from the root of the project, from a terminal:
+- `SITE_URL`: the public origin, such as `https://example.com`, for canonical and
+  alternate-language URLs. Local development also works without this value.
+- `BASE_PATH`: the deployment subdirectory, such as `/verity-helper`; defaults
+  to `/`. Navigation and the favicon respect this path.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+The existing GitHub workflows supply these values for production and PR previews.
+Astro generates static pages with trailing slashes. English is the default locale
+without a prefix; Simplified Chinese uses the existing `zh` locale path and
+`lang="zh-Hans"` in the document.
 
-## 👀 Want to learn more?
+## Code and tests
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our
-[Discord server](https://astro.build/chat).
+- `src/pages/`: four small Astro route entry points.
+- `src/components/ToolPage.astro`: shared page shell and localized navigation.
+- `src/components/Calculator.tsx` and `Exercise.tsx`: interactive React tools.
+- `src/lib/verity.ts`: room inference, legal swaps, puzzle generation, and solver.
+- `src/lib/practice.ts`: pure practice reducer and deadline handling.
+- `src/i18n/messages.ts`: English and Simplified Chinese UI text.
+- `src/styles/global.css`: shared Tailwind component-layer styling.
+
+The tools use Astro’s
+[React integration and client hydration](https://docs.astro.build/en/guides/framework-components/)
+with `client:load`. Astro renders the initial HTML; only the interactive tool
+hydrates. The header uses ordinary links generated by
+[Astro’s i18n helpers](https://docs.astro.build/en/guides/internationalization/).
+There is no separate client router or backend.
+
+Vitest tests cover all 126 valid ordered room configurations, known shortest
+solutions, invalid inputs, shape conservation, and immutable swaps. Reducer tests
+cover pending excisions, cancellation, victory, reset, and deadline expiry.
+React Testing Library and jsdom exercise the actual controls in both languages,
+including reset, identical solids, practice without solution cues, and timer expiry.
+
+## References
+
+Behavior was studied from these two tools:
+
+- [yugnar’s Verity Calculator](https://yugnar.com/verityCalculator/).
+  The original calculator credits
+  [u/swegmesterflex](https://www.reddit.com/user/swegmesterflex/) for its
+  dissection algorithm.
+- [The Final Shape exercise](https://static.19970301.xyz/the_final_shape/dist/index.html#/).
+
+This project independently implements the observed mechanics, solver, React
+components, and geometric SVG icons. It does not load the references’ scripts,
+images, or fonts at runtime.
