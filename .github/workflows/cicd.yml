@@ -45,6 +45,7 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
+      pages: read
     outputs:
       artifact-id: ${{ steps.upload.outputs.artifact-id }}
     steps:
