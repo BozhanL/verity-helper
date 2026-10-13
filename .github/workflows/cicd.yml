@@ -40,6 +40,9 @@ jobs:
       - name: 🎨 Run Prettier check
         run: npm run format
 
+      - name: 🧪 Run unit tests
+        run: npm run test
+
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 5
