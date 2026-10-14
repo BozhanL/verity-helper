@@ -2,119 +2,125 @@
 
 [简体中文](README.zh-CN.md)
 
-A bilingual calculator and practice tool for outside dissection in the Verity
-encounter of Destiny 2’s Salvation’s Edge raid. Built with Astro, React, and
-TypeScript, with a shared interface for both tools.
+A calculator and practice tool for outside dissection in the Verity encounter of
+Destiny 2’s Salvation’s Edge raid. Available in English and Simplified Chinese.
+
+## Use the tools
+
+| Tool       | English                 | Simplified Chinese  |
+| ---------- | ----------------------- | ------------------- |
+| Calculator | [Calculator][calc-en]   | [计算器][calc-zh]   |
+| Exercise   | [Exercise][exercise-en] | [练习][exercise-zh] |
+
+[calc-en]: https://verity.903684.xyz/
+[calc-zh]: https://verity.903684.xyz/zh/
+[exercise-en]: https://verity.903684.xyz/exercise/
+[exercise-zh]: https://verity.903684.xyz/zh/exercise/
+
+Use the header to switch tools without changing the language, or switch
+languages while staying on the same tool. Both tools require JavaScript.
+
+## Calculator
+
+1. Under **Inside statues**, select the left and middle symbols.
+2. Under **Outside solids**, select the left and middle solids. You can select
+   the same solid for both statues.
+3. Follow the numbered cuts under **Dissection sequence**. Each pair of cuts
+   completes one swap.
+
+The right statue is filled in automatically, and the calculator finds the fewest
+swaps. The outside solids must contain exactly two circles, two triangles, and
+two squares in total. The calculator reports invalid combinations and rooms that
+are already aligned.
+
+Each swap diagram shows three boxes in left–middle–right statue order. Excise the
+shape marked **1**, then **2**, from the indicated statues. The solids below each
+swap show the resulting room; the last step shows the completed room.
+
+## Exercise
+
+1. Click **Start exercise** to begin a random 3:30 round.
+2. Select a shape under **Current shape**, then click **Excise** under a statue.
+3. Choose a different shape and click **Excise** under another statue to
+   complete the swap.
+
+Use **Cancel selection** to clear a pending cut, or **New exercise** to start
+over. Your goal is to give each outside statue the two shapes that differ from
+its matching inside symbol. The exercise shows only the given inside symbols
+and outside solids, so you can practice without solution hints.
+
+The timer stops when you finish and blocks further moves when time runs out.
+It keeps counting down in background tabs. Switching tools or languages resets
+the round.
+
+## Local development
+
+The project uses Astro, React, TypeScript, and Tailwind CSS. Install Node.js 24
+and npm 11 (version 11.11 or later), then run these commands from your local clone:
+
+```sh
+npm ci
+npm run dev
+```
+
+Open the address printed in the terminal, usually <http://localhost:4321>.
+Press **Ctrl+C** to stop the development server.
+
+Checks cover types, lint, formatting, and tests.
+
+| Command                 | Purpose                              |
+| ----------------------- | ------------------------------------ |
+| `npm run check-all:par` | Run all checks in parallel           |
+| `npm run check-all`     | Run all checks sequentially          |
+| `npm test`              | Run unit and React interaction tests |
+| `npm run test:watch`    | Rerun tests as files change          |
+| `npm run format:fix`    | Format the project                   |
+| `npm run build`         | Generate the static site in `dist/`  |
+| `npm run preview`       | Preview the production build locally |
+
+Run `npm run build` before `npm run preview`.
+
+Before opening a pull request, run `npm run check-all:par`.
+Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+The commit hook checks your message automatically; `npm run commit` opens an
+interactive prompt to help write it.
+
+## Deployment
+
+Set these optional environment variables when building for another domain or
+a subdirectory:
+
+- `SITE_URL`: the public origin, such as `https://example.com`, used for
+  canonical and alternate-language links.
+- `BASE_PATH`: the deployment subdirectory, such as `/verity-helper`.
+  Defaults to `/`; navigation and assets use this path.
+
+Local development works without either variable. GitHub workflows set them for
+production and PR previews.
+
+## Project structure and tests
+
+Astro builds the static pages, and React handles the interactive controls.
+
+| Location                            | Contents                       |
+| ----------------------------------- | ------------------------------ |
+| [pages/](src/pages/)                | Astro page routes              |
+| [components/](src/components/)      | React tools and page content   |
+| [verity.ts](src/lib/verity.ts)      | Puzzle rules and solver        |
+| [practice.ts](src/lib/practice.ts)  | Exercise rounds and timer      |
+| [messages.ts](src/i18n/messages.ts) | English and Simplified Chinese |
+| [global.css](src/styles/global.css) | Shared styles                  |
+
+Vitest covers all 126 valid room configurations, invalid inputs, and exercise
+behavior, including cancellation, completion, reset, and timer expiry.
+React interaction tests cover both languages.
+
+## Credits
 
 This project was created by OpenAI Codex, guided by the project owner's
 requirements and feedback.
 
-## Pages
-
-| Tool       | English      | Simplified Chinese |
-| ---------- | ------------ | ------------------ |
-| Calculator | `/`          | `/zh/`             |
-| Exercise   | `/exercise/` | `/zh/exercise/`    |
-
-The calculator is the home page. The header switches tools without changing the
-language; the language links keep you on the same tool. All paths include the
-configured `BASE_PATH` when deployed in a subdirectory.
-
-## Calculator
-
-Choose the left and middle inside symbols and outside solids. The right statue
-is inferred. Select the same solid in both pickers when needed. Sphere, Pyramid,
-and Cube share a row or column; Cone, Cylinder, and Prism form the other group.
-The solver finds the fewest swaps. Invalid rooms are rejected; valid rooms
-contain two of each shape.
-
-Each swap shows three boxes in left–middle–right statue order. Excise the
-numbered shapes from their boxes; the unused box stays empty. Arrows link the
-swapping statues. The three solids below each swap show the resulting room;
-the last step shows the completed room.
-
-## Exercise
-
-Start a 3:30 round. Select a shape and excise it from a statue, then select a
-different shape on another statue. The second excision completes the exchange.
-Cancel a pending cut when needed. Practice shows only the given inside symbols
-and outside solids; infer their components and targets yourself.
-
-Each outside solid needs the two shapes different from its matching inside symbol.
-
-The timer stops on success and disables dissection at expiry. An absolute
-deadline prevents background tabs from extending a round. Navigation or a
-language change resets the exercise.
-
-## Development
-
-Use Node.js 24 and npm 11.11 or newer within the declared npm 11 range.
-
-```sh
-npm install
-npm run dev -- --background
-```
-
-The local site is normally at <http://localhost:4321>. Manage the background server
-with `npm run astro -- dev status`, `npm run astro -- dev logs`, and
-`npm run astro -- dev stop`.
-
-| Command                 | Purpose                                   |
-| ----------------------- | ----------------------------------------- |
-| `npm run check-all:par` | Type check, lint, format check, and tests |
-| `npm run check-all`     | Run those checks sequentially             |
-| `npm test`              | Run the unit and React interaction tests  |
-| `npm run test:watch`    | Run tests in watch mode                   |
-| `npm run format:fix`    | Format the project                        |
-| `npm run build`         | Generate the static site in `dist/`       |
-| `npm run preview`       | Preview the production build              |
-
-Run `npm run check-all:par` before handing completed work back to the user.
-
-Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
-The Husky `commit-msg` hook runs commitlint. Use `npm run commit` for the
-Commitizen prompt.
-
-## Deployment configuration
-
-`astro.config.ts` reads two optional build-time environment variables:
-
-- `SITE_URL`: the public origin, such as `https://example.com`, for canonical and
-  alternate-language URLs. Local development also works without this value.
-- `BASE_PATH`: the deployment subdirectory, such as `/verity-helper`; defaults
-  to `/`. Navigation and the favicon respect this path.
-
-The existing GitHub workflows supply these values for production and PR previews.
-Astro generates static pages with trailing slashes. English is the default locale
-without a prefix; Simplified Chinese uses the existing `zh` locale path and
-`lang="zh-Hans"` in the document.
-
-## Code and tests
-
-- `src/pages/`: four small Astro route entry points.
-- `src/components/ToolPage.astro`: shared page shell and localized navigation.
-- `src/components/Calculator.tsx` and `Exercise.tsx`: interactive React tools.
-- `src/lib/verity.ts`: room inference, legal swaps, puzzle generation, and solver.
-- `src/lib/practice.ts`: pure practice reducer and deadline handling.
-- `src/i18n/messages.ts`: English and Simplified Chinese UI text.
-- `src/styles/global.css`: shared Tailwind component-layer styling.
-
-The tools use Astro’s
-[React integration and client hydration](https://docs.astro.build/en/guides/framework-components/)
-with `client:load`. Astro renders the initial HTML; only the interactive tool
-hydrates. The header uses ordinary links generated by
-[Astro’s i18n helpers](https://docs.astro.build/en/guides/internationalization/).
-There is no separate client router or backend.
-
-Vitest tests cover all 126 valid ordered room configurations, known shortest
-solutions, invalid inputs, shape conservation, and immutable swaps. Reducer tests
-cover pending excisions, cancellation, victory, reset, and deadline expiry.
-React Testing Library and jsdom exercise the actual controls in both languages,
-including reset, identical solids, practice without solution cues, and timer expiry.
-
-## References
-
-Behavior was studied from these two tools:
+Inspired by these tools:
 
 - [yugnar’s Verity Calculator](https://yugnar.com/verityCalculator/).
   The original calculator credits
@@ -122,6 +128,7 @@ Behavior was studied from these two tools:
   dissection algorithm.
 - [The Final Shape exercise](https://static.19970301.xyz/the_final_shape/dist/index.html#/).
 
-This project independently implements the observed mechanics, solver, React
-components, and geometric SVG icons. It does not load the references’ scripts,
-images, or fonts at runtime.
+This project independently implements the solver, components, and geometric SVG
+icons.
+
+Licensed under [AGPL-3.0](LICENSE).

@@ -38,6 +38,9 @@ commitlint; `npm run commit` opens the Commitizen prompt.
 
 ## Documentation
 
+Write both README files for human users and contributors. Keep agent workflow
+and handover instructions in this file.
+
 Update this file when project structure, workflows, or conventions change, or
 when new guidance is needed for future tasks.
 

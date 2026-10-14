@@ -2,97 +2,117 @@
 
 [English](README.md)
 
-《命运 2》救赎边缘突袭第四关的双语外场剖切计算器与练习工具。
-项目使用 Astro、React 和 TypeScript，两个工具共用同一套界面与解题规则。
+《命运 2》救赎边缘突袭第四关的外场剖切计算器与练习工具，支持英文和简体中文。
 
-本项目由 OpenAI Codex 根据项目所有者的需求与反馈创建。
+## 使用工具
 
-## 页面
+| 工具   | 英文                    | 简体中文            |
+| ------ | ----------------------- | ------------------- |
+| 计算器 | [Calculator][calc-en]   | [计算器][calc-zh]   |
+| 练习   | [Exercise][exercise-en] | [练习][exercise-zh] |
 
-| 工具   | 英文页面     | 简体中文页面    |
-| ------ | ------------ | --------------- |
-| 计算器 | `/`          | `/zh/`          |
-| 练习   | `/exercise/` | `/zh/exercise/` |
+[calc-en]: https://verity.903684.xyz/
+[calc-zh]: https://verity.903684.xyz/zh/
+[exercise-en]: https://verity.903684.xyz/exercise/
+[exercise-zh]: https://verity.903684.xyz/zh/exercise/
 
-首页为计算器。顶部导航可切换工具并保留当前语言；切换语言时保留当前工具。
-部署到子目录时，所有链接都会包含配置的 `BASE_PATH`。
+通过顶部导航切换工具时会保留当前语言；切换语言时会保留当前工具。
+两个工具都需要浏览器启用 JavaScript。
 
-## 使用方法
+## 计算器
 
-计算器：选择左侧和中间的内场图形及外场立体图形，右侧自动推算。
-前两座雕像的立体图形相同时，在两个选择框中分别选择相同图形即可。
-球体、三角锥和立方体排列在同一行或列；圆锥、圆柱和三棱柱为另一组。
-有效房间中每种平面图形各有两个；计算器会给出交换次数最少的方案，
-并提示无效输入或已完成的状态。
+1. 在**内场雕像**中选择左侧和中间的平面图形。
+2. 在**外场立体图形**中选择左侧和中间的立体图形，两座雕像可以选择相同的图形。
+3. 按**剖切步骤**中的数字顺序操作，每两次剖切完成一次交换。
 
-每次交换都按左侧、中间、右侧的雕像顺序显示三个方框。按数字依次从对应方框的雕像中
-剖切图形，未参与交换的方框留空。箭头连接参与交换的雕像。每次交换下方展示交换后的房间，
-最后一步即完成后的房间。
+右侧雕像会自动推算，计算器会给出交换次数最少的方案。
+外场立体图形的组成必须恰好包含两个圆形、两个三角形和两个正方形。
+组合无效或图形已经正确时，计算器会显示相应提示。
 
-练习：开始 3:30 的随机回合，选择图形并从雕像中剖切，再从另一座雕像中剖切
-不同图形。第二次剖切后完成交换。可取消待完成的剖切。练习只展示给定的内场图形和外场立体图形，
-需要自行推断其组成与目标。
+每次交换按左侧、中间、右侧的雕像顺序显示三个方框。
+先从标记 **1** 的雕像剖切方框内的图形，再从标记 **2** 的雕像剖切对应图形。
+每次交换下方显示交换后的房间，最后一步即完成后的房间。
 
-外场目标为对应内场图形之外的另外两种图形。
+## 练习
 
-完成后计时停止，超时后禁止继续剖切。计时采用绝对截止时间，后台标签页不会延长回合。
-离开页面或切换语言会重置练习状态。
+1. 点击**开始练习**，开始一轮 3 分 30 秒的随机练习。
+2. 选择**当前图形**，再点击一座雕像下方的**剖切**。
+3. 选择另一种图形，再点击另一座雕像下方的**剖切**，完成交换。
 
-## 开发与检查
+点击**取消选择**可清除待完成的剖切，点击**新练习**可重新开始。
+目标是让每座外场雕像包含对应内场图形之外的另外两种图形。
+练习只展示给定的内场图形和外场立体图形，方便你在没有解题提示的情况下练习。
 
-使用 Node.js 24 和符合项目声明范围的 npm 11.11 或更高的 npm 11 版本。
+完成后计时停止，超时后无法继续剖切。切换到其他标签页时，计时仍会继续。
+切换工具或语言会重置本轮练习。
+
+## 本地开发
+
+项目使用 Astro、React、TypeScript 和 Tailwind CSS。
+安装 Node.js 24 和 npm 11（11.11 或更高版本），然后在本地仓库目录中运行：
 
 ```sh
-npm install
-npm run dev -- --background
+npm ci
+npm run dev
 ```
 
-本地地址通常为 <http://localhost:4321>。使用以下命令管理后台服务器：
+打开终端显示的地址，通常为 <http://localhost:4321>。
+按 **Ctrl+C** 停止开发服务器。
 
-```sh
-npm run astro -- dev status
-npm run astro -- dev logs
-npm run astro -- dev stop
-```
+检查包括类型、代码、格式检查和测试。
 
 | 命令                    | 用途                               |
 | ----------------------- | ---------------------------------- |
 | `npm run check-all:par` | 并行运行类型、代码、格式检查和测试 |
 | `npm run check-all`     | 顺序运行上述检查                   |
 | `npm test`              | 运行单元测试与 React 交互测试      |
-| `npm run test:watch`    | 监听模式运行测试                   |
+| `npm run test:watch`    | 文件变化时重新运行测试             |
+| `npm run format:fix`    | 格式化项目                         |
 | `npm run build`         | 在 `dist/` 中生成静态站点          |
-| `npm run preview`       | 预览生产构建                       |
+| `npm run preview`       | 在本地预览生产构建                 |
 
-完成任务并交还工作前，运行 `npm run check-all:par`。
+运行 `npm run preview` 前，先运行 `npm run build`。
 
+提交 PR 前，运行 `npm run check-all:par`。
 提交信息遵循 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)。
-Husky 的 `commit-msg` 钩子会运行 commitlint；使用 `npm run commit` 打开 Commitizen 交互提示。
+提交钩子会自动检查信息格式；`npm run commit` 可打开交互提示，帮助你编写提交信息。
 
-## 部署与实现
+## 部署
 
-`astro.config.ts` 保留现有的 `en` 和 `zh` 语言配置。英文页面不带语言前缀，
-中文页面使用 `/zh/`，HTML 文档声明为 `lang="zh-Hans"`。
+部署到其他域名或子目录时，可以在构建环境中设置以下可选变量：
 
-构建时可设置 `SITE_URL` 为公开站点源地址，例如 `https://example.com`；
-`BASE_PATH` 指定部署子目录，例如 `/verity-helper`，默认值为 `/`。
-导航、语言链接和网站图标均支持子目录部署。本地开发无需设置 `SITE_URL`。
+- `SITE_URL`：公开站点源地址，例如 `https://example.com`，用于规范链接和其他语言版本的链接。
+- `BASE_PATH`：部署子目录，例如 `/verity-helper`，默认值为 `/`；导航和资源地址都会使用此路径。
 
-Astro 负责静态路由、元数据与页面外壳，通过 `client:load` 激活 React 工具。
-页面使用原生链接及 Astro 的国际化辅助函数，无需额外的前端路由器或后端。
-双语文本位于 `src/i18n/messages.ts`，共享样式位于 `src/styles/global.css`。
+本地开发无需设置这两个变量。GitHub 工作流会为正式部署和 PR 预览自动设置它们。
 
-纯函数逻辑位于 `src/lib/verity.ts` 和 `src/lib/practice.ts`。
-Vitest 覆盖全部 126 种有效的有序房间配置、最少交换方案、非法输入、
-图形数量守恒、取消、完成、重置和超时。
-React Testing Library 与 jsdom 验证两种语言下的实际控件操作。
+## 项目结构与测试
 
-## 参考来源
+Astro 生成静态页面，React 负责交互控件。
+
+| 位置                                | 内容                      |
+| ----------------------------------- | ------------------------- |
+| [pages/](src/pages/)                | Astro 页面路由            |
+| [components/](src/components/)      | 页面内容与 React 交互工具 |
+| [verity.ts](src/lib/verity.ts)      | 图形规则与求解器          |
+| [practice.ts](src/lib/practice.ts)  | 练习回合与计时            |
+| [messages.ts](src/i18n/messages.ts) | 英文和简体中文文本        |
+| [global.css](src/styles/global.css) | 共享样式                  |
+
+Vitest 覆盖全部 126 种有效房间配置、非法输入，以及取消、完成、重置和超时等练习行为。
+React 交互测试覆盖两种语言。
+
+## 致谢
+
+本项目由 OpenAI Codex 根据项目所有者的需求与反馈创建。
+
+参考了以下工具：
 
 - [yugnar 的 Verity Calculator](https://yugnar.com/verityCalculator/)。
   原计算器将剖切算法归功于
   [u/swegmesterflex](https://www.reddit.com/user/swegmesterflex/)。
 - [终焉之形练习页面](https://static.19970301.xyz/the_final_shape/dist/index.html#/)。
 
-本项目独立实现参考页面的机制、求解器、React 组件及几何 SVG 图标，
-运行时不加载参考页面的脚本、图片或字体。
+本项目独立实现求解器、组件及几何 SVG 图标。
+
+项目采用 [AGPL-3.0](LICENSE) 许可证。
