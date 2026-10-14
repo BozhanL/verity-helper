@@ -14,6 +14,9 @@ Manage the background server with `astro dev stop`, `astro dev status`, and
 If you changed any project files during the task, run `npm run check-all:par`
 before handing the work back to the user. Skip it if you made no file changes.
 
+Production deployment must wait for both the `test` and `build` CI jobs.
+The final CI result must fail if any dependency fails or is cancelled.
+
 After completing a task that changes files and passing the required checks,
 ask the user whether to create a Git commit unless they have already requested
 or declined a commit for that task.

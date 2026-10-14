@@ -123,6 +123,6 @@ jobs:
       - build
       - page
     steps:
-      - name: ✔️ Fail if any dependency failed
-        if: ${{ contains(needs.*.result, 'failure') }}
+      - name: ✔️ Fail if any dependency failed or was cancelled
+        if: ${{ always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) }}
         run: exit 1
