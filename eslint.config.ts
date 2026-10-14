@@ -11,7 +11,13 @@ const tsfiles = ["**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx,astro}"];
 
 export default defineConfig([
   // Ignore folders globally
-  globalIgnores(["node_modules/**", ".astro/**", "build/**", "dist/**"]),
+  globalIgnores([
+    "node_modules/**",
+    ".astro/**",
+    ".agents/skills/**",
+    "build/**",
+    "dist/**",
+  ]),
 
   sonarjs.recommended,
 
