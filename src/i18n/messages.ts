@@ -57,6 +57,7 @@ const en = {
   references: "References",
   referenceCalculator: "Original calculator",
   referenceExercise: "Original exercise",
+  repository: "GitHub repository",
   positions: { 0: "Left", 1: "Middle", 2: "Right" },
   shapes: { circle: "Circle", triangle: "Triangle", square: "Square" },
   solids: {
@@ -120,6 +121,7 @@ const zh: typeof en = {
   references: "参考来源",
   referenceCalculator: "原版计算器",
   referenceExercise: "原版练习",
+  repository: "GitHub 仓库",
   positions: { 0: "左侧", 1: "中间", 2: "右侧" },
   shapes: { circle: "圆形", triangle: "三角形", square: "正方形" },
   solids: {
