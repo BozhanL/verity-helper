@@ -2,17 +2,21 @@
 
 [English](README.md)
 
-《命运 2》救赎边缘突袭第四关的外场剖切计算器与练习工具，支持英文和简体中文。
+《命运 2》救赎边缘突袭第四关的外场剖切与单人房图形分配计算器，另提供外场剖切练习。
+支持英文和简体中文。
 
 ## 使用工具
 
 | 工具   | 英文                    | 简体中文            |
 | ------ | ----------------------- | ------------------- |
 | 计算器 | [Calculator][calc-en]   | [计算器][calc-zh]   |
+| 单人房 | [Solo room][solo-en]    | [单人房][solo-zh]   |
 | 练习   | [Exercise][exercise-en] | [练习][exercise-zh] |
 
 [calc-en]: https://verity.903684.xyz/
 [calc-zh]: https://verity.903684.xyz/zh/
+[solo-en]: https://verity.903684.xyz/solo/
+[solo-zh]: https://verity.903684.xyz/zh/solo/
 [exercise-en]: https://verity.903684.xyz/exercise/
 [exercise-zh]: https://verity.903684.xyz/zh/exercise/
 
@@ -32,6 +36,19 @@
 每次交换按左侧、中间、右侧的雕像顺序显示三个方框。
 先从标记 **1** 的雕像剖切方框内的图形，再从标记 **2** 的雕像剖切对应图形。
 每次交换下方显示交换后的房间，最后一步即完成后的房间。
+
+## 单人房
+
+1. 选择左侧和中间的**内场雕像**图形，右侧自动推算。
+2. 在**你的雕像**中选择自己的位置。
+3. 选择两个**房间图形**，查看**图形分配**。
+
+每张卡片按位置和手持图形标明雕像。**送出**表示给该玩家的图形，**保留**表示留在自己房间的图形。
+图形不会分配给自己，也不会分配给手持相同图形的玩家。
+
+如果有两个自己的图形，各给另外两名玩家一个。
+如果有两个相同的其他图形，给符合条件的另一名玩家一个，并保留一个。
+两个不同的图形则直接分配给另外两名玩家。
 
 ## 练习
 
@@ -100,6 +117,7 @@ Astro 生成静态页面，React 负责交互控件。
 | [global.css](src/styles/global.css) | 共享样式                  |
 
 Vitest 覆盖全部 126 种有效房间配置、非法输入，以及取消、完成、重置和超时等练习行为。
+单人房测试覆盖雕像顺序、玩家位置和房间图形顺序的全部 162 种组合，包括重复图形与保留规则。
 React 交互测试覆盖两种语言。
 
 ## 致谢
@@ -112,6 +130,9 @@ React 交互测试覆盖两种语言。
   原计算器将剖切算法归功于
   [u/swegmesterflex](https://www.reddit.com/user/swegmesterflex/)。
 - [终焉之形练习页面](https://static.19970301.xyz/the_final_shape/dist/index.html#/)。
+- [Traveler’s Chosen 真理指南][solo-guide]，包含单人房直接分配规则。
+
+[solo-guide]: https://sites.google.com/view/travelerschosen/guides/salvations-edge/verity
 
 本项目独立实现求解器、组件及几何 SVG 图标。
 

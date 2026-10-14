@@ -91,10 +91,16 @@ export function getSolid(pair: Pair): Solid {
   return solid;
 }
 
+function isValidInside(inside: Triple<Shape>): boolean {
+  return (
+    new Set(inside).size === 3 &&
+    SHAPES.every((shape) => inside.includes(shape))
+  );
+}
+
 export function isValidPuzzle(puzzle: Puzzle): boolean {
   return (
-    new Set(puzzle.inside).size === 3 &&
-    SHAPES.every((shape) => puzzle.inside.includes(shape)) &&
+    isValidInside(puzzle.inside) &&
     puzzle.outside.every((pair) =>
       pair.every((shape) => SHAPES.includes(shape)),
     ) &&
@@ -220,4 +226,56 @@ export function generatePuzzle(random: () => number = Math.random): Puzzle {
       [inside[2], extras[2]],
     ],
   };
+}
+
+export interface SoloTransfer {
+  readonly statue: Statue;
+  readonly shape: Shape;
+}
+
+export interface SoloPlan {
+  readonly give: readonly SoloTransfer[];
+  readonly keep: readonly Shape[];
+}
+
+/** Plan direct solo-room transfers for the two currently available shapes. */
+export function planSoloTransfers(
+  inside: Triple<Shape>,
+  self: Statue,
+  available: Pair,
+): SoloPlan | null {
+  if (!isValidInside(inside)) {
+    return null;
+  }
+  const [firstShape, secondShape] = available;
+  if (firstShape === secondShape && firstShape !== inside[self]) {
+    const recipient = STATUES.find(
+      (statue) => statue !== self && inside[statue] !== firstShape,
+    );
+    return recipient === undefined
+      ? null
+      : {
+          give: [{ statue: recipient, shape: firstShape }],
+          keep: [firstShape],
+        };
+  }
+  const [one, two] = STATUES.filter((statue) => statue !== self);
+  if (one === undefined || two === undefined) {
+    return null;
+  }
+  for (const [first, second] of [
+    [one, two],
+    [two, one],
+  ] as const) {
+    if (inside[first] !== firstShape && inside[second] !== secondShape) {
+      return {
+        give: [
+          { statue: first, shape: firstShape },
+          { statue: second, shape: secondShape },
+        ],
+        keep: [],
+      };
+    }
+  }
+  return null;
 }

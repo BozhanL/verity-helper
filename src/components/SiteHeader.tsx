@@ -1,11 +1,11 @@
 import type { ReactElement } from "react";
-import { getMessages, type Locale, type Page } from "../i18n/messages";
+import { getMessages, PAGES, type Locale, type Page } from "../i18n/messages";
 import ShapeIcon from "./ShapeIcon";
 
 interface Props {
   locale: Locale;
   page: Page;
-  links: { calculator: string; exercise: string; en: string; zh: string };
+  links: Record<Page | Locale, string>;
 }
 
 export default function SiteHeader({
@@ -26,18 +26,15 @@ export default function SiteHeader({
         </span>
       </a>
       <nav className="page-navigation" aria-label={messages.navigation}>
-        <a
-          href={links.calculator}
-          aria-current={page === "calculator" ? "page" : undefined}
-        >
-          {messages.calculator}
-        </a>
-        <a
-          href={links.exercise}
-          aria-current={page === "exercise" ? "page" : undefined}
-        >
-          {messages.exercise}
-        </a>
+        {PAGES.map((tool) => (
+          <a
+            key={tool}
+            href={links[tool]}
+            aria-current={page === tool ? "page" : undefined}
+          >
+            {messages[tool]}
+          </a>
+        ))}
       </nav>
       <nav className="language-navigation" aria-label={messages.language}>
         <a

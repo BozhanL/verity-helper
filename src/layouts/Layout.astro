@@ -12,7 +12,7 @@ interface Props {
 
 const { locale, page, title, description } = Astro.props;
 const messages = getMessages(locale);
-const path = page === "exercise" ? "exercise" : undefined;
+const path = page === "calculator" ? undefined : page;
 const canonical = Astro.site
   ? new URL(getRelativeLocaleUrl(locale, path), Astro.site)
   : undefined;

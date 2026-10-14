@@ -12,6 +12,7 @@ it("keeps page and language navigation on the matching localized routes", () => 
       page="exercise"
       links={{
         calculator: "/preview/zh/",
+        solo: "/preview/zh/solo/",
         exercise: "/preview/zh/exercise/",
         en: "/preview/exercise/",
         zh: "/preview/zh/exercise/",
@@ -33,3 +34,50 @@ it("keeps page and language navigation on the matching localized routes", () => 
     languages.getByRole("link", { name: "简体中文" }).getAttribute("href"),
   ).toBe("/preview/zh/exercise/");
 });
+
+it.each([
+  {
+    locale: "en",
+    navigation: "Main navigation",
+    language: "Language",
+    solo: "Solo room",
+    prefix: "",
+  },
+  {
+    locale: "zh",
+    navigation: "主导航",
+    language: "语言",
+    solo: "单人房",
+    prefix: "zh/",
+  },
+] as const)(
+  "keeps solo navigation and language links for $locale",
+  ({ locale, navigation, language, solo, prefix }) => {
+    render(
+      <SiteHeader
+        locale={locale}
+        page="solo"
+        links={{
+          calculator: "/preview/" + prefix,
+          solo: "/preview/" + prefix + "solo/",
+          exercise: "/preview/" + prefix + "exercise/",
+          en: "/preview/solo/",
+          zh: "/preview/zh/solo/",
+        }}
+      />,
+    );
+    const pages = within(screen.getByRole("navigation", { name: navigation }));
+    const link = pages.getByRole("link", { name: solo });
+    expect(link.getAttribute("aria-current")).toBe("page");
+    expect(link.getAttribute("href")).toBe("/preview/" + prefix + "solo/");
+    const languages = within(
+      screen.getByRole("navigation", { name: language }),
+    );
+    expect(
+      languages.getByRole("link", { name: "English" }).getAttribute("href"),
+    ).toBe("/preview/solo/");
+    expect(
+      languages.getByRole("link", { name: "简体中文" }).getAttribute("href"),
+    ).toBe("/preview/zh/solo/");
+  },
+);
