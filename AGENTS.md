@@ -28,8 +28,20 @@ or declined a commit for that task.
 
 Use Conventional Commits for commit messages. The Husky `commit-msg` hook runs
 commitlint; `npm run commit` opens the Commitizen prompt.
-Name task branches using [Conventional Branch](https://conventionalbranch.org/),
-for example `feature/solo-room-calculator`.
+
+## Branch naming
+
+Branch names follow the [Conventional Branch](https://conventionalbranch.org/)
+specification: `<type>/<description>`, lowercase, hyphen-separated.
+
+Types: `feature/` (or `feat/`), `bugfix/` (or `fix/`), `hotfix/`, `release/`, `chore/`.
+`main`, `master` and `develop` take no prefix.
+
+Examples: `feature/add-login-page`, `bugfix/fix-header-overflow`, `release/v1.2.0`.
+
+When you create a branch yourself rather than at a person's direction, prefix it
+with your own agent name instead — `claude/`, `codex/`, `copilot/`, `cursor/`,
+or the vendor-neutral `ai/` — so the branch records who wrote it.
 
 ## Project structure and UI
 

@@ -1,0 +1,5 @@
+# Default state for all rules
+default: true
+
+# MD009/no-trailing-spaces : Trailing spaces : https://github.com/DavidAnson/markdownlint/blob/v0.41.1/doc/md009.md
+MD009: false
