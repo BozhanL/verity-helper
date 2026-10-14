@@ -27,6 +27,8 @@ const en = {
   soloNothingToGive: "No shape to give to {position} ({symbol})",
   exercise: "Exercise",
   language: "Language",
+  theme: "Theme",
+  themes: { light: "Light", dark: "Dark", system: "System" },
   skip: "Skip to content",
   calculatorTitle: "Dissection calculator",
   calculatorDescription:
@@ -110,6 +112,8 @@ const zh: typeof en = {
   soloNothingToGive: "无需给{position}雕像（{symbol}）送出图形",
   exercise: "练习",
   language: "语言",
+  theme: "主题",
+  themes: { light: "浅色", dark: "深色", system: "跟随系统" },
   skip: "跳转到主要内容",
   calculatorTitle: "剖切计算器",
   calculatorDescription: "观察雕像，找到最少步骤的剖切方案。",

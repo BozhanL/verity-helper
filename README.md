@@ -22,7 +22,14 @@ Available in English and Simplified Chinese.
 [exercise-zh]: https://verity.903684.xyz/zh/exercise/
 
 Use the header to switch tools without changing the language, or switch
-languages while staying on the same tool. Both tools require JavaScript.
+languages while staying on the same tool. All three tools require JavaScript.
+
+Use **Theme** in the header to choose **Light**, **Dark**, or **System**.
+System follows your device setting. Your choice is saved when browser storage
+is available and applies across tools and languages.
+
+The tools adapt to phone and tablet layouts. Shape and statue choices support
+touch, **Tab**, arrow keys, and **Space**.
 
 ## Calculator
 
@@ -73,7 +80,8 @@ the round.
 
 ## Local development
 
-The project uses Astro, React, TypeScript, and Tailwind CSS. Install Node.js 24
+The project uses Astro, React, TypeScript, and Tailwind CSS, with Remeda for
+array helpers and Radix for accessible selection controls. Install Node.js 24
 and npm 11 (version 11.11 or later), then run these commands from your local clone:
 
 ```sh
@@ -86,19 +94,27 @@ Press **Ctrl+C** to stop the development server.
 
 Checks cover types, lint, formatting, and tests.
 
-| Command                 | Purpose                              |
-| ----------------------- | ------------------------------------ |
-| `npm run check-all:par` | Run all checks in parallel           |
-| `npm run check-all`     | Run all checks sequentially          |
-| `npm test`              | Run unit and React interaction tests |
-| `npm run test:watch`    | Rerun tests as files change          |
-| `npm run format:fix`    | Format the project                   |
-| `npm run build`         | Generate the static site in `dist/`  |
-| `npm run preview`       | Preview the production build locally |
+| Command                 | Purpose                                      |
+| ----------------------- | -------------------------------------------- |
+| `npm run check-all:par` | Run all checks in parallel                   |
+| `npm run check-all`     | Run all checks sequentially                  |
+| `npm test`              | Run unit and React interaction tests         |
+| `npm run test:e2e`      | Test production pages in Chromium and WebKit |
+| `npm run test:watch`    | Rerun tests as files change                  |
+| `npm run format:fix`    | Format the project                           |
+| `npm run build`         | Generate the static site in `dist/`          |
+| `npm run preview`       | Preview the production build locally         |
 
 Run `npm run build` before `npm run preview`.
 
-Before opening a pull request, run `npm run check-all:par`.
+Install browser test engines once with `npx playwright install chromium webkit`.
+Then run `npm run test:e2e`; it builds and serves production pages automatically.
+Browser reports are saved in `playwright-report/`, with screenshots and failure
+traces in `test-results/`. Set `BASE_PATH=/review-preview` in the command's
+environment to test a subdirectory build. CI runs both configurations.
+
+Before opening a pull request, run `npm run check-all:par`, then
+`npm run test:e2e`.
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 The commit hook checks your message automatically; `npm run commit` opens an
 interactive prompt to help write it.
@@ -133,7 +149,11 @@ Vitest covers all 126 valid room configurations, invalid inputs, and exercise
 behavior, including cancellation, completion, reset, and timer expiry.
 Solo tests cover all 162 combinations of statue order, player position, and
 ordered room shapes, including duplicate shapes and retention.
-React interaction tests cover both languages.
+React interaction tests cover both languages, theme preferences, and keyboard
+selection. Playwright checks hydrated production pages in Chromium and WebKit,
+including phone and tablet portrait/landscape layouts, both themes, and
+root/subdirectory navigation. Production deployment waits for tests and the
+production build to succeed.
 
 ## Credits
 

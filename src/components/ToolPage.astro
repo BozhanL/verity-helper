@@ -49,7 +49,7 @@ const links = {
   title={content.title}
   description={content.description}
 >
-  <SiteHeader locale={locale} page={page} links={links} />
+  <SiteHeader locale={locale} page={page} links={links} client:load />
   <main id="main">
     <header class="hero">
       <p class="eyebrow">{messages.encounter}</p>

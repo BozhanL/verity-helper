@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 import { getMessages, PAGES, type Locale, type Page } from "../i18n/messages";
 import ShapeIcon from "./ShapeIcon";
+import ThemeSelect from "./ThemeSelect";
 
 interface Props {
   locale: Locale;
@@ -36,26 +37,29 @@ export default function SiteHeader({
           </a>
         ))}
       </nav>
-      <nav className="language-navigation" aria-label={messages.language}>
-        <a
-          href={links.en}
-          lang="en"
-          hrefLang="en"
-          aria-label="English"
-          aria-current={locale === "en" ? "page" : undefined}
-        >
-          EN
-        </a>
-        <span aria-hidden="true">/</span>
-        <a
-          href={links.zh}
-          lang="zh-Hans"
-          hrefLang="zh-Hans"
-          aria-current={locale === "zh" ? "page" : undefined}
-        >
-          简体中文
-        </a>
-      </nav>
+      <div className="header-controls">
+        <nav className="language-navigation" aria-label={messages.language}>
+          <a
+            href={links.en}
+            lang="en"
+            hrefLang="en"
+            aria-label="English"
+            aria-current={locale === "en" ? "page" : undefined}
+          >
+            EN
+          </a>
+          <span aria-hidden="true">/</span>
+          <a
+            href={links.zh}
+            lang="zh-Hans"
+            hrefLang="zh-Hans"
+            aria-current={locale === "zh" ? "page" : undefined}
+          >
+            简体中文
+          </a>
+        </nav>
+        <ThemeSelect locale={locale} />
+      </div>
     </header>
   );
 }

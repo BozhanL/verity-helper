@@ -15,7 +15,7 @@ afterEach(cleanup);
 
 function choose(group: string, name: string): void {
   fireEvent.click(
-    within(screen.getByRole("group", { name: group })).getByRole("button", {
+    within(screen.getByRole("group", { name: group })).getByRole("radio", {
       name,
     }),
   );
@@ -41,7 +41,7 @@ function chooseRoom(first: Shape, second: Shape, locale: Locale = "en"): void {
 
 function selectSelf(): void {
   fireEvent.click(
-    screen.getByRole("button", { name: "Your statue: Right (Square)" }),
+    screen.getByRole("radio", { name: "Your statue: Right (Square)" }),
   );
 }
 
@@ -49,7 +49,7 @@ describe("solo-room calculator", () => {
   it("requires an explicit player position as well as the statue and room shapes", () => {
     render(<SoloCalculator locale="en" />);
     expect(
-      screen.getByRole("button", { name: "Your statue: Right" }),
+      screen.getByRole("radio", { name: "Your statue: Right" }),
     ).toHaveProperty("disabled", true);
     chooseStatues();
     chooseRoom("triangle", "square");
@@ -136,26 +136,26 @@ describe("solo-room calculator", () => {
     chooseRoom("circle", "circle");
     fireEvent.click(screen.getByRole("button", { name: "Reset room shapes" }));
     expect(
-      screen.getByRole("button", {
+      screen.getByRole("radio", {
         name: "Your statue: Right (Square)",
-        pressed: true,
+        checked: true,
       }),
     ).toBeDefined();
     expect(
       within(
         screen.getByRole("group", { name: "First room shape" }),
-      ).queryAllByRole("button", { pressed: true }),
+      ).queryAllByRole("radio", { checked: true }),
     ).toHaveLength(0);
     chooseRoom("square", "square");
     fireEvent.click(screen.getByRole("button", { name: "Reset inside" }));
     expect(
-      screen.getByRole("button", { name: "Your statue: Right" }),
+      screen.getByRole("radio", { name: "Your statue: Right" }),
     ).toHaveProperty("disabled", true);
     chooseStatues();
     expect(
       within(screen.getByRole("group", { name: "Your statue" })).queryAllByRole(
-        "button",
-        { pressed: true },
+        "radio",
+        { checked: true },
       ),
     ).toHaveLength(0);
     selectSelf();
@@ -163,14 +163,14 @@ describe("solo-room calculator", () => {
       screen.getByRole("img", { name: "Give Square to Middle (Triangle)" }),
     ).toBeDefined();
     fireEvent.click(screen.getByRole("button", { name: "Reset selections" }));
-    expect(screen.queryAllByRole("button", { pressed: true })).toHaveLength(0);
+    expect(screen.queryAllByRole("radio", { checked: true })).toHaveLength(0);
   });
 
   it("provides the same distribution and controls in Simplified Chinese", () => {
     render(<SoloCalculator locale="zh" />);
     chooseStatues("zh");
     fireEvent.click(
-      screen.getByRole("button", { name: "你的雕像: 右侧 (正方形)" }),
+      screen.getByRole("radio", { name: "你的雕像: 右侧 (正方形)" }),
     );
     chooseRoom("triangle", "square", "zh");
     const result = within(screen.getByRole("region", { name: "图形分配" }));

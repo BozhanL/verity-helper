@@ -1,10 +1,13 @@
+import * as RadioGroup from "@radix-ui/react-radio-group";
 import type { ReactElement } from "react";
 import { getMessages, type Locale } from "../i18n/messages";
 import ShapeIcon, { type IconShape } from "./ShapeIcon";
+import { useHydrated } from "./useHydrated";
 
 interface Props<T extends IconShape> {
   legend: string;
   label?: string;
+  solids?: boolean;
   choices: readonly T[];
   value: T | null;
   unavailable?: T | null;
@@ -15,40 +18,45 @@ interface Props<T extends IconShape> {
 export default function ShapePicker<T extends IconShape>({
   legend,
   label,
+  solids = false,
   choices,
   value,
   unavailable,
   locale,
   onChange,
 }: Readonly<Props<T>>): ReactElement {
+  const hydrated = useHydrated();
   const messages = getMessages(locale);
   const names = { ...messages.shapes, ...messages.solids };
   return (
     <fieldset className="shape-picker" aria-label={legend}>
       <legend>{label ?? legend}</legend>
-      <div
+      <RadioGroup.Root
+        disabled={!hydrated}
+        aria-label={legend}
+        value={value ?? ""}
+        onValueChange={(next) => {
+          const choice = choices.find((shape) => shape === next);
+          if (choice !== undefined) {
+            onChange(choice);
+          }
+        }}
         className={
-          choices.length > 3
-            ? "shape-options shape-options--solids"
-            : "shape-options"
+          solids ? "shape-options shape-options--solids" : "shape-options"
         }
       >
         {choices.map((shape) => (
-          <button
+          <RadioGroup.Item
             key={shape}
-            type="button"
+            value={shape}
             className="shape-choice"
-            aria-pressed={value === shape}
             disabled={shape === unavailable}
-            onClick={() => {
-              onChange(shape);
-            }}
           >
             <ShapeIcon shape={shape} />
             <span>{names[shape]}</span>
-          </button>
+          </RadioGroup.Item>
         ))}
-      </div>
+      </RadioGroup.Root>
     </fieldset>
   );
 }

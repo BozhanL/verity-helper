@@ -14,7 +14,7 @@ permissions: {}
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     permissions:
       contents: read
     steps:
@@ -42,6 +42,27 @@ jobs:
 
       - name: 🧪 Run unit tests
         run: npm run test
+
+      - name: Install browser test engines
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Test production pages
+        run: npm run test:e2e
+
+      - name: Test subdirectory deployment
+        env:
+          BASE_PATH: /review-preview
+        run: npm run test:e2e
+
+      - name: Upload browser failure evidence
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: browser-test-results
+          path: |
+            test-results
+            playwright-report
+          retention-days: 7
 
   build:
     runs-on: ubuntu-latest
@@ -88,7 +109,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
     timeout-minutes: 5
-    needs: build
+    needs: [test, build]
     permissions:
       contents: write
     steps:

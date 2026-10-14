@@ -2,6 +2,7 @@
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { getMessages, type Locale, type Page } from "@/i18n/messages";
 import "@/styles/global.css";
+import { THEME_COLORS, THEME_STORAGE_KEY } from "@/lib/theme";
 
 interface Props {
   locale: Locale;
@@ -27,7 +28,38 @@ const favicon = import.meta.env.BASE_URL + "favicon.svg";
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#f6f7fb" />
+    <meta name="theme-color" content={THEME_COLORS.light} />
+    <meta name="color-scheme" content="light dark" />
+    <script
+      is:inline
+      define:vars={{
+        themeColors: THEME_COLORS,
+        themeStorageKey: THEME_STORAGE_KEY,
+      }}
+    >
+      {
+        let preference = "system";
+        try {
+          const stored = localStorage.getItem(themeStorageKey);
+          if (stored === "light" || stored === "dark" || stored === "system") {
+            preference = stored;
+          }
+        } catch {
+          // Use the device preference when browser storage is unavailable.
+        }
+        const theme =
+          preference === "system"
+            ? matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light"
+            : preference;
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        document
+          .querySelector('meta[name="theme-color"]')
+          ?.setAttribute("content", themeColors[theme]);
+      }
+    </script>
     <link rel="icon" type="image/svg+xml" href={favicon} />
     {canonical && <link rel="canonical" href={canonical} />}
     <link
@@ -48,6 +80,8 @@ const favicon = import.meta.env.BASE_URL + "favicon.svg";
       {messages.skip}
     </a>
     <slot />
-    <noscript class="noscript-message">{messages.noScript}</noscript>
+    <noscript>
+      <p class="noscript-message">{messages.noScript}</p>
+    </noscript>
   </body>
 </html>

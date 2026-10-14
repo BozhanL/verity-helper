@@ -19,6 +19,14 @@ interactive changes; component tests alone do not catch client startup failures.
 If you changed any project files during the task, run `npm run check-all:par`
 before handing the work back to the user. Skip it if you made no file changes.
 
+Browser regression tests use Playwright against production previews:
+`npm run test:e2e`. Install engines with `npx playwright install chromium webkit`.
+Run project checks first, then browser tests at root and with
+`BASE_PATH=/review-preview`. The browser suite builds `dist/`; do not run it
+concurrently with other production builds or Astro checks. Keep browser reports
+and screenshots ignored, and inspect representative phone/tablet screenshots
+in both themes. Chromium and WebKit runs must exercise hydrated controls.
+
 Production deployment must wait for both the `test` and `build` CI jobs.
 The final CI result must fail if any dependency fails or is cancelled.
 
@@ -61,6 +69,13 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   in `src/lib/verity.ts` and reuse `InsideInputs.tsx` for statue selection.
 - Treat exercise rounds as unaided practice: show the given inside symbols and
   outside solids without solution hints, target mappings, or shape breakdowns.
+- Keep theme preferences in `src/lib/theme.ts`: light, dark, or system, saved
+  under `verity-theme`. Apply the resolved theme before first paint in the
+  shared layout; retain the CSS system-theme fallback without JavaScript.
+- Use Radix Radio Groups for single-choice shape and statue controls. Preserve
+  empty/reset states, disabled choices, and localized accessible names. Disable
+  interactive input until React is ready; browser tests must verify visible
+  readiness and actual interaction, rather than only Astro hydration attributes.
 - Add shared styles to `@layer components` in `src/styles/global.css` so the
   Tailwind lint configuration recognizes them.
 - Update relevant Vitest tests and both README files when behavior changes.

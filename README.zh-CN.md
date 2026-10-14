@@ -21,7 +21,12 @@
 [exercise-zh]: https://verity.903684.xyz/zh/exercise/
 
 通过顶部导航切换工具时会保留当前语言；切换语言时会保留当前工具。
-两个工具都需要浏览器启用 JavaScript。
+三个工具都需要浏览器启用 JavaScript。
+
+通过顶部的**主题**选择**浅色**、**深色**或**跟随系统**。
+“跟随系统”会使用设备的外观设置。浏览器允许存储时，所选主题会被保存，并在切换工具或语言后保留。
+
+工具布局适配手机和平板。图形和雕像选择支持触控、**Tab**、方向键和**空格键**。
 
 ## 计算器
 
@@ -65,7 +70,7 @@
 
 ## 本地开发
 
-项目使用 Astro、React、TypeScript 和 Tailwind CSS。
+项目使用 Astro、React、TypeScript 和 Tailwind CSS，通过 Remeda 处理数组辅助操作，并使用 Radix 构建无障碍选择控件。
 安装 Node.js 24 和 npm 11（11.11 或更高版本），然后在本地仓库目录中运行：
 
 ```sh
@@ -78,19 +83,25 @@ npm run dev
 
 检查包括类型、代码、格式检查和测试。
 
-| 命令                    | 用途                               |
-| ----------------------- | ---------------------------------- |
-| `npm run check-all:par` | 并行运行类型、代码、格式检查和测试 |
-| `npm run check-all`     | 顺序运行上述检查                   |
-| `npm test`              | 运行单元测试与 React 交互测试      |
-| `npm run test:watch`    | 文件变化时重新运行测试             |
-| `npm run format:fix`    | 格式化项目                         |
-| `npm run build`         | 在 `dist/` 中生成静态站点          |
-| `npm run preview`       | 在本地预览生产构建                 |
+| 命令                    | 用途                                 |
+| ----------------------- | ------------------------------------ |
+| `npm run check-all:par` | 并行运行类型、代码、格式检查和测试   |
+| `npm run check-all`     | 顺序运行上述检查                     |
+| `npm test`              | 运行单元测试与 React 交互测试        |
+| `npm run test:e2e`      | 在 Chromium 和 WebKit 中测试生产页面 |
+| `npm run test:watch`    | 文件变化时重新运行测试               |
+| `npm run format:fix`    | 格式化项目                           |
+| `npm run build`         | 在 `dist/` 中生成静态站点            |
+| `npm run preview`       | 在本地预览生产构建                   |
 
 运行 `npm run preview` 前，先运行 `npm run build`。
 
-提交 PR 前，运行 `npm run check-all:par`。
+首次运行浏览器测试前，使用 `npx playwright install chromium webkit` 安装浏览器引擎。
+然后运行 `npm run test:e2e`，测试会自动构建并启动生产页面预览。
+浏览器报告保存在 `playwright-report/`，截图和失败追踪保存在 `test-results/`。
+在命令的环境中设置 `BASE_PATH=/review-preview` 即可测试子目录部署。CI 会运行这两种配置。
+
+提交 PR 前，先运行 `npm run check-all:par`，再运行 `npm run test:e2e`。
 提交信息遵循 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)。
 提交钩子会自动检查信息格式；`npm run commit` 可打开交互提示，帮助你编写提交信息。
 
@@ -118,7 +129,9 @@ Astro 生成静态页面，React 负责交互控件。
 
 Vitest 覆盖全部 126 种有效房间配置、非法输入，以及取消、完成、重置和超时等练习行为。
 单人房测试覆盖雕像顺序、玩家位置和房间图形顺序的全部 162 种组合，包括重复图形与保留规则。
-React 交互测试覆盖两种语言。
+React 交互测试覆盖两种语言、主题偏好和键盘选择。
+Playwright 在 Chromium 和 WebKit 中检查激活交互后的生产页面，包括手机和平板的横竖屏布局、浅深主题，以及根路径和子目录导航。
+生产部署会等待测试和生产构建均成功。
 
 ## 致谢
 
