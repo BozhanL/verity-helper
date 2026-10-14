@@ -881,6 +881,123 @@
     border-radius: 10px;
   }
 
+  .solo-identity {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .solo-positions,
+  .solo-shape-inputs {
+    display: grid;
+    gap: 12px;
+  }
+  .solo-positions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .solo-shape-inputs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .solo-position {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 4px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #fafbfe;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 650;
+    min-width: 0;
+  }
+  .solo-position .shape-icon {
+    width: 26px;
+    height: 26px;
+  }
+  .solo-position:hover:enabled,
+  .solo-position[aria-pressed="true"] {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+  .solo-position[aria-pressed="true"] {
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+  .solo-recipient {
+    margin: 0;
+    padding: 18px 8px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid var(--line);
+    border-radius: 11px;
+  }
+  .solo-recipient--you {
+    border-color: #c9bce9;
+    background: #fcfaff;
+  }
+  .solo-recipient-heading {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    min-height: 38px;
+    gap: 3px;
+    margin-bottom: 14px;
+  }
+  .solo-recipient-heading .position-label {
+    margin: 0;
+  }
+  .solo-you {
+    border-radius: 20px;
+    padding: 2px 6px;
+    color: var(--accent);
+    background: var(--accent-light);
+    font-size: 9px;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+  .solo-statue-symbol {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 10px;
+  }
+  .solo-statue-symbol .shape-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .solo-action-label {
+    margin: 18px 0 8px;
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 650;
+  }
+  .solo-gift {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    max-width: 100%;
+    aspect-ratio: 1;
+    border: 1px solid #ded6f3;
+    border-radius: 11px;
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+  .solo-gift .shape-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .solo-gift--empty {
+    border-color: var(--line);
+    border-style: dashed;
+    background: #f6f7fb;
+    color: var(--muted);
+  }
+
   @media (max-width: 1050px) {
     .site-header {
       padding-inline: 30px;
@@ -931,6 +1048,7 @@
       width: 100%;
     }
     .page-navigation a {
+      padding-inline: 10px;
       flex: 1;
       text-align: center;
     }

@@ -7,6 +7,7 @@ import { GoalBoard } from "./Board";
 import Calculator from "./Calculator";
 import Exercise from "./Exercise";
 import SiteHeader from "./SiteHeader";
+import SoloCalculator from "./SoloCalculator";
 
 interface Props {
   locale: Locale;
@@ -15,36 +16,48 @@ interface Props {
 
 const { locale, page } = Astro.props;
 const messages = getMessages(locale);
-const title = page === "calculator" ? messages.calculator : messages.exercise;
-const description =
-  page === "calculator"
-    ? messages.calculatorDescription
-    : messages.exerciseDescription;
-const path = page === "exercise" ? "exercise" : undefined;
+const content = {
+  calculator: {
+    title: messages.calculator,
+    heading: messages.calculatorTitle,
+    description: messages.calculatorDescription,
+  },
+  solo: {
+    title: messages.solo,
+    heading: messages.soloTitle,
+    description: messages.soloDescription,
+  },
+  exercise: {
+    title: messages.exercise,
+    heading: messages.exerciseTitle,
+    description: messages.exerciseDescription,
+  },
+}[page];
+const path = page === "calculator" ? undefined : page;
 const links = {
   calculator: getRelativeLocaleUrl(locale),
+  solo: getRelativeLocaleUrl(locale, "solo"),
   exercise: getRelativeLocaleUrl(locale, "exercise"),
   en: getRelativeLocaleUrl("en", path),
   zh: getRelativeLocaleUrl("zh", path),
 };
 ---
 
-<Layout locale={locale} page={page} title={title} description={description}>
+<Layout
+  locale={locale}
+  page={page}
+  title={content.title}
+  description={content.description}
+>
   <SiteHeader locale={locale} page={page} links={links} />
   <main id="main">
     <header class="hero">
       <p class="eyebrow">{messages.encounter}</p>
-      <h1>
-        {page === "calculator"
-          ? messages.calculatorTitle
-          : messages.exerciseTitle}
-      </h1>
+      <h1>{content.heading}</h1>
     </header>
-    {page === "calculator" ? (
-      <Calculator locale={locale} client:load />
-    ) : (
-      <Exercise locale={locale} client:load />
-    )}
+    {page === "calculator" && <Calculator locale={locale} client:load />}
+    {page === "solo" && <SoloCalculator locale={locale} client:load />}
+    {page === "exercise" && <Exercise locale={locale} client:load />}
     {page === "calculator" && (
       <aside class="rule-note">
         <h2>{messages.rulesTitle}</h2>

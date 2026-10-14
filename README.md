@@ -2,18 +2,22 @@
 
 [简体中文](README.zh-CN.md)
 
-A calculator and practice tool for outside dissection in the Verity encounter of
-Destiny 2’s Salvation’s Edge raid. Available in English and Simplified Chinese.
+Calculators and a practice tool for the Verity encounter of Destiny 2’s
+Salvation’s Edge raid. Plan outside dissection or solo-room shape transfers.
+Available in English and Simplified Chinese.
 
 ## Use the tools
 
 | Tool       | English                 | Simplified Chinese  |
 | ---------- | ----------------------- | ------------------- |
 | Calculator | [Calculator][calc-en]   | [计算器][calc-zh]   |
+| Solo room  | [Solo room][solo-en]    | [单人房][solo-zh]   |
 | Exercise   | [Exercise][exercise-en] | [练习][exercise-zh] |
 
 [calc-en]: https://verity.903684.xyz/
 [calc-zh]: https://verity.903684.xyz/zh/
+[solo-en]: https://verity.903684.xyz/solo/
+[solo-zh]: https://verity.903684.xyz/zh/solo/
 [exercise-en]: https://verity.903684.xyz/exercise/
 [exercise-zh]: https://verity.903684.xyz/zh/exercise/
 
@@ -36,6 +40,20 @@ are already aligned.
 Each swap diagram shows three boxes in left–middle–right statue order. Excise the
 shape marked **1**, then **2**, from the indicated statues. The solids below each
 swap show the resulting room; the last step shows the completed room.
+
+## Solo room
+
+1. Select the left and middle **Inside statues** symbols; the right is automatic.
+2. Under **Your statue**, select your own position.
+3. Select both **Room shapes** to see the **Shape distribution**.
+
+Each card identifies a statue by its position and held symbol. **Give** shows
+the shape to send there; **Keep** shows what stays in your room. A shape is
+never assigned to your own statue or a statue holding that shape.
+
+With two copies of your own symbol, give one to each other player. With two
+copies of another symbol, give one to the eligible other player and keep one.
+Different shapes are distributed directly to the two other players.
 
 ## Exercise
 
@@ -113,6 +131,8 @@ Astro builds the static pages, and React handles the interactive controls.
 
 Vitest covers all 126 valid room configurations, invalid inputs, and exercise
 behavior, including cancellation, completion, reset, and timer expiry.
+Solo tests cover all 162 combinations of statue order, player position, and
+ordered room shapes, including duplicate shapes and retention.
 React interaction tests cover both languages.
 
 ## Credits
@@ -127,6 +147,9 @@ Inspired by these tools:
   [u/swegmesterflex](https://www.reddit.com/user/swegmesterflex/) for its
   dissection algorithm.
 - [The Final Shape exercise](https://static.19970301.xyz/the_final_shape/dist/index.html#/).
+- [Traveler’s Chosen Verity guide][solo-guide], including direct solo transfers.
+
+[solo-guide]: https://sites.google.com/view/travelerschosen/guides/salvations-edge/verity
 
 This project independently implements the solver, components, and geometric SVG
 icons.

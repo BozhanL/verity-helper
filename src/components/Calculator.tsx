@@ -3,7 +3,6 @@ import { getMessages, type Locale } from "../i18n/messages";
 import {
   inferInside,
   inferOutside,
-  SHAPES,
   SOLIDS,
   solve,
   type Shape,
@@ -11,6 +10,7 @@ import {
   type Triple,
 } from "../lib/verity";
 import { MiniBoard, ShapeBudget, SolidDisplay } from "./Board";
+import InsideInputs from "./InsideInputs";
 import Sequence from "./Sequence";
 import ShapeIcon from "./ShapeIcon";
 import ShapePicker from "./ShapePicker";
@@ -122,44 +122,13 @@ export default function Calculator({
               {messages.resetShort}
             </button>
           </div>
-          <div className="statue-grid">
-            <ShapePicker
-              legend={messages.positions[0] + " · " + messages.inside}
-              label={messages.positions[0]}
-              choices={SHAPES}
-              value={leftShape}
-              unavailable={middleShape}
-              locale={locale}
-              onChange={setLeftShape}
-            />
-            <ShapePicker
-              legend={messages.positions[1] + " · " + messages.inside}
-              label={messages.positions[1]}
-              choices={SHAPES}
-              value={middleShape}
-              unavailable={leftShape}
-              locale={locale}
-              onChange={setMiddleShape}
-            />
-            <div className="inferred-statue">
-              <span className="position-label">{messages.positions[2]}</span>
-              <span className="inferred-label">{messages.inferred}</span>
-              {inside === null ? (
-                <span
-                  className="diagram-placeholder"
-                  role="img"
-                  aria-label={messages.chooseTwo}
-                >
-                  ?
-                </span>
-              ) : (
-                <div className="inferred-shape">
-                  <ShapeIcon shape={inside[2]} />
-                  <strong>{messages.shapes[inside[2]]}</strong>
-                </div>
-              )}
-            </div>
-          </div>
+          <InsideInputs
+            locale={locale}
+            left={leftShape}
+            middle={middleShape}
+            onLeftChange={setLeftShape}
+            onMiddleChange={setMiddleShape}
+          />
         </section>
         <section className="panel">
           <div className="panel-heading">

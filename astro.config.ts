@@ -21,6 +21,8 @@ export default defineConfig({
   },
 
   vite: {
+    // Production checks must not overwrite the running dev server's React runtime.
+    cacheDir: `node_modules/.vite/${env.NODE_ENV ?? "development"}`,
     plugins: [tailwindcss()],
   },
 });
