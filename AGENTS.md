@@ -24,9 +24,9 @@ Browser regression tests use Playwright against production previews:
 `npx playwright install chromium firefox webkit`.
 `npm run check-all:par` runs all checks, including browser tests, in parallel.
 `npm run check-all` runs the same checks sequentially.
-Also run browser tests with `BASE_PATH=/review-preview`. The browser suite builds
-`dist/`; avoid overlapping browser runs or separate production builds because
-they share build output and report directories.
+Also run browser tests with `BASE_PATH=/review-preview`. Browser suites rebuild
+`dist/`; within the same workspace, avoid overlapping browser runs or separate
+production builds because they share build output and report directories.
 Use `localhost` for both the preview host and browser base URL.
 Configure browser workers as `75%` locally and `100%` in CI.
 Set fixed responsive viewports with `test.use({ viewport })`
@@ -36,11 +36,12 @@ support full mobile emulation. Keep browser reports and screenshots ignored,
 and inspect representative phone/tablet screenshots in both themes.
 All browser projects must exercise hydrated controls.
 
-CI runs type, lint, formatting, and unit checks in `test`. Browser tests run in
-a separate `e2e` job with a 30-minute timeout; run its root and subdirectory
-suites sequentially. Production deployment must wait for `test`, `e2e`, and
-`build`. The final CI result must include all jobs and fail if any dependency
-fails or is cancelled.
+CI runs type, lint, formatting, and unit checks in `test`. Browser tests use an
+`e2e` matrix with separate root and subdirectory jobs, each with a 30-minute
+timeout. CI matrix jobs have isolated runner workspaces and may run in parallel.
+In a shared workspace, run root and subdirectory suites sequentially.
+Production deployment must wait for `test`, `e2e`, and `build`. The final CI
+result must include all jobs and fail if any dependency fails or is cancelled.
 
 After completing a task that changes files and passing the required checks,
 ask the user whether to create a Git commit unless they have already requested
