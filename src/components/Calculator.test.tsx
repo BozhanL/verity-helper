@@ -13,7 +13,7 @@ afterEach(cleanup);
 
 function choose(group: string, shape: string): void {
   fireEvent.click(
-    within(screen.getByRole("group", { name: group })).getByRole("button", {
+    within(screen.getByRole("group", { name: group })).getByRole("radio", {
       name: shape,
     }),
   );
@@ -36,7 +36,7 @@ describe("calculator controls", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "Reset selections" }));
     expect(screen.getByText("Select your room")).toBeDefined();
-    expect(screen.queryAllByRole("button", { pressed: true })).toHaveLength(0);
+    expect(screen.queryAllByRole("radio", { checked: true })).toHaveLength(0);
   });
 
   it("reports impossible solids separately from an already solved room", () => {
@@ -61,7 +61,7 @@ describe("calculator controls", () => {
     expect(
       within(
         screen.getByRole("group", { name: "Middle · Inside statues" }),
-      ).getByRole("button", { name: "Circle" }),
+      ).getByRole("radio", { name: "Circle" }),
     ).toHaveProperty("disabled", true);
     choose("Left · Outside solids", "Cone");
     choose("Middle · Outside solids", "Cone");
@@ -71,20 +71,20 @@ describe("calculator controls", () => {
       expect(
         within(
           screen.getByRole("group", { name: position + " · Outside solids" }),
-        ).getByRole("button", { name: "Cone", pressed: true }),
+        ).getByRole("radio", { name: "Cone", checked: true }),
       ).toBeDefined();
     }
     choose("Left · Outside solids", "Prism");
     expect(
       within(
         screen.getByRole("group", { name: "Middle · Outside solids" }),
-      ).getByRole("button", { name: "Cone", pressed: true }),
+      ).getByRole("radio", { name: "Cone", checked: true }),
     ).toBeDefined();
     choose("Middle · Outside solids", "Cylinder");
     expect(
       within(
         screen.getByRole("group", { name: "Left · Outside solids" }),
-      ).getByRole("button", { name: "Prism", pressed: true }),
+      ).getByRole("radio", { name: "Prism", checked: true }),
     ).toBeDefined();
     expect(screen.getByText("Already aligned.")).toBeDefined();
     fireEvent.click(screen.getByRole("button", { name: "Reset outside" }));
@@ -92,13 +92,13 @@ describe("calculator controls", () => {
       expect(
         within(
           screen.getByRole("group", { name: position + " · Outside solids" }),
-        ).queryAllByRole("button", { pressed: true }),
+        ).queryAllByRole("radio", { checked: true }),
       ).toHaveLength(0);
     }
     expect(
       within(
         screen.getByRole("group", { name: "Left · Inside statues" }),
-      ).getByRole("button", { name: "Circle", pressed: true }),
+      ).getByRole("radio", { name: "Circle", checked: true }),
     ).toBeDefined();
   });
 

@@ -1,3 +1,4 @@
+import * as RadioGroup from "@radix-ui/react-radio-group";
 import { useState, type ReactElement } from "react";
 import { getMessages, type Locale } from "../i18n/messages";
 import {
@@ -210,18 +211,26 @@ export default function SoloCalculator({
             aria-label={messages.soloStatue}
           >
             <legend>{messages.soloStatue}</legend>
-            <div className="solo-positions">
+            <RadioGroup.Root
+              className="solo-positions"
+              aria-label={messages.soloStatue}
+              value={self === null ? "" : String(self)}
+              disabled={inside === null}
+              onValueChange={(value) => {
+                const statue = STATUES.find(
+                  (candidate) => String(candidate) === value,
+                );
+                if (statue !== undefined) {
+                  setSelf(statue);
+                }
+              }}
+            >
               {STATUES.map((statue) => (
-                <button
+                <RadioGroup.Item
                   key={statue}
-                  type="button"
+                  value={String(statue)}
                   className="solo-position"
                   aria-label={selfLabel(locale, statue, inside)}
-                  aria-pressed={self === statue}
-                  disabled={inside === null}
-                  onClick={() => {
-                    setSelf(statue);
-                  }}
                 >
                   <span>{messages.positions[statue]}</span>
                   {inside === null ? (
@@ -229,9 +238,9 @@ export default function SoloCalculator({
                   ) : (
                     <ShapeIcon shape={inside[statue]} />
                   )}
-                </button>
+                </RadioGroup.Item>
               ))}
-            </div>
+            </RadioGroup.Root>
           </fieldset>
         </section>
         <section className="panel">

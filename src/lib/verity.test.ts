@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   applySwap,
   generatePuzzle,
@@ -17,6 +17,10 @@ import {
   type Shape,
   type Triple,
 } from "./verity";
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 const ORDERS: Triple<Shape>[] = [
   ["circle", "triangle", "square"],
@@ -181,7 +185,8 @@ describe("dissection solver", () => {
 
   it("generates valid, unsolved rounds with each statue containing its own symbol", () => {
     for (const value of [0, 0.2, 0.49, 0.75, 0.999]) {
-      const puzzle = generatePuzzle(() => value);
+      vi.spyOn(Math, "random").mockReturnValue(value);
+      const puzzle = generatePuzzle();
       expect(isValidPuzzle(puzzle)).toBe(true);
       expect(isSolved(puzzle)).toBe(false);
       for (const statue of STATUES) {

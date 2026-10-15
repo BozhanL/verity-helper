@@ -11,6 +11,7 @@ import {
 import { generatePuzzle, SHAPES, STATUES, type Shape } from "../lib/verity";
 import { InsideBoard, SolidDisplay } from "./Board";
 import ShapePicker from "./ShapePicker";
+import { useHydrated } from "./useHydrated";
 
 function RoundStatus({
   state,
@@ -43,6 +44,7 @@ export default function Exercise({
   locale,
 }: Readonly<{ locale: Locale }>): ReactElement {
   const messages = getMessages(locale);
+  const hydrated = useHydrated();
   const [state, dispatch] = useReducer(
     practiceReducer,
     undefined,
@@ -89,6 +91,7 @@ export default function Exercise({
           <button
             type="button"
             className="button button--primary"
+            disabled={!hydrated}
             onClick={startRound}
           >
             {state.phase === "ready" ? messages.start : messages.newExercise}
@@ -103,6 +106,32 @@ export default function Exercise({
         <RoundStatus state={state} locale={locale} />
       </section>
       <div className="exercise-layout">
+        <aside className="panel exercise-controls">
+          <ShapePicker
+            legend={messages.currentShape}
+            choices={SHAPES}
+            value={selectedShape}
+            locale={locale}
+            onChange={setSelectedShape}
+          />
+          {state.pending !== null && (
+            <div className="selection-feedback" role="status">
+              <p>
+                {messages.selected} · {messages.positions[state.pending.statue]}{" "}
+                · {messages.shapes[state.pending.shape]}
+              </p>
+              <button
+                type="button"
+                className="text-button"
+                onClick={() => {
+                  dispatch({ type: "cancel" });
+                }}
+              >
+                {messages.cancel}
+              </button>
+            </div>
+          )}
+        </aside>
         <section className="panel">
           <div className="panel-heading">
             <div>
@@ -152,32 +181,6 @@ export default function Exercise({
             <InsideBoard inside={state.puzzle.inside} locale={locale} />
           </div>
         </section>
-        <aside className="panel exercise-controls">
-          <ShapePicker
-            legend={messages.currentShape}
-            choices={SHAPES}
-            value={selectedShape}
-            locale={locale}
-            onChange={setSelectedShape}
-          />
-          {state.pending !== null && (
-            <div className="selection-feedback" role="status">
-              <p>
-                {messages.selected} · {messages.positions[state.pending.statue]}{" "}
-                · {messages.shapes[state.pending.shape]}
-              </p>
-              <button
-                type="button"
-                className="text-button"
-                onClick={() => {
-                  dispatch({ type: "cancel" });
-                }}
-              >
-                {messages.cancel}
-              </button>
-            </div>
-          )}
-        </aside>
       </div>
     </div>
   );

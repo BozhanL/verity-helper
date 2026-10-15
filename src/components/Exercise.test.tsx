@@ -28,7 +28,7 @@ afterEach(() => {
 function choose(shape: verity.Shape): void {
   fireEvent.click(
     within(screen.getByRole("group", { name: "Current shape" })).getByRole(
-      "button",
+      "radio",
       { name: getMessages("en").shapes[shape] },
     ),
   );

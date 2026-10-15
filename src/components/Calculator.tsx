@@ -5,6 +5,7 @@ import {
   inferOutside,
   SOLIDS,
   solve,
+  type Board,
   type Shape,
   type Solid,
   type Triple,
@@ -20,6 +21,7 @@ interface ResultProps {
   inside: Triple<Shape> | null;
   left: Solid | null;
   middle: Solid | null;
+  outside: Board | null;
 }
 
 function Result({
@@ -27,6 +29,7 @@ function Result({
   inside,
   left,
   middle,
+  outside,
 }: Readonly<ResultProps>): ReactElement {
   const messages = getMessages(locale);
   if (inside === null || left === null || middle === null) {
@@ -37,7 +40,6 @@ function Result({
       </div>
     );
   }
-  const outside = inferOutside(left, middle);
   const swaps = outside === null ? null : solve({ inside, outside });
   if (outside === null || swaps === null) {
     return (
@@ -146,11 +148,12 @@ export default function Calculator({
             </button>
           </div>
           <ShapeBudget locale={locale} />
-          <div className="statue-grid">
+          <div className="statue-grid statue-grid--inputs">
             <ShapePicker
               legend={messages.positions[0] + " · " + messages.outside}
               label={messages.positions[0]}
               choices={SOLIDS}
+              solids
               value={leftSolid}
               locale={locale}
               onChange={setLeftSolid}
@@ -159,6 +162,7 @@ export default function Calculator({
               legend={messages.positions[1] + " · " + messages.outside}
               label={messages.positions[1]}
               choices={SOLIDS}
+              solids
               value={middleSolid}
               locale={locale}
               onChange={setMiddleSolid}
@@ -208,6 +212,7 @@ export default function Calculator({
           inside={inside}
           left={leftSolid}
           middle={middleSolid}
+          outside={outside}
         />
       </section>
     </div>

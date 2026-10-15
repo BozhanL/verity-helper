@@ -21,7 +21,7 @@ export default function InsideInputs({
   const inside =
     left !== null && middle !== null ? inferInside(left, middle) : null;
   return (
-    <div className="statue-grid">
+    <div className="statue-grid statue-grid--inputs">
       <ShapePicker
         legend={messages.positions[0] + " · " + messages.inside}
         label={messages.positions[0]}

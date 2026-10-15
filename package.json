@@ -15,7 +15,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check-all:par": "concurrently --kill-others-on-fail npm:check npm:lint npm:format npm:test",
+    "check-all:par": "concurrently --kill-others-on-fail npm:check npm:lint npm:format npm:test npm:test:e2e",
     "check-all": "npm run check-all:par -- -m 1",
     "check": "astro check --minimumFailingSeverity hint",
     "format": "prettier --check .",
@@ -24,6 +24,7 @@
     "lint:fix": "eslint --max-warnings 0 --fix .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
     "prepare": "husky",
     "commitlint": "commitlint",
     "commit": "cz"
@@ -39,10 +40,12 @@
   },
   "dependencies": {
     "@astrojs/react": "7.0.1",
+    "@radix-ui/react-radio-group": "1.4.8",
     "@tailwindcss/vite": "4.3.3",
     "astro": "7.3.7",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "remeda": "2.51.0",
     "tailwindcss": "4.3.3"
   },
   "devDependencies": {
@@ -50,6 +53,7 @@
     "@commitlint/cli": "21.2.3",
     "@commitlint/config-conventional": "21.2.3",
     "@commitlint/cz-commitlint": "21.2.3",
+    "@playwright/test": "1.63.0",
     "@testing-library/react": "16.3.3",
     "@types/node": "24.19.1",
     "@types/react": "19.3.0",

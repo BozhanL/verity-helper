@@ -17,6 +17,8 @@ export default defineConfig([
     ".agents/skills/**",
     "build/**",
     "dist/**",
+    "test-results/**",
+    "playwright-report/**",
   ]),
 
   sonarjs.recommended,

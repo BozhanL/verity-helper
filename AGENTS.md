@@ -19,8 +19,29 @@ interactive changes; component tests alone do not catch client startup failures.
 If you changed any project files during the task, run `npm run check-all:par`
 before handing the work back to the user. Skip it if you made no file changes.
 
-Production deployment must wait for both the `test` and `build` CI jobs.
-The final CI result must fail if any dependency fails or is cancelled.
+Browser regression tests use Playwright against production previews:
+`npm run test:e2e`. Install engines with
+`npx playwright install chromium firefox webkit`.
+`npm run check-all:par` runs all checks, including browser tests, in parallel.
+`npm run check-all` runs the same checks sequentially.
+Also run browser tests with `BASE_PATH=/review-preview`. Browser suites rebuild
+`dist/`; within the same workspace, avoid overlapping browser runs or separate
+production builds because they share build output and report directories.
+Use `localhost` for both the preview host and browser base URL.
+Configure browser workers as `75%` locally and `100%` in CI.
+Set fixed responsive viewports with `test.use({ viewport })`
+before page creation.
+Firefox phone coverage uses a phone-sized viewport and touch; Firefox does not
+support full mobile emulation. Keep browser reports and screenshots ignored,
+and inspect representative phone/tablet screenshots in both themes.
+All browser projects must exercise hydrated controls.
+
+CI runs type, lint, formatting, and unit checks in `test`. Browser tests use an
+`e2e` matrix with separate root and subdirectory jobs, each with a 30-minute
+timeout. CI matrix jobs have isolated runner workspaces and may run in parallel.
+In a shared workspace, run root and subdirectory suites sequentially.
+Production deployment must wait for `test`, `e2e`, and `build`. The final CI
+result must include all jobs and fail if any dependency fails or is cancelled.
 
 After completing a task that changes files and passing the required checks,
 ask the user whether to create a Git commit unless they have already requested
@@ -61,6 +82,13 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   in `src/lib/verity.ts` and reuse `InsideInputs.tsx` for statue selection.
 - Treat exercise rounds as unaided practice: show the given inside symbols and
   outside solids without solution hints, target mappings, or shape breakdowns.
+- Keep theme preferences in `src/lib/theme.ts`: light, dark, or system, saved
+  under `verity-theme`. Apply the resolved theme before first paint in the
+  shared layout; retain the CSS system-theme fallback without JavaScript.
+- Use Radix Radio Groups for single-choice shape and statue controls. Preserve
+  empty/reset states, disabled choices, and localized accessible names. Disable
+  interactive input until React is ready; browser tests must verify visible
+  readiness and actual interaction, rather than only Astro hydration attributes.
 - Add shared styles to `@layer components` in `src/styles/global.css` so the
   Tailwind lint configuration recognizes them.
 - Update relevant Vitest tests and both README files when behavior changes.
