@@ -15,7 +15,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check-all:par": "concurrently --kill-others-on-fail npm:check npm:lint npm:format npm:test",
+    "check-all:par": "concurrently --kill-others-on-fail npm:check npm:lint npm:format npm:test npm:test:e2e",
     "check-all": "npm run check-all:par -- -m 1",
     "check": "astro check --minimumFailingSeverity hint",
     "format": "prettier --check .",

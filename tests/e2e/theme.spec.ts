@@ -125,9 +125,9 @@ test.describe("without JavaScript", () => {
     await expect(page.getByRole("radio").first()).toBeDisabled();
     const warning = page.locator(".noscript-message");
     await expect(warning).toBeVisible();
-    await expect(warning).toHaveJSProperty(
-      "textContent",
+    await expect(warning).toHaveText(
       "JavaScript is needed to use these tools. Enable it, then reload this page.",
+      { useInnerText: true },
     );
     await page.getByRole("link", { name: "Solo room", exact: true }).click();
     await expect(

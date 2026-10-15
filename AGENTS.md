@@ -20,12 +20,21 @@ If you changed any project files during the task, run `npm run check-all:par`
 before handing the work back to the user. Skip it if you made no file changes.
 
 Browser regression tests use Playwright against production previews:
-`npm run test:e2e`. Install engines with `npx playwright install chromium webkit`.
-Run project checks first, then browser tests at root and with
-`BASE_PATH=/review-preview`. The browser suite builds `dist/`; do not run it
-concurrently with other production builds or Astro checks. Keep browser reports
-and screenshots ignored, and inspect representative phone/tablet screenshots
-in both themes. Chromium and WebKit runs must exercise hydrated controls.
+`npm run test:e2e`. Install engines with
+`npx playwright install chromium firefox webkit`.
+`npm run check-all:par` runs all checks, including browser tests, in parallel.
+`npm run check-all` runs the same checks sequentially.
+Also run browser tests with `BASE_PATH=/review-preview`. The browser suite builds
+`dist/`; avoid overlapping browser runs or separate production builds because
+they share build output and report directories.
+Use `localhost` for both the preview host and browser base URL.
+Configure browser workers as `75%` locally and `100%` in CI.
+Set fixed responsive viewports with `test.use({ viewport })`
+before page creation.
+Firefox phone coverage uses a phone-sized viewport and touch; Firefox does not
+support full mobile emulation. Keep browser reports and screenshots ignored,
+and inspect representative phone/tablet screenshots in both themes.
+All browser projects must exercise hydrated controls.
 
 Production deployment must wait for both the `test` and `build` CI jobs.
 The final CI result must fail if any dependency fails or is cancelled.

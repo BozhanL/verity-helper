@@ -9,7 +9,8 @@ export const test = base.extend<{ browserErrors: string[] }>({
       });
       page.on("console", (message) => {
         if (message.type() === "error") {
-          errors.push(message.text());
+          const { url } = message.location();
+          errors.push(url ? message.text() + " (" + url + ")" : message.text());
         }
       });
       await use(errors);
