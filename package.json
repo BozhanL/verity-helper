@@ -42,7 +42,7 @@
     "@astrojs/react": "7.0.1",
     "@radix-ui/react-radio-group": "1.4.8",
     "@tailwindcss/vite": "4.3.3",
-    "astro": "7.3.6",
+    "astro": "7.3.7",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "remeda": "2.51.0",
