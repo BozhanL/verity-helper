@@ -46,8 +46,12 @@ export default defineConfig({
       use: devices["Pixel 5"],
     },
     {
-      name: "Galaxy Z Fold 6 Cover landscape",
-      use: devices["Galaxy Z Fold 6 Cover landscape"],
+      name: "Galaxy Z Fold 6",
+      use: devices["Galaxy Z Fold 6"],
+    },
+    {
+      name: "Galaxy Z Fold 6 Cover",
+      use: devices["Galaxy Z Fold 6 Cover"],
     },
     {
       name: "Mobile Safari",
