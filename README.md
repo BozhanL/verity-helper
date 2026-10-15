@@ -112,7 +112,9 @@ Install browser test engines once with
 Then run `npm run test:e2e`; it builds and serves production pages automatically.
 Browser reports are saved in `playwright-report/`, with screenshots and failure
 traces in `test-results/`. Set `BASE_PATH=/review-preview` in the command's
-environment to test a subdirectory build. CI runs both configurations.
+environment to test a subdirectory build. CI runs both configurations sequentially
+in a separate `e2e` job with a 30-minute timeout. Type, lint, formatting, and unit
+checks run in the `test` job.
 
 The browser matrix covers Chromium, Firefox, and WebKit with desktop and mobile
 presets. Firefox phone coverage uses a small viewport and touch; full mobile

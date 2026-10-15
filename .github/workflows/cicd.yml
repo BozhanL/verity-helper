@@ -43,18 +43,37 @@ jobs:
       - name: 🧪 Run unit tests
         run: npm run test
 
-      - name: Install browser test engines
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: 🏗 Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: 🏗 Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+          cache: npm
+          check-latest: true
+
+      - name: 📦 Install dependencies
+        run: npm ci --no-audit
+
+      - name: 🌐 Install browser test engines
         run: npx playwright install --with-deps chromium firefox webkit
 
-      - name: Test production pages
+      - name: 🧪 Test production pages
         run: npm run test:e2e
 
-      - name: Test subdirectory deployment
+      - name: 🧪 Test subdirectory deployment
         env:
           BASE_PATH: /review-preview
         run: npm run test:e2e
 
-      - name: Upload browser failure evidence
+      - name: 📦 Upload browser failure evidence
         if: ${{ failure() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
@@ -109,7 +128,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
     timeout-minutes: 5
-    needs: [test, build]
+    needs: [test, e2e, build]
     permissions:
       contents: write
     steps:
@@ -141,6 +160,7 @@ jobs:
     timeout-minutes: 2
     needs:
       - test
+      - e2e
       - build
       - page
     steps:

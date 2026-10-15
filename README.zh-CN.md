@@ -99,7 +99,9 @@ npm run dev
 首次运行浏览器测试前，使用 `npx playwright install chromium firefox webkit` 安装浏览器引擎。
 然后运行 `npm run test:e2e`，测试会自动构建并启动生产页面预览。
 浏览器报告保存在 `playwright-report/`，截图和失败追踪保存在 `test-results/`。
-在命令的环境中设置 `BASE_PATH=/review-preview` 即可测试子目录部署。CI 会运行这两种配置。
+在命令的环境中设置 `BASE_PATH=/review-preview` 即可测试子目录部署。
+CI 会在独立的 `e2e` 任务中顺序运行这两种配置，超时时间为 30 分钟。
+类型、代码、格式检查和单元测试在 `test` 任务中运行。
 
 浏览器测试覆盖 Chromium、Firefox 和 WebKit 的桌面及移动配置。Firefox 的手机测试使用小尺寸视口和触控；Firefox 不支持完整的移动设备模拟。
 

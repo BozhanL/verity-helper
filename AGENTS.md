@@ -36,8 +36,11 @@ support full mobile emulation. Keep browser reports and screenshots ignored,
 and inspect representative phone/tablet screenshots in both themes.
 All browser projects must exercise hydrated controls.
 
-Production deployment must wait for both the `test` and `build` CI jobs.
-The final CI result must fail if any dependency fails or is cancelled.
+CI runs type, lint, formatting, and unit checks in `test`. Browser tests run in
+a separate `e2e` job with a 30-minute timeout; run its root and subdirectory
+suites sequentially. Production deployment must wait for `test`, `e2e`, and
+`build`. The final CI result must include all jobs and fail if any dependency
+fails or is cancelled.
 
 After completing a task that changes files and passing the required checks,
 ask the user whether to create a Git commit unless they have already requested
