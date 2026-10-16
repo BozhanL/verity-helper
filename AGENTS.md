@@ -67,11 +67,21 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
 ## Project structure and UI
 
 - Use Astro for routes and layouts, and React islands for interactive tools.
-- The calculator is `/`, solo-room distribution is `/solo/`, and exercise is
-  `/exercise/`, with matching `/zh/` routes. Keep metadata and language links
-  on the selected tool when adding routes.
+- The encounter chooser is `/`; Repository's end-plate helper is `/repository/`.
+  Verity's calculator is `/verity/`, with solo-room distribution at
+  `/verity/solo/` and exercise at `/verity/exercise/`, all with matching `/zh/`
+  routes. Keep page paths and encounter membership in `src/lib/navigation.ts`;
+  preserve the selected page in metadata and language links.
 - Keep puzzle rules in `src/lib/verity.ts` and exercise state in
   `src/lib/practice.ts`. Share shape types and puzzle rules across tools.
+- Keep Repository rules in `src/lib/repository.ts`. Positions are viewed from
+  the entrance facing the exit. Start-to-end wiring is L-M-R in room 1, M-L-R
+  in room 2, and M-R-L in room 3. Keep receiving and closing instructions
+  separate, each with the corresponding start-plate sender reminder.
+- Repository accepts any two distinct conductor callouts and infers the third.
+  The currently held resonance is determined by the last pickup. Changing rooms
+  preserves the assigned start plate but clears callouts and held resonance;
+  changing the assigned start within a room preserves these room-specific inputs.
 - Update English and Simplified Chinese together in `src/i18n/messages.ts`.
   Generate navigation with Astro's i18n helpers so `BASE_PATH` is respected.
 - Prefer shape diagrams and short labels. Give diagrams localized accessible
@@ -85,8 +95,9 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
 - Keep theme preferences in `src/lib/theme.ts`: light, dark, or system, saved
   under `verity-theme`. Apply the resolved theme before first paint in the
   shared layout; retain the CSS system-theme fallback without JavaScript.
-- Use Radix Radio Groups for single-choice shape and statue controls. Preserve
-  empty/reset states, disabled choices, and localized accessible names. Disable
+- Use Radix Radio Groups for single-choice shape, statue, plate, and room
+  controls. Preserve empty/reset states, disabled choices, and localized
+  accessible names. Disable
   interactive input until React is ready; browser tests must verify visible
   readiness and actual interaction, rather than only Astro hydration attributes.
 - Add shared styles to `@layer components` in `src/styles/global.css` so the

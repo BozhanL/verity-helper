@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
-import { getMessages, PAGES, type Locale, type Page } from "../i18n/messages";
+import { getMessages, type Locale, type Page } from "../i18n/messages";
+import { getEncounter, VERITY_PAGES } from "../lib/navigation";
 import ShapeIcon from "./ShapeIcon";
 import ThemeSelect from "./ThemeSelect";
 
@@ -15,9 +16,10 @@ export default function SiteHeader({
   links,
 }: Readonly<Props>): ReactElement {
   const messages = getMessages(locale);
+  const encounter = getEncounter(page);
   return (
     <header className="site-header">
-      <a href={links.calculator} className="brand">
+      <a href={links.home} className="brand">
         <span className="brand-icon">
           <ShapeIcon shape="prism" />
         </span>
@@ -26,17 +28,38 @@ export default function SiteHeader({
           <small>{messages.subtitle}</small>
         </span>
       </a>
-      <nav className="page-navigation" aria-label={messages.navigation}>
-        {PAGES.map((tool) => (
+      <div className="site-navigation">
+        <nav className="page-navigation" aria-label={messages.navigation}>
           <a
-            key={tool}
-            href={links[tool]}
-            aria-current={page === tool ? "page" : undefined}
+            href={links.repository}
+            aria-current={encounter === "repository" ? "page" : undefined}
           >
-            {messages[tool]}
+            {messages.repositoryEncounter}
           </a>
-        ))}
-      </nav>
+          <a
+            href={links.calculator}
+            aria-current={encounter === "verity" ? "location" : undefined}
+          >
+            {messages.verityEncounter}
+          </a>
+        </nav>
+        {encounter === "verity" && (
+          <nav
+            className="page-navigation tool-navigation"
+            aria-label={messages.toolNavigation}
+          >
+            {VERITY_PAGES.map((tool) => (
+              <a
+                key={tool}
+                href={links[tool]}
+                aria-current={page === tool ? "page" : undefined}
+              >
+                {messages[tool]}
+              </a>
+            ))}
+          </nav>
+        )}
+      </div>
       <div className="header-controls">
         <nav className="language-navigation" aria-label={messages.language}>
           <a

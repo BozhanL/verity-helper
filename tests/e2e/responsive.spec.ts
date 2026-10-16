@@ -1,7 +1,15 @@
 import type { Page } from "@playwright/test";
 import { getMessages } from "../../src/i18n/messages";
 import { expect, test } from "./fixtures";
-import { choose, chooseInside, chooseSelf, openTool, ROUTES } from "./helpers";
+import {
+  choose,
+  chooseInside,
+  chooseRepository,
+  chooseSelf,
+  openPage,
+  openTool,
+  ROUTES,
+} from "./helpers";
 
 test.use({ hasTouch: true });
 const VIEWPORTS = [
@@ -17,7 +25,7 @@ const VIEWPORTS = [
 
 async function assertTouchTargets(page: Page): Promise<void> {
   const controls = page.locator(
-    "button:visible, select:visible, .page-navigation a, .language-navigation a, .reference-links a, .brand",
+    "button:visible, select:visible, .page-navigation a, .language-navigation a, .reference-links a, .encounter-card, .brand",
   );
   const targets = await controls.evaluateAll((elements) =>
     elements.map((element) => {
@@ -38,6 +46,93 @@ async function assertTouchTargets(page: Page): Promise<void> {
   }
 }
 
+async function exerciseRoute(
+  page: Page,
+  route: (typeof ROUTES)[number],
+  theme: "light" | "dark",
+  height: number,
+): Promise<void> {
+  const messages = getMessages(route.locale);
+  if (route.tool === "home") {
+    await openPage(page, route.path);
+    await page
+      .getByRole("combobox")
+      .selectOption(theme === "dark" ? "light" : "dark");
+    await page.getByRole("combobox").selectOption(theme);
+    await expect(
+      page.getByRole("heading", { name: messages.homeTitle }),
+    ).toBeVisible();
+  } else {
+    await openTool(page, route.path);
+  }
+  if (route.tool === "repository") {
+    await chooseRepository(page, route.locale);
+    const choices = await page
+      .locator(".conductor-card .shape-choice")
+      .evaluateAll((buttons) =>
+        buttons.map((button) => ({
+          label: button.textContent,
+          width: button.clientWidth,
+          content: button.scrollWidth,
+        })),
+      );
+    for (const choice of choices) {
+      expect(
+        choice.content,
+        choice.label + " must fit inside its button",
+      ).toBeLessThanOrEqual(choice.width + 1);
+    }
+    await expect(
+      page.getByRole("heading", {
+        name: messages.repositoryTool.closeAt.replace(
+          "{position}",
+          messages.positions[2],
+        ),
+      }),
+    ).toBeVisible();
+  } else if (route.tool === "calculator") {
+    await chooseInside(page, route.locale);
+    await choose(
+      page,
+      messages.positions[0] + " · " + messages.outside,
+      messages.solids.sphere,
+    );
+    await choose(
+      page,
+      messages.positions[1] + " · " + messages.outside,
+      messages.solids.pyramid,
+    );
+    await expect(
+      page.getByRole("heading", {
+        name: messages.swap + " 3",
+        exact: true,
+      }),
+    ).toBeVisible();
+  } else if (route.tool === "solo") {
+    await chooseInside(page, route.locale);
+    await chooseSelf(page, route.locale);
+    await choose(page, messages.soloFirstShape, messages.shapes.circle);
+    await choose(page, messages.soloSecondShape, messages.shapes.circle);
+    await expect(
+      page
+        .getByRole("region", { name: messages.soloDistribution })
+        .getByRole("img"),
+    ).toHaveCount(3);
+  } else if (route.tool === "exercise") {
+    await page.getByRole("button", { name: messages.start, exact: true }).tap();
+    await page.locator(".button--excise:enabled").first().tap();
+    await expect(
+      page.getByRole("button", { name: messages.cancel, exact: true }),
+    ).toBeVisible();
+    if (height < 600) {
+      await expect(page.locator(".exercise-controls")).toHaveCSS(
+        "position",
+        "static",
+      );
+    }
+  }
+}
+
 for (const viewport of VIEWPORTS) {
   test.describe(() => {
     test.use({ viewport });
@@ -49,55 +144,7 @@ for (const viewport of VIEWPORTS) {
           localStorage.setItem("verity-theme", value);
         }, theme);
         for (const route of ROUTES) {
-          const messages = getMessages(route.locale);
-          await openTool(page, route.path);
-          if (route.tool === "calculator") {
-            await chooseInside(page, route.locale);
-            await choose(
-              page,
-              messages.positions[0] + " · " + messages.outside,
-              messages.solids.sphere,
-            );
-            await choose(
-              page,
-              messages.positions[1] + " · " + messages.outside,
-              messages.solids.pyramid,
-            );
-            await expect(
-              page.getByRole("heading", {
-                name: messages.swap + " 3",
-                exact: true,
-              }),
-            ).toBeVisible();
-          } else if (route.tool === "solo") {
-            await chooseInside(page, route.locale);
-            await chooseSelf(page, route.locale);
-            await choose(page, messages.soloFirstShape, messages.shapes.circle);
-            await choose(
-              page,
-              messages.soloSecondShape,
-              messages.shapes.circle,
-            );
-            await expect(
-              page
-                .getByRole("region", { name: messages.soloDistribution })
-                .getByRole("img"),
-            ).toHaveCount(3);
-          } else {
-            await page
-              .getByRole("button", { name: messages.start, exact: true })
-              .tap();
-            await page.locator(".button--excise:enabled").first().tap();
-            await expect(
-              page.getByRole("button", { name: messages.cancel, exact: true }),
-            ).toBeVisible();
-            if (viewport.height < 600) {
-              await expect(page.locator(".exercise-controls")).toHaveCSS(
-                "position",
-                "static",
-              );
-            }
-          }
+          await exerciseRoute(page, route, theme, viewport.height);
           const width = await page.evaluate(() => ({
             scroll: document.documentElement.scrollWidth,
             viewport: document.documentElement.clientWidth,

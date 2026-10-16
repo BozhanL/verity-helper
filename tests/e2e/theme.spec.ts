@@ -5,7 +5,7 @@ test("System follows device changes and manual choices take precedence", async (
   page,
 }) => {
   await page.emulateMedia({ colorScheme: "dark" });
-  await openTool(page, "");
+  await openTool(page, "verity/");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(page.getByRole("combobox", { name: "Theme" })).toHaveValue(
     "system",
@@ -26,23 +26,23 @@ test("saved choices survive reloads and localized tool navigation", async ({
   page,
   baseURL,
 }) => {
-  await openTool(page, "");
+  await openTool(page, "verity/");
   await page.getByRole("combobox", { name: "Theme" }).selectOption("dark");
   await page.reload();
   await expect(page.getByRole("combobox", { name: "Theme" })).toHaveValue(
     "dark",
   );
   await page.getByRole("link", { name: "Solo room", exact: true }).click();
-  await expect(page).toHaveURL(new URL("solo/", baseURL).href);
+  await expect(page).toHaveURL(new URL("verity/solo/", baseURL).href);
   await page
     .getByRole("link", { name: "\u7b80\u4f53\u4e2d\u6587", exact: true })
     .click();
-  await expect(page).toHaveURL(new URL("zh/solo/", baseURL).href);
+  await expect(page).toHaveURL(new URL("zh/verity/solo/", baseURL).href);
   await expect(
     page.getByRole("combobox", { name: "\u4e3b\u9898" }),
   ).toHaveValue("dark");
   await page.getByRole("link", { name: "\u7ec3\u4e60", exact: true }).click();
-  await expect(page).toHaveURL(new URL("zh/exercise/", baseURL).href);
+  await expect(page).toHaveURL(new URL("zh/verity/exercise/", baseURL).href);
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 });
 
@@ -57,7 +57,7 @@ test("persisted dark mode is applied before the first animation frame", async ({
         document.documentElement.dataset.theme ?? "";
     });
   });
-  await openTool(page, "");
+  await openTool(page, "verity/");
   await expect(page.locator("html")).toHaveAttribute(
     "data-first-frame-theme",
     "dark",
@@ -66,9 +66,9 @@ test("persisted dark mode is applied before the first animation frame", async ({
 });
 
 test("theme choices synchronize between tabs", async ({ page, context }) => {
-  await openTool(page, "");
+  await openTool(page, "verity/");
   const other = await context.newPage();
-  await openTool(other, "solo/");
+  await openTool(other, "verity/solo/");
   await page.getByRole("combobox", { name: "Theme" }).selectOption("dark");
   await expect(other.getByRole("combobox", { name: "Theme" })).toHaveValue(
     "dark",
@@ -82,7 +82,7 @@ test("invalid stored preferences fall back to System", async ({ page }) => {
     localStorage.setItem("verity-theme", "unknown");
   });
   await page.emulateMedia({ colorScheme: "dark" });
-  await openTool(page, "");
+  await openTool(page, "verity/");
   await expect(page.getByRole("combobox", { name: "Theme" })).toHaveValue(
     "system",
   );
@@ -99,7 +99,7 @@ test("denied storage does not break theme selection or tool hydration", async ({
       },
     });
   });
-  await openTool(page, "");
+  await openTool(page, "verity/");
   await page.getByRole("combobox", { name: "Theme" }).selectOption("dark");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page
@@ -122,6 +122,10 @@ test.describe("without JavaScript", () => {
       "rgb(21, 22, 36)",
     );
     await expect(page.getByRole("combobox", { name: "Theme" })).toBeDisabled();
+    await page
+      .getByRole("navigation", { name: "Main navigation" })
+      .getByRole("link", { name: "4 · Verity calculator" })
+      .click();
     await expect(page.getByRole("radio").first()).toBeDisabled();
     const warning = page.locator(".noscript-message");
     await expect(warning).toBeVisible();
