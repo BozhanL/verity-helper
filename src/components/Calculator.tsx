@@ -11,6 +11,7 @@ import {
   type Triple,
 } from "../lib/verity";
 import { MiniBoard, ShapeBudget, SolidDisplay } from "./Board";
+import { CONTROL_PROPS } from "./controlProps";
 import InsideInputs from "./InsideInputs";
 import Sequence from "./Sequence";
 import ShapeIcon from "./ShapeIcon";
@@ -123,6 +124,7 @@ export default function Calculator({
               <h2>{messages.inside}</h2>
             </div>
             <button
+              {...CONTROL_PROPS}
               className="text-button"
               type="button"
               aria-label={messages.resetInside}
@@ -157,6 +159,7 @@ export default function Calculator({
               <h2>{messages.outside}</h2>
             </div>
             <button
+              {...CONTROL_PROPS}
               className="text-button"
               type="button"
               aria-label={messages.resetOutside}
@@ -227,6 +230,7 @@ export default function Calculator({
               {messages.editInputs}
             </a>
             <button
+              {...CONTROL_PROPS}
               className="text-button"
               type="button"
               aria-label={messages.reset}

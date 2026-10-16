@@ -1,6 +1,7 @@
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import type { ReactElement } from "react";
 import { getMessages, type Locale } from "../i18n/messages";
+import { CONTROL_PROPS } from "./controlProps";
 import ShapeIcon, { type IconShape } from "./ShapeIcon";
 import { useHydrated } from "./useHydrated";
 
@@ -53,6 +54,7 @@ export default function ShapePicker<T extends IconShape>({
       >
         {choices.map((shape) => (
           <RadioGroup.Item
+            {...CONTROL_PROPS}
             key={shape}
             value={shape}
             className="shape-choice"

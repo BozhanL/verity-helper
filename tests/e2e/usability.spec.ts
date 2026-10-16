@@ -150,7 +150,7 @@ for (const locale of ["en", "zh"] as const) {
     ).toHaveCount(0);
   });
 
-  test(`${locale}: controls wait for scripts and become visibly ready`, async ({
+  test(`${locale}: controls wait for scripts after loading and reloading`, async ({
     page,
   }) => {
     for (const path of [
@@ -159,29 +159,44 @@ for (const locale of ["en", "zh"] as const) {
       "verity/solo/",
       "verity/exercise/",
     ]) {
-      const { promise: scripts, resolve: releaseScripts } =
-        Promise.withResolvers<undefined>();
-      await page.route("**/*.js", async (route) => {
-        await scripts;
-        await route.continue();
-      });
-      try {
-        await page.goto(prefix + path, { waitUntil: "commit" });
-        await expect(page.locator(".readiness")).toHaveText(
-          messages.controlsLoading,
-        );
-        for (const button of await page.getByRole("button").all()) {
-          await expect(button).toBeDisabled();
+      for (const reload of [false, true]) {
+        const { promise: scripts, resolve: releaseScripts } =
+          Promise.withResolvers<undefined>();
+        await page.route("**/*.js", async (route) => {
+          await scripts;
+          await route.continue();
+        });
+        try {
+          if (reload) {
+            await page.reload({ waitUntil: "commit" });
+          } else {
+            await page.goto(prefix + path, { waitUntil: "commit" });
+          }
+          await expect(page.locator(".readiness")).toHaveText(
+            messages.controlsLoading,
+          );
+          await expect(page.getByRole("combobox")).toBeDisabled();
+          for (const button of await page.getByRole("button").all()) {
+            await expect(button).toBeDisabled();
+          }
+          await expect(page.getByRole("radio").first()).toBeDisabled();
+        } finally {
+          releaseScripts(undefined);
         }
-        await expect(page.getByRole("radio").first()).toBeDisabled();
-      } finally {
-        releaseScripts(undefined);
+        await expect(page.locator(".readiness")).toHaveText(
+          messages.controlsReady,
+        );
+        await expect(page.getByRole("radio").first()).toBeEnabled();
+        await expect(page.getByRole("combobox")).toBeEnabled();
+        if (reload) {
+          await expect(page.getByRole("combobox")).toHaveValue("dark");
+        }
+        await page.unroute("**/*.js");
+        await page.getByRole("combobox").selectOption("dark");
+        const choice = page.getByRole("radio").first();
+        await choice.tap();
+        await expect(choice).toBeChecked();
       }
-      await expect(page.locator(".readiness")).toHaveText(
-        messages.controlsReady,
-      );
-      await expect(page.getByRole("radio").first()).toBeEnabled();
-      await page.unroute("**/*.js");
     }
   });
 }

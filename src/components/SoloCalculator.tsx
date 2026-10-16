@@ -11,6 +11,7 @@ import {
   type Statue,
   type Triple,
 } from "../lib/verity";
+import { CONTROL_PROPS } from "./controlProps";
 import InsideInputs from "./InsideInputs";
 import ShapeIcon from "./ShapeIcon";
 import ShapePicker from "./ShapePicker";
@@ -206,6 +207,7 @@ export default function SoloCalculator({
               <h2>{messages.inside}</h2>
             </div>
             <button
+              {...CONTROL_PROPS}
               className="text-button"
               type="button"
               aria-label={messages.resetInside}
@@ -243,6 +245,7 @@ export default function SoloCalculator({
             >
               {STATUES.map((statue) => (
                 <RadioGroup.Item
+                  {...CONTROL_PROPS}
                   key={statue}
                   value={String(statue)}
                   className="solo-position"
@@ -266,6 +269,7 @@ export default function SoloCalculator({
               <h2>{messages.soloRoomShapes}</h2>
             </div>
             <button
+              {...CONTROL_PROPS}
               className="text-button"
               type="button"
               aria-label={messages.soloResetRoom}
@@ -319,6 +323,7 @@ export default function SoloCalculator({
               {messages.editInputs}
             </a>
             <button
+              {...CONTROL_PROPS}
               className="text-button"
               type="button"
               aria-label={messages.reset}

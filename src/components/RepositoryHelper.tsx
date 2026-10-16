@@ -12,6 +12,7 @@ import {
   type Room,
 } from "../lib/repository";
 import { SHAPES, type Shape } from "../lib/verity";
+import { CONTROL_PROPS } from "./controlProps";
 import ShapeIcon from "./ShapeIcon";
 import ShapePicker from "./ShapePicker";
 import ToolReadiness from "./ToolReadiness";
@@ -68,6 +69,7 @@ function NumberPicker<T extends number>({
       >
         {choices.map((choice) => (
           <RadioGroup.Item
+            {...CONTROL_PROPS}
             key={choice.value}
             value={String(choice.value)}
             className="solo-position"
@@ -105,6 +107,7 @@ function ConductorInputs({
               <h3>{messages.positions[plate]}</h3>
               {inferred === undefined ? (
                 <button
+                  {...CONTROL_PROPS}
                   className="text-button"
                   type="button"
                   disabled={disabled || callouts[plate] === null}
@@ -256,6 +259,7 @@ export default function RepositoryHelper({
             <h2 id="repository-setup-heading">{text.setup}</h2>
           </div>
           <button
+            {...CONTROL_PROPS}
             className="text-button"
             type="button"
             disabled={!hydrated}

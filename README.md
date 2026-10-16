@@ -207,6 +207,8 @@ production and PR previews.
 ## Project structure and tests
 
 Astro builds the static pages, and React handles the interactive controls.
+Interactive controls stay disabled until React is ready, including when
+reloading in Firefox.
 
 | Location                               | Contents                       |
 | -------------------------------------- | ------------------------------ |

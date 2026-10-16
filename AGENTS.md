@@ -115,6 +115,10 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   accessible names. Disable
   interactive input until React is ready; browser tests must verify visible
   readiness and actual interaction, rather than only Astro hydration attributes.
+  Apply `CONTROL_PROPS` from `src/components/controlProps.ts` to buttons,
+  selects, and Radix items so Firefox cannot restore their disabled state before
+  hydration. Browser readiness checks must cover fresh loads and reloads with
+  scripts delayed.
 - Add shared styles to `@layer components` in `src/styles/global.css` so the
   Tailwind lint configuration recognizes them.
 - Update relevant Vitest tests and both README files when behavior changes.
