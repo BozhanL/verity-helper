@@ -11,9 +11,12 @@ import {
   type Statue,
   type Triple,
 } from "../lib/verity";
+import { CONTROL_PROPS } from "./controlProps";
 import InsideInputs from "./InsideInputs";
 import ShapeIcon from "./ShapeIcon";
 import ShapePicker from "./ShapePicker";
+import ToolReadiness from "./ToolReadiness";
+import { useHydrated } from "./useHydrated";
 
 function selfLabel(
   locale: Locale,
@@ -84,6 +87,10 @@ function Distribution({
           ? plan.keep[0]
           : plan.give.find((transfer) => transfer.statue === statue)?.shape;
         const label = distributionLabel(locale, inside, self, statue, shape);
+        const action = own ? messages.soloKeep : messages.soloGive;
+        const emptyAction = own
+          ? messages.soloNothingToKeep
+          : messages.soloNothingToSend;
         return (
           <figure
             key={statue}
@@ -102,7 +109,7 @@ function Distribution({
               <span>{messages.shapes[inside[statue]]}</span>
             </div>
             <span className="solo-action-label">
-              {own ? messages.soloKeep : messages.soloGive}
+              {shape === undefined ? emptyAction : action}
             </span>
             <span
               className={
@@ -133,11 +140,17 @@ function SoloResult({
   second: Shape | null;
 }>): ReactElement {
   const messages = getMessages(locale);
+  let incomplete = messages.soloChooseRoom;
+  if (inside === null) {
+    incomplete = messages.soloChooseStatues;
+  } else if (self === null) {
+    incomplete = messages.soloChooseSelf;
+  }
   if (inside === null || self === null || first === null || second === null) {
     return (
       <div className="empty-state">
         <ShapeIcon shape="circle" />
-        <h3>{messages.soloIncomplete}</h3>
+        <h3>{incomplete}</h3>
       </div>
     );
   }
@@ -146,6 +159,7 @@ function SoloResult({
     return (
       <div className="feedback feedback--error" role="alert">
         <h3>{messages.invalid}</h3>
+        <p>{messages.soloInvalid}</p>
       </div>
     );
   }
@@ -158,6 +172,7 @@ export default function SoloCalculator({
   locale,
 }: Readonly<{ locale: Locale }>): ReactElement {
   const messages = getMessages(locale);
+  const hydrated = useHydrated();
   const [left, setLeft] = useState<Shape | null>(null);
   const [middle, setMiddle] = useState<Shape | null>(null);
   const [self, setSelf] = useState<Statue | null>(null);
@@ -183,7 +198,8 @@ export default function SoloCalculator({
 
   return (
     <div className="tool">
-      <div className="calculator-inputs">
+      <ToolReadiness locale={locale} />
+      <div className="calculator-inputs" id="solo-inputs" tabIndex={-1}>
         <section className="panel">
           <div className="panel-heading">
             <div>
@@ -191,9 +207,11 @@ export default function SoloCalculator({
               <h2>{messages.inside}</h2>
             </div>
             <button
+              {...CONTROL_PROPS}
               className="text-button"
               type="button"
               aria-label={messages.resetInside}
+              disabled={!hydrated}
               onClick={resetInside}
             >
               {messages.resetShort}
@@ -215,7 +233,7 @@ export default function SoloCalculator({
               className="solo-positions"
               aria-label={messages.soloStatue}
               value={self === null ? "" : String(self)}
-              disabled={inside === null}
+              disabled={!hydrated || inside === null}
               onValueChange={(value) => {
                 const statue = STATUES.find(
                   (candidate) => String(candidate) === value,
@@ -227,6 +245,7 @@ export default function SoloCalculator({
             >
               {STATUES.map((statue) => (
                 <RadioGroup.Item
+                  {...CONTROL_PROPS}
                   key={statue}
                   value={String(statue)}
                   className="solo-position"
@@ -250,9 +269,11 @@ export default function SoloCalculator({
               <h2>{messages.soloRoomShapes}</h2>
             </div>
             <button
+              {...CONTROL_PROPS}
               className="text-button"
               type="button"
               aria-label={messages.soloResetRoom}
+              disabled={!hydrated}
               onClick={resetRoom}
             >
               {messages.resetShort}
@@ -276,8 +297,18 @@ export default function SoloCalculator({
           </div>
         </section>
       </div>
+      {inside !== null &&
+        self !== null &&
+        first !== null &&
+        second !== null && (
+          <div className="result-links">
+            <a href="#solo-result">{messages.viewResult} ↓</a>
+          </div>
+        )}
       <section
         className="panel solution-panel"
+        id="solo-result"
+        tabIndex={-1}
         aria-live="polite"
         aria-atomic="false"
         aria-labelledby="solo-distribution-heading"
@@ -287,14 +318,21 @@ export default function SoloCalculator({
             <span className="panel-number">03</span>
             <h2 id="solo-distribution-heading">{messages.soloDistribution}</h2>
           </div>
-          <button
-            className="text-button"
-            type="button"
-            aria-label={messages.reset}
-            onClick={resetAll}
-          >
-            {messages.resetShort}
-          </button>
+          <div className="result-actions">
+            <a className="text-button" href="#solo-inputs">
+              {messages.editInputs}
+            </a>
+            <button
+              {...CONTROL_PROPS}
+              className="text-button"
+              type="button"
+              aria-label={messages.reset}
+              disabled={!hydrated}
+              onClick={resetAll}
+            >
+              {messages.resetShort}
+            </button>
+          </div>
         </div>
         <SoloResult
           locale={locale}

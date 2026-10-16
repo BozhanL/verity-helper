@@ -33,7 +33,7 @@ it("keeps page and language navigation on the matching localized routes", () => 
   expect(
     pages.getByRole("link", { name: "练习" }).getAttribute("aria-current"),
   ).toBe("page");
-  expect(pages.getByRole("link", { name: "计算器" }).getAttribute("href")).toBe(
+  expect(pages.getByRole("link", { name: "剖切" }).getAttribute("href")).toBe(
     "/preview/zh/verity/",
   );
   const languages = within(screen.getByRole("navigation", { name: "语言" }));

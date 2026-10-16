@@ -159,7 +159,9 @@ it("blocks duplicate callouts, recalculates corrections, and preserves inputs wh
     }),
   ).toBeDefined();
   callout(0, "triangle");
-  expect(screen.getByRole("img").textContent).toContain(text.resonances.square);
+  expect(screen.getByRole("img").getAttribute("aria-label")).toContain(
+    text.resonances.square,
+  );
   select(text.startPlate, "Middle");
   expect(
     screen.getByRole("heading", { name: "Receive at the Right end plate" }),

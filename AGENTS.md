@@ -86,12 +86,27 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   Generate navigation with Astro's i18n helpers so `BASE_PATH` is respected.
 - Prefer shape diagrams and short labels. Give diagrams localized accessible
   descriptions, and retain accessible names on controls.
+- Keep one adaptive interface: Exercise and pre-raid experimentation are the
+  learning path. Keep mobile conductor positions in left-middle-right columns,
+  with resonance selection and closing guidance visible together after scrolling
+  to the callouts at 390x844. Short shape labels must retain full resonance names
+  accessibly and in the expandable reference.
+- Keep primary controls at least 48x48 CSS pixels and other controls at least
+  44x44. Result/edit links scroll only on explicit activation and preserve inputs.
+  Exercise's sticky picker must fit within a quarter of the portrait viewport;
+  use normal flow on short screens and keep focused board controls unobscured.
 - Solo-room distribution uses direct transfers: never give to your own statue
   or a statue holding the given shape. For two identical shapes different from
   your symbol, give one to the eligible teammate and keep one. Keep these rules
   in `src/lib/verity.ts` and reuse `InsideInputs.tsx` for statue selection.
 - Treat exercise rounds as unaided practice: show the given inside symbols and
   outside solids without solution hints, target mappings, or shape breakdowns.
+- Configure Noto Sans and Noto Sans SC with Astro’s Fonts API in `astro.config.ts`.
+  Use Google Fonts for both families. Preload Noto Sans on all pages and
+  Noto Sans SC on Chinese pages. Derive the Chinese glyph subset from the
+  translations. Compose `--font-noto-sans` and `--font-noto-sans-sc` before system
+  fallbacks in the shared styles. Browser layout checks must wait for fonts and
+  verify Latin and Chinese font downloads with `BASE_PATH`.
 - Keep theme preferences in `src/lib/theme.ts`: light, dark, or system, saved
   under `verity-theme`. Apply the resolved theme before first paint in the
   shared layout; retain the CSS system-theme fallback without JavaScript.
@@ -100,6 +115,10 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   accessible names. Disable
   interactive input until React is ready; browser tests must verify visible
   readiness and actual interaction, rather than only Astro hydration attributes.
+  Apply `CONTROL_PROPS` from `src/components/controlProps.ts` to buttons,
+  selects, and Radix items so Firefox cannot restore their disabled state before
+  hydration. Browser readiness checks must cover fresh loads and reloads with
+  scripts delayed.
 - Add shared styles to `@layer components` in `src/styles/global.css` so the
   Tailwind lint configuration recognizes them.
 - Update relevant Vitest tests and both README files when behavior changes.

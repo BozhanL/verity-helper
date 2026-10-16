@@ -47,7 +47,7 @@ for (const locale of ["en", "zh"] as const) {
       .getByRole("button", { name: messages.resetOutside, exact: true })
       .tap();
     await expect(
-      page.getByRole("heading", { name: messages.incomplete }),
+      page.getByRole("heading", { name: messages.outsideIncomplete }),
     ).toBeVisible();
     await expect(
       page
@@ -114,7 +114,7 @@ for (const locale of ["en", "zh"] as const) {
       ).toBeVisible();
       await page.getByRole("button", { name: messages.soloResetRoom }).tap();
       await expect(
-        page.getByRole("heading", { name: messages.soloIncomplete }),
+        page.getByRole("heading", { name: messages.soloChooseRoom }),
       ).toBeVisible();
     }
     await page

@@ -12,8 +12,10 @@ import {
   type Room,
 } from "../lib/repository";
 import { SHAPES, type Shape } from "../lib/verity";
+import { CONTROL_PROPS } from "./controlProps";
 import ShapeIcon from "./ShapeIcon";
 import ShapePicker from "./ShapePicker";
+import ToolReadiness from "./ToolReadiness";
 import { useHydrated } from "./useHydrated";
 
 function positionText(template: string, plate: Plate, locale: Locale): string {
@@ -67,6 +69,7 @@ function NumberPicker<T extends number>({
       >
         {choices.map((choice) => (
           <RadioGroup.Item
+            {...CONTROL_PROPS}
             key={choice.value}
             value={String(choice.value)}
             className="solo-position"
@@ -104,6 +107,7 @@ function ConductorInputs({
               <h3>{messages.positions[plate]}</h3>
               {inferred === undefined ? (
                 <button
+                  {...CONTROL_PROPS}
                   className="text-button"
                   type="button"
                   disabled={disabled || callouts[plate] === null}
@@ -125,7 +129,7 @@ function ConductorInputs({
                 choices={SHAPES}
                 value={callouts[plate]}
                 locale={locale}
-                names={text.resonances}
+                accessibleNames={text.resonances}
                 disabled={disabled}
                 unavailable={
                   callouts.find(
@@ -152,7 +156,7 @@ function ConductorInputs({
                 }
               >
                 <ShapeIcon shape={inferred} />
-                <figcaption>{text.resonances[inferred]}</figcaption>
+                <figcaption>{messages.shapes[inferred]}</figcaption>
               </figure>
             )}
           </div>
@@ -246,9 +250,7 @@ export default function RepositoryHelper({
     <div className="tool repository-tool">
       <div className="repository-intro">
         <p className="helper-note">{text.orientation}</p>
-        <p className="readiness" role="status">
-          {hydrated ? text.ready : text.loading}
-        </p>
+        <ToolReadiness locale={locale} />
       </div>
       <section className="panel" aria-labelledby="repository-setup-heading">
         <div className="panel-heading">
@@ -257,6 +259,7 @@ export default function RepositoryHelper({
             <h2 id="repository-setup-heading">{text.setup}</h2>
           </div>
           <button
+            {...CONTROL_PROPS}
             className="text-button"
             type="button"
             disabled={!hydrated}
@@ -304,7 +307,11 @@ export default function RepositoryHelper({
           )}
         </section>
       </section>
-      <section className="panel" aria-labelledby="conductors-heading">
+      <section
+        className="panel"
+        id="repository-callouts"
+        aria-labelledby="conductors-heading"
+      >
         <div className="panel-heading">
           <div>
             <span className="panel-number">02</span>
@@ -318,8 +325,19 @@ export default function RepositoryHelper({
           disabled={!hydrated || !setupReady}
           onChange={changeCallout}
         />
+        <details className="resonance-key">
+          <summary>{text.resonanceNames}</summary>
+          <ul>
+            {SHAPES.map((shape) => (
+              <li key={shape}>
+                <ShapeIcon shape={shape} />
+                {text.resonances[shape]}
+              </li>
+            ))}
+          </ul>
+        </details>
       </section>
-      <div className="calculator-inputs">
+      <div className="repository-closing">
         <section className="panel" aria-labelledby="held-heading">
           <div className="panel-heading">
             <div>
@@ -332,7 +350,7 @@ export default function RepositoryHelper({
             choices={SHAPES}
             value={held}
             locale={locale}
-            names={text.resonances}
+            accessibleNames={text.resonances}
             disabled={!setupReady}
             onChange={setHeld}
           />

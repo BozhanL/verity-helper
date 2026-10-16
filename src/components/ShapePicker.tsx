@@ -1,6 +1,7 @@
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import type { ReactElement } from "react";
 import { getMessages, type Locale } from "../i18n/messages";
+import { CONTROL_PROPS } from "./controlProps";
 import ShapeIcon, { type IconShape } from "./ShapeIcon";
 import { useHydrated } from "./useHydrated";
 
@@ -13,6 +14,7 @@ interface Props<T extends IconShape> {
   unavailable?: T | null;
   disabled?: boolean;
   names?: Partial<Record<IconShape, string>>;
+  accessibleNames?: Partial<Record<IconShape, string>>;
   locale: Locale;
   onChange: (shape: T) => void;
 }
@@ -26,6 +28,7 @@ export default function ShapePicker<T extends IconShape>({
   unavailable,
   disabled = false,
   names,
+  accessibleNames,
   locale,
   onChange,
 }: Readonly<Props<T>>): ReactElement {
@@ -51,9 +54,11 @@ export default function ShapePicker<T extends IconShape>({
       >
         {choices.map((shape) => (
           <RadioGroup.Item
+            {...CONTROL_PROPS}
             key={shape}
             value={shape}
             className="shape-choice"
+            aria-label={accessibleNames?.[shape]}
             disabled={shape === unavailable}
           >
             <ShapeIcon shape={shape} />

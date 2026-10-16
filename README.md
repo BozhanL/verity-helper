@@ -13,7 +13,7 @@ Available in English and Simplified Chinese.
 | ----------------------- | ----------------------- | --------------------- |
 | Encounter chooser       | [Home][home-en]         | [首页][home-zh]       |
 | Encounter 3: Repository | [Plate helper][repo-en] | [终点板助手][repo-zh] |
-| Encounter 4: Verity     | [Calculator][calc-en]   | [计算器][calc-zh]     |
+| Verity: Dissection      | [Dissection][calc-en]   | [剖切][calc-zh]       |
 | Verity: Solo room       | [Solo room][solo-en]    | [单人房][solo-zh]     |
 | Verity: Exercise        | [Exercise][exercise-en] | [练习][exercise-zh]   |
 
@@ -30,7 +30,7 @@ Available in English and Simplified Chinese.
 
 Use the header to switch tools without changing the language, or switch
 languages while staying on the same page. Verity’s solo room and exercise are
-grouped under its calculator. The interactive tools require JavaScript.
+grouped under Verity alongside **Dissection**. The interactive tools require JavaScript.
 
 Use **Theme** in the header to choose **Light**, **Dark**, or **System**.
 System follows your device setting. Your choice is saved when browser storage
@@ -38,6 +38,11 @@ is available and applies across tools and languages.
 
 The tools adapt to phone and tablet layouts. Shape and statue choices support
 touch, **Tab**, arrow keys, and **Space**.
+
+Use **Exercise** on a PC to learn dissection, and try the calculators before the
+raid starts. The same interface works during the raid on your phone, with large
+touch targets, compact diagrams, and a visible **Controls ready** status.
+There is no separate learning or in-raid configuration.
 
 ## Repository (encounter 3)
 
@@ -65,6 +70,11 @@ Changing rooms keeps your assigned start plate but clears conductor callouts and
 held resonance. Changing the start plate within the same room keeps those inputs.
 **Reset** clears everything. Switching pages or languages resets the helper.
 
+Conductor positions stay in left–middle–right order on phones. Controls use short
+shape names; open **Resonance names** for their full in-game names. Your current
+resonance and closing instructions follow the callouts, so you can read the
+destination and sender together.
+
 ## Verity calculator (encounter 4)
 
 1. Under **Inside statues**, select the left and middle symbols.
@@ -82,6 +92,11 @@ Each swap diagram shows three boxes in left–middle–right statue order. Excis
 shape marked **1**, then **2**, from the indicated statues. The solids below each
 swap show the resulting room; the last step shows the completed room.
 
+After entering the shapes, use **View result** to jump to the sequence and
+**Edit inputs** to return without clearing your choices. Incorrect combinations
+identify which inputs to recheck. Results update immediately when inputs change;
+the page scrolls only when you choose a link.
+
 ### Solo room
 
 1. Select the left and middle **Inside statues** symbols; the right is automatic.
@@ -91,6 +106,9 @@ swap show the resulting room; the last step shows the completed room.
 Each card identifies a statue by its position and held symbol. **Give** shows
 the shape to send there; **Keep** shows what stays in your room. A shape is
 never assigned to your own statue or a statue holding that shape.
+
+**Nothing to give** and **Nothing to keep** explicitly identify empty actions.
+The same **View result** and **Edit inputs** links are available here.
 
 With two copies of your own symbol, give one to each other player. With two
 copies of another symbol, give one to the eligible other player and keep one.
@@ -112,6 +130,10 @@ The timer stops when you finish and blocks further moves when time runs out.
 It keeps counting down in background tabs. Switching tools or languages resets
 the round.
 
+On phones, the compact shape picker stays near the board while scrolling when
+there is enough screen height. It scrolls normally on short screens and in phone
+landscape. Restart remains available as a secondary action during a round.
+
 ## Local development
 
 The project uses Astro, React, TypeScript, and Tailwind CSS, with Remeda for
@@ -125,6 +147,13 @@ npm run dev
 
 Open the address printed in the terminal, usually <http://localhost:4321>.
 Press **Ctrl+C** to stop the development server.
+
+Astro downloads variable Noto Sans for Latin text and Noto Sans SC for Simplified
+Chinese from Google Fonts, then serves both with the site. The Chinese font
+includes the characters used by the translations and updates automatically when
+they change. Noto Sans is preloaded on all pages; Noto Sans SC is preloaded on
+Chinese pages. The first development or production build needs access to
+Google Fonts.
 
 Checks cover types, lint, formatting, unit tests, and browser tests.
 
@@ -178,6 +207,8 @@ production and PR previews.
 ## Project structure and tests
 
 Astro builds the static pages, and React handles the interactive controls.
+Interactive controls stay disabled until React is ready, including when
+reloading in Firefox.
 
 | Location                               | Contents                       |
 | -------------------------------------- | ------------------------------ |

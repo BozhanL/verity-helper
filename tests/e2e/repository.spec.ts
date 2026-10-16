@@ -46,7 +46,9 @@ for (const locale of ["en", "zh"] as const) {
       messages.positions[0] + " · " + text.conductor,
       text.resonances.triangle,
     );
-    await expect(page.getByRole("img")).toContainText(text.resonances.square);
+    await expect(page.getByRole("img")).toHaveAccessibleName(
+      new RegExp(text.resonances.square),
+    );
     await expect(closing).toContainText(
       text.closeAt.replace("{position}", messages.positions[0]),
     );
@@ -62,7 +64,9 @@ for (const locale of ["en", "zh"] as const) {
       messages.positions[2] + " · " + text.conductor,
       text.resonances.triangle,
     );
-    await expect(page.getByRole("img")).toContainText(text.resonances.square);
+    await expect(page.getByRole("img")).toHaveAccessibleName(
+      new RegExp(text.resonances.square),
+    );
     await choose(page, text.held, text.resonances.circle);
     await expect(closing).toContainText(
       text.stayAt.replace("{position}", messages.positions[1]),

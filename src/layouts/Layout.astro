@@ -1,4 +1,5 @@
 ---
+import { Font } from "astro:assets";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { getMessages, type Locale, type Page } from "@/i18n/messages";
 import "@/styles/global.css";
@@ -31,6 +32,8 @@ const favicon = import.meta.env.BASE_URL + "favicon.svg";
     <meta name="description" content={description} />
     <meta name="theme-color" content={THEME_COLORS.light} />
     <meta name="color-scheme" content="light dark" />
+    <Font cssVariable="--font-noto-sans" preload />
+    <Font cssVariable="--font-noto-sans-sc" preload={locale === "zh"} />
     <script
       is:inline
       define:vars={{

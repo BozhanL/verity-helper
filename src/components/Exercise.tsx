@@ -10,7 +10,9 @@ import {
 } from "../lib/practice";
 import { generatePuzzle, SHAPES, STATUES, type Shape } from "../lib/verity";
 import { InsideBoard, SolidDisplay } from "./Board";
+import { CONTROL_PROPS } from "./controlProps";
 import ShapePicker from "./ShapePicker";
+import ToolReadiness from "./ToolReadiness";
 import { useHydrated } from "./useHydrated";
 
 function RoundStatus({
@@ -72,6 +74,7 @@ export default function Exercise({
 
   return (
     <div className="tool">
+      <ToolReadiness locale={locale} />
       <section className="panel">
         <div className="round-toolbar">
           <div
@@ -89,8 +92,11 @@ export default function Exercise({
             <strong>{state.swaps.length.toString().padStart(2, "0")}</strong>
           </div>
           <button
+            {...CONTROL_PROPS}
             type="button"
-            className="button button--primary"
+            className={
+              "button " + (running ? "button--secondary" : "button--primary")
+            }
             disabled={!hydrated}
             onClick={startRound}
           >
@@ -121,6 +127,7 @@ export default function Exercise({
                 · {messages.shapes[state.pending.shape]}
               </p>
               <button
+                {...CONTROL_PROPS}
                 type="button"
                 className="text-button"
                 onClick={() => {
@@ -161,6 +168,7 @@ export default function Exercise({
                     showDetails={false}
                   />
                   <button
+                    {...CONTROL_PROPS}
                     type="button"
                     className="button button--excise"
                     aria-label={describeExcise(locale, labelSelection)}

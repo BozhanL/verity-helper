@@ -47,3 +47,19 @@ it("uses radio semantics and skips unavailable shapes during keyboard navigation
     true,
   );
 });
+
+it("keeps full resonance names accessible alongside short visible labels", () => {
+  render(
+    <ShapePicker
+      legend="Resonance"
+      choices={SHAPES}
+      value={null}
+      locale="en"
+      accessibleNames={{ circle: "Circle · Spherical" }}
+      onChange={() => undefined}
+    />,
+  );
+  const circle = screen.getByRole("radio", { name: "Circle · Spherical" });
+  expect(circle.textContent).toBe("Circle");
+  expect(screen.getByRole("radio", { name: "Square" })).toBeDefined();
+});

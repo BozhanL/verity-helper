@@ -8,6 +8,7 @@ import {
   THEME_STORAGE_KEY,
   type ThemePreference,
 } from "../lib/theme";
+import { CONTROL_PROPS } from "./controlProps";
 
 export default function ThemeSelect({
   locale,
@@ -47,6 +48,7 @@ export default function ThemeSelect({
     <label className="theme-select">
       <span>{messages.theme}</span>
       <select
+        {...CONTROL_PROPS}
         disabled={!ready}
         value={preference}
         onChange={(event) => {
