@@ -11,6 +11,7 @@ import {
 import { generatePuzzle, SHAPES, STATUES, type Shape } from "../lib/verity";
 import { InsideBoard, SolidDisplay } from "./Board";
 import ShapePicker from "./ShapePicker";
+import ToolReadiness from "./ToolReadiness";
 import { useHydrated } from "./useHydrated";
 
 function RoundStatus({
@@ -72,6 +73,7 @@ export default function Exercise({
 
   return (
     <div className="tool">
+      <ToolReadiness locale={locale} />
       <section className="panel">
         <div className="round-toolbar">
           <div
@@ -90,7 +92,9 @@ export default function Exercise({
           </div>
           <button
             type="button"
-            className="button button--primary"
+            className={
+              "button " + (running ? "button--secondary" : "button--primary")
+            }
             disabled={!hydrated}
             onClick={startRound}
           >

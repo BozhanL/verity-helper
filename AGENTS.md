@@ -86,6 +86,15 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   Generate navigation with Astro's i18n helpers so `BASE_PATH` is respected.
 - Prefer shape diagrams and short labels. Give diagrams localized accessible
   descriptions, and retain accessible names on controls.
+- Keep one adaptive interface: Exercise and pre-raid experimentation are the
+  learning path. Keep mobile conductor positions in left-middle-right columns,
+  with resonance selection and closing guidance visible together after scrolling
+  to the callouts at 390x844. Short shape labels must retain full resonance names
+  accessibly and in the expandable reference.
+- Keep primary controls at least 48x48 CSS pixels and other controls at least
+  44x44. Result/edit links scroll only on explicit activation and preserve inputs.
+  Exercise's sticky picker must fit within a quarter of the portrait viewport;
+  use normal flow on short screens and keep focused board controls unobscured.
 - Solo-room distribution uses direct transfers: never give to your own statue
   or a statue holding the given shape. For two identical shapes different from
   your symbol, give one to the eligible teammate and keep one. Keep these rules

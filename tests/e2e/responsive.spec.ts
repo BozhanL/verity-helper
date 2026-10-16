@@ -25,12 +25,17 @@ const VIEWPORTS = [
 
 async function assertTouchTargets(page: Page): Promise<void> {
   const controls = page.locator(
-    "button:visible, select:visible, .page-navigation a, .language-navigation a, .reference-links a, .encounter-card, .brand",
+    "button:visible, select:visible, summary:visible, .page-navigation a, .language-navigation a:visible, .reference-links a, .result-links a, .result-actions a, .encounter-card, .brand",
   );
   const targets = await controls.evaluateAll((elements) =>
     elements.map((element) => {
       const { width, height } = element.getBoundingClientRect();
-      return { width, height, label: element.textContent.trim() || "Control" };
+      return {
+        width,
+        height,
+        label: element.textContent.trim() || "Control",
+        primary: element.matches('[role="radio"], .button'),
+      };
     }),
   );
   for (const target of targets) {
@@ -38,11 +43,11 @@ async function assertTouchTargets(page: Page): Promise<void> {
     expect(
       Number(target.width.toFixed(3)),
       target.label,
-    ).toBeGreaterThanOrEqual(44);
+    ).toBeGreaterThanOrEqual(target.primary ? 48 : 44);
     expect(
       Number(target.height.toFixed(3)),
       target.label,
-    ).toBeGreaterThanOrEqual(44);
+    ).toBeGreaterThanOrEqual(target.primary ? 48 : 44);
   }
 }
 

@@ -105,6 +105,11 @@ describe("solo-room calculator", () => {
         result.getByRole("img", { name: "You; Right: Square; " + keep }),
       ).toBeDefined();
       expect(result.getAllByRole("img")).toHaveLength(3);
+      if (keep === "Nothing to keep") {
+        expect(result.getByText("Nothing to keep")).toBeDefined();
+      } else {
+        expect(result.getByText("Nothing to give")).toBeDefined();
+      }
     },
   );
 

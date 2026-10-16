@@ -124,7 +124,7 @@ test.describe("without JavaScript", () => {
     await expect(page.getByRole("combobox", { name: "Theme" })).toBeDisabled();
     await page
       .getByRole("navigation", { name: "Main navigation" })
-      .getByRole("link", { name: "4 · Verity calculator" })
+      .getByRole("link", { name: "4 · Verity" })
       .click();
     await expect(page.getByRole("radio").first()).toBeDisabled();
     const warning = page.locator(".noscript-message");

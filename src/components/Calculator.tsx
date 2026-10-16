@@ -15,6 +15,8 @@ import InsideInputs from "./InsideInputs";
 import Sequence from "./Sequence";
 import ShapeIcon from "./ShapeIcon";
 import ShapePicker from "./ShapePicker";
+import ToolReadiness from "./ToolReadiness";
+import { useHydrated } from "./useHydrated";
 
 interface ResultProps {
   locale: Locale;
@@ -36,7 +38,9 @@ function Result({
     return (
       <div className="empty-state">
         <ShapeIcon shape="prism" />
-        <h3>{messages.incomplete}</h3>
+        <h3>
+          {inside === null ? messages.incomplete : messages.outsideIncomplete}
+        </h3>
       </div>
     );
   }
@@ -45,6 +49,7 @@ function Result({
     return (
       <div className="feedback feedback--error" role="alert">
         <h3>{messages.invalid}</h3>
+        <p id="outside-error">{messages.outsideInvalid}</p>
         <ShapeBudget locale={locale} />
       </div>
     );
@@ -78,6 +83,7 @@ export default function Calculator({
   locale,
 }: Readonly<{ locale: Locale }>): ReactElement {
   const messages = getMessages(locale);
+  const hydrated = useHydrated();
   const [leftShape, setLeftShape] = useState<Shape | null>(null);
   const [middleShape, setMiddleShape] = useState<Shape | null>(null);
   const [leftSolid, setLeftSolid] = useState<Solid | null>(null);
@@ -108,7 +114,8 @@ export default function Calculator({
 
   return (
     <div className="tool">
-      <div className="calculator-inputs">
+      <ToolReadiness locale={locale} />
+      <div className="calculator-inputs" id="dissection-inputs" tabIndex={-1}>
         <section className="panel">
           <div className="panel-heading">
             <div>
@@ -119,6 +126,7 @@ export default function Calculator({
               className="text-button"
               type="button"
               aria-label={messages.resetInside}
+              disabled={!hydrated}
               onClick={resetInside}
             >
               {messages.resetShort}
@@ -132,7 +140,17 @@ export default function Calculator({
             onMiddleChange={setMiddleShape}
           />
         </section>
-        <section className="panel">
+        <section
+          className="panel"
+          aria-describedby={
+            inside !== null &&
+            leftSolid !== null &&
+            middleSolid !== null &&
+            outside === null
+              ? "outside-error"
+              : undefined
+          }
+        >
           <div className="panel-heading">
             <div>
               <span className="panel-number">02</span>
@@ -142,6 +160,7 @@ export default function Calculator({
               className="text-button"
               type="button"
               aria-label={messages.resetOutside}
+              disabled={!hydrated}
               onClick={resetOutside}
             >
               {messages.resetShort}
@@ -185,27 +204,41 @@ export default function Calculator({
           </div>
         </section>
       </div>
+      {inside !== null && leftSolid !== null && middleSolid !== null && (
+        <div className="result-links">
+          <a href="#dissection-result">{messages.viewResult} ↓</a>
+        </div>
+      )}
       <section
         className="panel solution-panel"
+        id="dissection-result"
+        tabIndex={-1}
         aria-live="polite"
         aria-atomic="false"
+        aria-labelledby="dissection-heading"
       >
         <div className="panel-heading">
           <div>
             <span className="panel-number">03</span>
-            <h2>{messages.solution}</h2>
+            <h2 id="dissection-heading">{messages.solution}</h2>
           </div>
-          <button
-            className="text-button"
-            type="button"
-            aria-label={messages.reset}
-            onClick={() => {
-              resetInside();
-              resetOutside();
-            }}
-          >
-            {messages.resetShort}
-          </button>
+          <div className="result-actions">
+            <a className="text-button" href="#dissection-inputs">
+              {messages.editInputs}
+            </a>
+            <button
+              className="text-button"
+              type="button"
+              aria-label={messages.reset}
+              disabled={!hydrated}
+              onClick={() => {
+                resetInside();
+                resetOutside();
+              }}
+            >
+              {messages.resetShort}
+            </button>
+          </div>
         </div>
         <Result
           locale={locale}

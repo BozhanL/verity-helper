@@ -35,7 +35,9 @@ describe("calculator controls", () => {
       3,
     );
     fireEvent.click(screen.getByRole("button", { name: "Reset selections" }));
-    expect(screen.getByText("Select your room")).toBeDefined();
+    expect(
+      screen.getByText("Choose the Left and Middle inside symbols."),
+    ).toBeDefined();
     expect(screen.queryAllByRole("radio", { checked: true })).toHaveLength(0);
   });
 

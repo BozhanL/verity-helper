@@ -20,6 +20,9 @@ export async function openPage(page: Page, path: string): Promise<void> {
 
 export async function openTool(page: Page, path: string): Promise<void> {
   await openPage(page, path);
+  await expect(page.locator(".readiness")).toHaveText(
+    /Controls ready\.|控件已就绪。/u,
+  );
   await expect(page.getByRole("radio").first()).toBeEnabled();
 }
 

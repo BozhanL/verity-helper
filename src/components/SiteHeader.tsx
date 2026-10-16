@@ -19,7 +19,7 @@ export default function SiteHeader({
   const encounter = getEncounter(page);
   return (
     <header className="site-header">
-      <a href={links.home} className="brand">
+      <a href={links.home} className="brand" aria-label={messages.brand}>
         <span className="brand-icon">
           <ShapeIcon shape="prism" />
         </span>

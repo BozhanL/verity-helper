@@ -10,6 +10,7 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     color-scheme: light dark;
+    scroll-padding-bottom: 16px;
     --text: light-dark(#27283b, #eeedf5);
     --page-background: light-dark(#f6f7fb, #151624);
     --muted: light-dark(#64677e, #b3b0c7);
@@ -92,6 +93,9 @@
   select {
     outline-offset: 5px;
   }
+  [id] {
+    scroll-margin-top: 16px;
+  }
   :focus-visible {
     outline: 3px solid var(--accent);
   }
@@ -135,7 +139,7 @@
   .site-header {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 25px 48px;
+    padding: 16px 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -169,7 +173,7 @@
   }
   .brand small {
     display: block;
-    font-size: 10px;
+    font-size: 12px;
     color: var(--muted);
     letter-spacing: 0.6px;
   }
@@ -185,7 +189,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 9px 23px;
+    padding: 8px 18px;
     border-radius: 7px;
     font-size: 13px;
     font-weight: 650;
@@ -201,14 +205,14 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
-    gap: 12px;
+    gap: 8px;
     min-width: 0;
   }
   .theme-select {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 11px;
+    font-size: 12px;
     color: var(--muted);
   }
   .theme-select select {
@@ -247,17 +251,17 @@
   main {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 0 48px;
+    padding: 0 32px;
   }
   .hero {
-    padding: 50px 0 35px;
+    padding: 28px 0 24px;
   }
   .eyebrow {
     font-size: 10px;
     font-weight: 750;
     letter-spacing: 2px;
     color: var(--accent);
-    margin-bottom: 16px;
+    margin-bottom: 10px;
   }
   .hero h1 {
     font-size: clamp(30px, 4vw, 47px);
@@ -267,18 +271,19 @@
   }
   .tool {
     display: grid;
-    gap: 22px;
+    gap: 16px;
   }
-  .calculator-inputs {
+  .calculator-inputs,
+  .repository-closing {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 22px;
+    gap: 16px;
   }
   .panel {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 15px;
-    padding: 25px;
+    padding: 20px;
     box-shadow: 0 3px 15px var(--panel-shadow);
   }
   .panel-heading {
@@ -312,14 +317,14 @@
   .calculator-inputs .panel-heading,
   .solution-panel > .panel-heading,
   .exercise-layout > .panel > .panel-heading {
-    margin-bottom: 22px;
+    margin-bottom: 12px;
   }
   .shape-budget {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 22px;
-    margin: 18px 0;
+    margin: 12px 0;
     color: var(--muted);
     font-size: 12px;
   }
@@ -338,9 +343,36 @@
     min-width: 44px;
     padding: 6px 4px;
     color: var(--accent);
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     text-align: left;
+  }
+  a.text-button,
+  .result-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .result-links {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -8px;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 650;
+  }
+  .result-links a {
+    padding-inline: 12px;
+    border: 1px solid var(--accent-border);
+    border-radius: 8px;
+    background: var(--accent-light);
+  }
+  .result-links a:hover {
+    text-decoration: underline;
+  }
+  .result-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
   .statue-grid {
     display: grid;
@@ -356,10 +388,10 @@
   .shape-picker legend,
   .position-label {
     display: block;
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 650;
     line-height: 1.6;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     color: var(--muted);
   }
   .shape-picker legend {
@@ -379,16 +411,17 @@
     border: 1px solid var(--line);
     background: var(--surface-subtle);
     border-radius: 9px;
-    padding: 10px 5px;
+    padding: 8px 4px;
     display: flex;
     align-items: center;
     gap: 8px;
     justify-content: center;
     color: var(--text-secondary);
     min-height: 54px;
+    min-width: 48px;
   }
   .shape-choice span {
-    font-size: 11px;
+    font-size: 14px;
   }
   .shape-choice .shape-icon {
     width: 25px;
@@ -428,7 +461,7 @@
   }
   .inferred-label {
     margin: 2px 0 18px;
-    font-size: 10px;
+    font-size: 12px;
     color: var(--muted);
   }
   .diagram-placeholder {
@@ -478,7 +511,7 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
-    font-size: 9px;
+    font-size: 12px;
     color: var(--muted);
   }
   .shape-composition .shape-icon {
@@ -488,10 +521,10 @@
   }
 
   .solution-panel {
-    padding: 26px;
+    padding: 20px;
   }
   .empty-state {
-    padding: 35px 10px 45px;
+    padding: 20px 8px;
     text-align: center;
   }
   .empty-state > .shape-icon {
@@ -525,7 +558,7 @@
   }
   .sequence {
     display: grid;
-    gap: 15px;
+    gap: 12px;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -534,7 +567,7 @@
   }
   .sequence > li {
     border: 1px solid var(--line);
-    padding: 19px;
+    padding: 14px;
     border-radius: 10px;
     min-width: 0;
   }
@@ -542,7 +575,7 @@
     display: flex;
     gap: 9px;
     align-items: center;
-    margin-bottom: 18px;
+    margin-bottom: 10px;
   }
   .step-number {
     width: 22px;
@@ -648,19 +681,19 @@
     height: 31px;
   }
   .after-swap {
-    margin-top: 18px;
-    padding-top: 14px;
+    margin-top: 10px;
+    padding-top: 10px;
     border-top: 1px solid var(--line);
   }
   .after-swap > span {
-    font-size: 10px;
+    font-size: 12px;
     color: var(--muted);
   }
   .mini-board {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
-    margin-top: 13px;
+    margin-top: 8px;
   }
   .mini-board > span {
     display: flex;
@@ -669,13 +702,13 @@
     gap: 7px;
     text-align: center;
     color: var(--muted);
-    font-size: 9px;
+    font-size: 12px;
     line-height: 1.6;
   }
   .mini-board .shape-icon {
     color: var(--accent);
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
   }
   .goal-board {
     display: grid;
@@ -723,6 +756,11 @@
     font-size: 17px;
     margin-bottom: 9px;
   }
+  .feedback p {
+    margin-block: 8px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
   .feedback--error {
     color: var(--error);
     background: var(--error-surface);
@@ -735,7 +773,7 @@
   .round-toolbar {
     display: flex;
     align-items: center;
-    gap: 50px;
+    gap: 24px;
   }
   .timer,
   .round-metric {
@@ -745,7 +783,7 @@
   }
   .timer > span,
   .round-metric > span {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--muted);
   }
   .timer strong {
@@ -770,9 +808,11 @@
     border-radius: 8px;
     border: 1px solid transparent;
     padding: 11px 18px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 650;
     line-height: 1.5;
+    min-width: 48px;
+    min-height: 48px;
   }
   .button--primary {
     color: var(--on-accent);
@@ -780,6 +820,14 @@
   }
   .button--primary:hover {
     background: var(--accent-hover);
+  }
+  .button--secondary {
+    color: var(--accent);
+    background: var(--surface);
+    border-color: var(--accent-border);
+  }
+  .button--secondary:hover:enabled {
+    background: var(--accent-light);
   }
   .button--excise {
     background: var(--excise-surface);
@@ -796,7 +844,7 @@
     display: block;
     width: 100%;
     height: 4px;
-    margin: 22px 0;
+    margin: 12px 0;
     border: 0;
     border-radius: 10px;
     accent-color: var(--accent);
@@ -836,7 +884,7 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) 270px;
     grid-template-areas: "board controls";
-    gap: 22px;
+    gap: 16px;
     align-items: start;
   }
   .exercise-layout > section {
@@ -869,14 +917,14 @@
     height: 80px;
   }
   .inside-section {
-    margin-top: 30px;
+    margin-top: 18px;
     border-top: 1px solid var(--line);
-    padding-top: 22px;
+    padding-top: 16px;
   }
   .inside-section > h3 {
     color: var(--muted);
     font-size: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
   }
   .inside-board {
     gap: 12px;
@@ -916,17 +964,17 @@
     font-size: 12px;
   }
   .selection-feedback {
-    padding: 20px 0;
-    margin: 17px 0;
-    border-block: 1px solid var(--line);
+    padding: 12px 0 0;
+    margin: 12px 0 0;
+    border-top: 1px solid var(--line);
   }
   .selection-feedback p {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--accent);
     line-height: 1.6;
   }
   .selection-feedback .text-button {
-    margin-top: 12px;
+    margin-top: 4px;
   }
   .rule-note {
     display: flex;
@@ -979,8 +1027,8 @@
   }
 
   .solo-identity {
-    margin-top: 24px;
-    padding-top: 18px;
+    margin-top: 16px;
+    padding-top: 12px;
     border-top: 1px solid var(--line);
   }
   .solo-positions,
@@ -1004,9 +1052,10 @@
     border-radius: 9px;
     background: var(--surface-subtle);
     color: var(--muted);
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 650;
     min-width: 0;
+    min-height: 48px;
   }
   .solo-position .shape-icon {
     width: 26px;
@@ -1023,7 +1072,7 @@
   }
   .solo-recipient {
     margin: 0;
-    padding: 18px 8px;
+    padding: 12px 8px;
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -1052,7 +1101,7 @@
     padding: 2px 6px;
     color: var(--accent);
     background: var(--accent-light);
-    font-size: 9px;
+    font-size: 12px;
     line-height: 1.2;
     font-weight: 700;
   }
@@ -1061,16 +1110,16 @@
     justify-items: center;
     gap: 6px;
     color: var(--muted);
-    font-size: 10px;
+    font-size: 14px;
   }
   .solo-statue-symbol .shape-icon {
     width: 32px;
     height: 32px;
   }
   .solo-action-label {
-    margin: 18px 0 8px;
+    margin: 12px 0 8px;
     color: var(--accent);
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 650;
   }
   .solo-gift {
@@ -1127,7 +1176,7 @@
   .encounter-card p,
   .helper-note {
     color: var(--muted);
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.7;
   }
   .encounter-tools {
@@ -1155,11 +1204,11 @@
   }
   .readiness {
     color: var(--muted);
-    font-size: 11px;
+    font-size: 12px;
     align-self: center;
   }
   .repository-tool > .panel > .panel-heading {
-    margin-bottom: 20px;
+    margin-bottom: 12px;
   }
   .plate-options {
     display: grid;
@@ -1167,15 +1216,15 @@
     gap: 10px;
   }
   .receive-guidance {
-    margin-top: 24px;
+    margin-top: 16px;
     border-top: 1px solid var(--line);
-    padding-top: 22px;
+    padding-top: 12px;
   }
   .plate-guidance {
     display: grid;
-    gap: 12px;
-    margin-top: 16px;
-    padding: 20px;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 14px;
     border-radius: 10px;
     background: var(--accent-light);
     color: var(--accent);
@@ -1200,7 +1249,7 @@
   }
   .plate-guidance--closing h3,
   .plate-guidance--closing p {
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1.4;
     font-weight: 650;
   }
@@ -1208,8 +1257,16 @@
     width: 36px;
     height: 36px;
   }
+  .plate-guidance--closing {
+    grid-template-columns: 32px minmax(0, 1fr);
+  }
+  .plate-guidance--closing > .shape-icon {
+    width: 28px;
+    height: 28px;
+    grid-row: 1 / 3;
+  }
   .repository-tool .helper-note {
-    margin-block: 12px;
+    margin-block: 8px;
   }
   .repository-intro .helper-note {
     margin: 0;
@@ -1217,12 +1274,12 @@
   .conductor-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
-    margin-top: 20px;
+    gap: 12px;
+    margin-top: 12px;
   }
   .conductor-card {
     min-width: 0;
-    padding: 16px;
+    padding: 12px;
     border: 1px solid var(--line);
     border-radius: 11px;
   }
@@ -1231,7 +1288,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    margin-bottom: 14px;
+    margin-bottom: 8px;
     min-height: 44px;
   }
   .conductor-heading .inferred-label {
@@ -1244,18 +1301,26 @@
     flex-shrink: 0;
   }
   .conductor-grid .shape-choice {
-    flex-direction: row;
-    justify-content: flex-start;
-    text-align: left;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 4px;
+  }
+  .conductor-card .shape-picker legend {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
   }
   .inferred-resonance {
     margin: 0;
     display: grid;
     justify-items: center;
     align-content: center;
-    gap: 16px;
-    padding: 24px 12px;
-    min-height: 150px;
+    gap: 12px;
+    padding: 12px 4px;
+    min-height: 184px;
     color: var(--accent);
     background: var(--accent-light);
     border-radius: 9px;
@@ -1265,6 +1330,36 @@
   .inferred-resonance .shape-icon {
     width: 48px;
     height: 48px;
+  }
+  .resonance-key {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .resonance-key summary {
+    min-height: 44px;
+    padding-block: 12px;
+    cursor: pointer;
+    color: var(--accent);
+  }
+  .resonance-key ul {
+    display: grid;
+    gap: 8px;
+    list-style: none;
+    margin: 4px 0;
+    padding: 0;
+  }
+  .resonance-key li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .resonance-key .shape-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .repository-closing .shape-picker .shape-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   @media (max-width: 1050px) {
@@ -1294,20 +1389,52 @@
     main {
       padding-inline: 30px;
     }
-    .calculator-inputs {
-      grid-template-columns: 1fr;
-    }
     .shape-options:not(.shape-options--solids) {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: 1fr;
     }
     .shape-choice {
       flex-direction: column;
       gap: 5px;
     }
     .shape-options--solids {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      grid-template-rows: repeat(2, minmax(0, 1fr));
-      grid-auto-flow: row;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(3, minmax(0, 1fr));
+      grid-auto-flow: column;
+    }
+    .statue-grid--inputs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .statue-grid--inputs .inferred-statue {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      justify-content: center;
+      gap: 8px;
+      border-left: 0;
+      border-top: 1px dashed var(--line);
+      padding: 10px 0 0;
+    }
+    .statue-grid--inputs .inferred-label {
+      margin: 0;
+    }
+    .statue-grid--inputs .inferred-shape {
+      display: flex;
+      gap: 8px;
+      margin: 0;
+    }
+    .statue-grid--inputs .inferred-shape .shape-icon {
+      width: 28px;
+      height: 28px;
+    }
+    .statue-grid--inputs .solid-display {
+      flex: 1;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+    .statue-grid--inputs .solid-icon {
+      width: 36px;
+      height: 36px;
     }
     .exercise-controls .shape-options {
       grid-template-columns: 1fr;
@@ -1322,72 +1449,159 @@
 
   @media (max-width: 760px) {
     .encounter-grid,
-    .conductor-grid {
+    .calculator-inputs,
+    .repository-closing {
       grid-template-columns: minmax(0, 1fr);
     }
     .site-header {
-      padding: 19px 20px;
-      flex-wrap: wrap;
-      gap: 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      padding: 10px 12px;
+      gap: 8px;
     }
     .brand {
-      margin-right: auto;
+      margin: 0;
+      gap: 6px;
+    }
+    .brand strong {
+      font-size: 16px;
+      letter-spacing: -0.4px;
+    }
+    .brand small {
+      display: none;
+    }
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+    }
+    .site-navigation {
+      grid-column: 1 / -1;
+      gap: 4px;
     }
     .header-controls {
       order: 2;
+      flex-wrap: nowrap;
+      gap: 4px;
+    }
+    .language-navigation {
+      gap: 0;
+    }
+    .language-navigation [aria-current],
+    .language-navigation > span {
+      display: none;
+    }
+    .theme-select > span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .theme-select select {
+      min-width: 84px;
+      padding-inline: 6px;
     }
     .page-navigation {
       order: 3;
       width: 100%;
     }
     .page-navigation a {
-      padding-inline: 10px;
+      padding-inline: 8px;
       flex: 1;
       text-align: center;
     }
     main {
-      padding-inline: 20px;
+      padding-inline: 12px;
     }
     .hero {
-      padding-top: 34px;
-      padding-bottom: 28px;
+      padding-top: 18px;
+      padding-bottom: 16px;
     }
     .hero h1 {
       letter-spacing: -1px;
     }
     .panel {
-      padding: 20px;
+      padding: 16px;
+    }
+    .conductor-grid {
+      gap: 8px;
+    }
+    .conductor-card {
+      padding: 0;
+      border: 0;
+    }
+    .conductor-heading {
+      flex-direction: column;
+      gap: 0;
+    }
+    .conductor-heading .inferred-label {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+    }
+    .conductor-card .shape-choice {
+      min-height: 58px;
+      padding: 4px 2px;
+    }
+    .conductor-card .shape-choice .shape-icon {
+      width: 22px;
+      height: 22px;
+    }
+    .repository-closing .shape-choice {
+      flex-direction: column;
+      gap: 4px;
+    }
+    .repository-closing .shape-picker legend {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
     }
     .exercise-layout {
       grid-template-columns: minmax(0, 1fr);
       grid-template-areas: "controls" "board";
-      gap: 18px;
+      gap: 12px;
     }
     .exercise-controls {
       grid-row: 1;
       position: sticky;
-      top: 12px;
+      top: 8px;
       z-index: 2;
       box-shadow: 0 4px 18px var(--sticky-shadow);
     }
     .exercise-controls .selection-feedback {
-      margin-block: 12px;
-      padding-block: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 8px;
+      padding-top: 8px;
+    }
+    .exercise-controls .shape-picker legend {
+      margin-bottom: 8px;
     }
     .exercise-controls .shape-options {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
     .exercise-controls .shape-choice {
-      padding: 12px 3px;
+      padding: 6px 3px;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px;
     }
     .exercise-controls .shape-choice span {
-      font-size: 11px;
+      font-size: 14px;
     }
-    .selection-feedback {
-      margin: 16px 0;
-      padding: 16px 0;
+    .exercise-controls .selection-feedback .text-button {
+      margin: 0;
+      flex-shrink: 0;
+      font-size: 12px;
+    }
+    .exercise-controls {
+      padding: 12px;
+    }
+    .button--excise {
+      scroll-margin-top: calc(25vh + 16px);
     }
     .shape-options--solids {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1395,11 +1609,11 @@
       grid-auto-flow: column;
     }
     .round-toolbar {
-      gap: 25px;
+      gap: 12px;
       flex-wrap: wrap;
     }
     .round-toolbar > button {
-      font-size: 11px;
+      font-size: 14px;
     }
     .rule-note {
       display: block;
@@ -1416,50 +1630,11 @@
   }
 
   @media (max-width: 420px) {
-    .site-header {
-      gap: 12px;
-    }
-    .header-controls {
-      width: 100%;
-      justify-content: space-between;
-    }
-    .statue-grid--inputs {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .statue-grid--inputs .inferred-statue {
-      grid-column: 1 / -1;
-      flex-direction: row;
-      justify-content: center;
-      gap: 12px;
-      border-left: 0;
-      border-top: 1px dashed var(--line);
-      padding: 12px 0 0;
-    }
-    .statue-grid--inputs .inferred-label {
-      margin: 0;
-    }
-    .statue-grid--inputs .inferred-shape {
-      display: flex;
-      gap: 8px;
-      margin: 0;
-    }
-    .statue-grid--inputs .inferred-shape .shape-icon {
-      width: 32px;
-      height: 32px;
-    }
-    .statue-grid--inputs .solid-display {
-      flex: 1;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-    }
-    .statue-grid--inputs .solid-icon {
-      width: 42px;
-      height: 42px;
+    .brand-icon {
+      display: none;
     }
     .panel {
-      padding: 17px;
+      padding: 14px;
     }
     .statue-grid {
       gap: 9px;
@@ -1471,7 +1646,7 @@
       flex-direction: row;
     }
     .shape-options--solids .shape-choice span {
-      font-size: 11px;
+      font-size: 14px;
     }
     .panel-heading {
       align-items: start;
@@ -1479,8 +1654,11 @@
     h2 {
       font-size: 14px;
     }
-    .panel-heading .text-button {
-      max-width: 75px;
+    .solution-panel > .panel-heading {
+      flex-wrap: wrap;
+    }
+    .result-actions {
+      width: 100%;
     }
     .sequence {
       grid-template-columns: minmax(0, 1fr);
@@ -1504,14 +1682,15 @@
       font-size: 12px;
     }
     .round-toolbar {
-      gap: 20px;
+      gap: 12px;
     }
     .round-toolbar > button {
-      width: 100%;
-      margin: 0;
+      margin-left: auto;
+      padding-inline: 10px;
+      font-size: 12px;
     }
     .timer strong {
-      font-size: 34px;
+      font-size: 30px;
     }
     .practice-statue {
       gap: 13px;
@@ -1522,7 +1701,7 @@
       height: 58px;
     }
     .button--excise {
-      min-width: 0;
+      min-width: 48px;
       width: 100%;
       padding: 8px 2px;
       font-size: 12px;
@@ -1533,9 +1712,12 @@
     .exercise-controls .shape-choice {
       flex-direction: column;
     }
+    .exercise-controls {
+      padding: 12px;
+    }
   }
 
-  @media (max-width: 760px) and (max-height: 599px) {
+  @media (max-width: 760px) and (max-height: 720px) {
     .exercise-controls {
       position: static;
     }

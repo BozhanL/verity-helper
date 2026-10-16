@@ -13,6 +13,7 @@ interface Props<T extends IconShape> {
   unavailable?: T | null;
   disabled?: boolean;
   names?: Partial<Record<IconShape, string>>;
+  accessibleNames?: Partial<Record<IconShape, string>>;
   locale: Locale;
   onChange: (shape: T) => void;
 }
@@ -26,6 +27,7 @@ export default function ShapePicker<T extends IconShape>({
   unavailable,
   disabled = false,
   names,
+  accessibleNames,
   locale,
   onChange,
 }: Readonly<Props<T>>): ReactElement {
@@ -54,6 +56,7 @@ export default function ShapePicker<T extends IconShape>({
             key={shape}
             value={shape}
             className="shape-choice"
+            aria-label={accessibleNames?.[shape]}
             disabled={shape === unavailable}
           >
             <ShapeIcon shape={shape} />
