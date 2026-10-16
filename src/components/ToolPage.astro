@@ -3,11 +3,14 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { getMessages, type Locale, type Page } from "../i18n/messages";
 import Layout from "../layouts/Layout.astro";
 import { SHAPES } from "../lib/verity";
+import { getEncounter, PAGE_PATHS } from "../lib/navigation";
 import { GoalBoard } from "./Board";
 import Calculator from "./Calculator";
 import Exercise from "./Exercise";
 import SiteHeader from "./SiteHeader";
 import SoloCalculator from "./SoloCalculator";
+import RepositoryHelper from "./RepositoryHelper";
+import ShapeIcon from "./ShapeIcon";
 
 interface Props {
   locale: Locale;
@@ -17,6 +20,16 @@ interface Props {
 const { locale, page } = Astro.props;
 const messages = getMessages(locale);
 const content = {
+  home: {
+    title: messages.homeTitle,
+    heading: messages.homeTitle,
+    description: messages.homeDescription,
+  },
+  repository: {
+    title: messages.repositoryTool.title,
+    heading: messages.repositoryTool.title,
+    description: messages.repositoryTool.description,
+  },
   calculator: {
     title: messages.calculator,
     heading: messages.calculatorTitle,
@@ -33,11 +46,20 @@ const content = {
     description: messages.exerciseDescription,
   },
 }[page];
-const path = page === "calculator" ? undefined : page;
+const path = PAGE_PATHS[page];
+const encounter = getEncounter(page);
+const encounterEyebrows = {
+  repository: messages.repositoryTool.encounter,
+  verity: messages.encounter,
+};
+const eyebrow =
+  encounter === null ? messages.siteEyebrow : encounterEyebrows[encounter];
 const links = {
-  calculator: getRelativeLocaleUrl(locale),
-  solo: getRelativeLocaleUrl(locale, "solo"),
-  exercise: getRelativeLocaleUrl(locale, "exercise"),
+  home: getRelativeLocaleUrl(locale, PAGE_PATHS.home),
+  repository: getRelativeLocaleUrl(locale, PAGE_PATHS.repository),
+  calculator: getRelativeLocaleUrl(locale, PAGE_PATHS.calculator),
+  solo: getRelativeLocaleUrl(locale, PAGE_PATHS.solo),
+  exercise: getRelativeLocaleUrl(locale, PAGE_PATHS.exercise),
   en: getRelativeLocaleUrl("en", path),
   zh: getRelativeLocaleUrl("zh", path),
 };
@@ -52,9 +74,31 @@ const links = {
   <SiteHeader locale={locale} page={page} links={links} client:load />
   <main id="main">
     <header class="hero">
-      <p class="eyebrow">{messages.encounter}</p>
+      <p class="eyebrow">{eyebrow}</p>
       <h1>{content.heading}</h1>
     </header>
+    {page === "home" && (
+      <div class="encounter-grid">
+        <a class="panel encounter-card" href={links.repository}>
+          <span class="encounter-icon">
+            <ShapeIcon shape="square" />
+          </span>
+          <h2>{messages.repositoryEncounter}</h2>
+          <p>{messages.repositoryTool.description}</p>
+        </a>
+        <a class="panel encounter-card" href={links.calculator}>
+          <span class="encounter-icon">
+            <ShapeIcon shape="prism" />
+          </span>
+          <h2>{messages.verityEncounter}</h2>
+          <p>{messages.verityDescription}</p>
+          <span class="encounter-tools">
+            {messages.calculator} · {messages.solo} · {messages.exercise}
+          </span>
+        </a>
+      </div>
+    )}
+    {page === "repository" && <RepositoryHelper locale={locale} client:load />}
     {page === "calculator" && <Calculator locale={locale} client:load />}
     {page === "solo" && <SoloCalculator locale={locale} client:load />}
     {page === "exercise" && <Exercise locale={locale} client:load />}
@@ -68,6 +112,11 @@ const links = {
   <footer class="site-footer">
     <p>{messages.footer}</p>
     <nav class="reference-links" aria-label={messages.references}>
+      {page === "repository" && (
+        <a href="https://www.destructoid.com/destiny-2-salvations-edge-third-encounter-raid-guide-repository/">
+          {messages.repositoryTool.reference}
+        </a>
+      )}
       <a href="https://yugnar.com/verityCalculator/">
         {messages.referenceCalculator}
       </a>

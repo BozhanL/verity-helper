@@ -1,28 +1,36 @@
-# Verity Helper
+# Salvation’s Edge Helper
 
 [简体中文](README.zh-CN.md)
 
-Calculators and a practice tool for the Verity encounter of Destiny 2’s
-Salvation’s Edge raid. Plan outside dissection or solo-room shape transfers.
+Helpers for encounters 3 and 4 of Destiny 2’s Salvation’s Edge raid.
+Find Repository plates and resonance destinations, or use Verity’s dissection
+calculator, solo-room calculator, and practice tool.
 Available in English and Simplified Chinese.
 
 ## Use the tools
 
-| Tool       | English                 | Simplified Chinese  |
-| ---------- | ----------------------- | ------------------- |
-| Calculator | [Calculator][calc-en]   | [计算器][calc-zh]   |
-| Solo room  | [Solo room][solo-en]    | [单人房][solo-zh]   |
-| Exercise   | [Exercise][exercise-en] | [练习][exercise-zh] |
+| Page                    | English                 | Simplified Chinese    |
+| ----------------------- | ----------------------- | --------------------- |
+| Encounter chooser       | [Home][home-en]         | [首页][home-zh]       |
+| Encounter 3: Repository | [Plate helper][repo-en] | [终点板助手][repo-zh] |
+| Encounter 4: Verity     | [Calculator][calc-en]   | [计算器][calc-zh]     |
+| Verity: Solo room       | [Solo room][solo-en]    | [单人房][solo-zh]     |
+| Verity: Exercise        | [Exercise][exercise-en] | [练习][exercise-zh]   |
 
-[calc-en]: https://verity.903684.xyz/
-[calc-zh]: https://verity.903684.xyz/zh/
-[solo-en]: https://verity.903684.xyz/solo/
-[solo-zh]: https://verity.903684.xyz/zh/solo/
-[exercise-en]: https://verity.903684.xyz/exercise/
-[exercise-zh]: https://verity.903684.xyz/zh/exercise/
+[home-en]: https://verity.903684.xyz/
+[home-zh]: https://verity.903684.xyz/zh/
+[repo-en]: https://verity.903684.xyz/repository/
+[repo-zh]: https://verity.903684.xyz/zh/repository/
+[calc-en]: https://verity.903684.xyz/verity/
+[calc-zh]: https://verity.903684.xyz/zh/verity/
+[solo-en]: https://verity.903684.xyz/verity/solo/
+[solo-zh]: https://verity.903684.xyz/zh/verity/solo/
+[exercise-en]: https://verity.903684.xyz/verity/exercise/
+[exercise-zh]: https://verity.903684.xyz/zh/verity/exercise/
 
 Use the header to switch tools without changing the language, or switch
-languages while staying on the same tool. All three tools require JavaScript.
+languages while staying on the same page. Verity’s solo room and exercise are
+grouped under its calculator. The interactive tools require JavaScript.
 
 Use **Theme** in the header to choose **Light**, **Dark**, or **System**.
 System follows your device setting. Your choice is saved when browser storage
@@ -31,7 +39,33 @@ is available and applies across tools and languages.
 The tools adapt to phone and tablet layouts. Shape and statue choices support
 touch, **Tab**, arrow keys, and **Space**.
 
-## Calculator
+## Repository (encounter 3)
+
+1. Select your **Assigned start plate**, then **Room / phase** (1, 2, or 3).
+   Follow **Receive the pulse** to the end plate, and ask the indicated start
+   plate sender to send.
+2. Enter any two **Conductor callouts**, using each conductor’s end-plate
+   position. The third resonance is inferred automatically. Duplicate callouts
+   are disabled; use **Clear** to change which two conductors you enter.
+3. Select **Your current resonance**: circle/Spherical, triangle/Pyramidal,
+   or square/Hexahedron. Your last pickup determines this type.
+4. Follow **Close the conductor** to the destination end plate, and ask its
+   corresponding start plate sender to send. **Stay** means you are already
+   at the correct receiving plate.
+
+Positions are viewed from the entrance, facing the exit. The wiring is:
+
+| Room | Left start → end | Middle start → end | Right start → end |
+| ---- | ---------------- | ------------------ | ----------------- |
+| 1    | Left             | Middle             | Right             |
+| 2    | Middle           | Left               | Right             |
+| 3    | Middle           | Right              | Left              |
+
+Changing rooms keeps your assigned start plate but clears conductor callouts and
+held resonance. Changing the start plate within the same room keeps those inputs.
+**Reset** clears everything. Switching pages or languages resets the helper.
+
+## Verity calculator (encounter 4)
 
 1. Under **Inside statues**, select the left and middle symbols.
 2. Under **Outside solids**, select the left and middle solids. You can select
@@ -48,7 +82,7 @@ Each swap diagram shows three boxes in left–middle–right statue order. Excis
 shape marked **1**, then **2**, from the indicated statues. The solids below each
 swap show the resulting room; the last step shows the completed room.
 
-## Solo room
+### Solo room
 
 1. Select the left and middle **Inside statues** symbols; the right is automatic.
 2. Under **Your statue**, select your own position.
@@ -62,7 +96,7 @@ With two copies of your own symbol, give one to each other player. With two
 copies of another symbol, give one to the eligible other player and keep one.
 Different shapes are distributed directly to the two other players.
 
-## Exercise
+### Exercise
 
 1. Click **Start exercise** to begin a random 3:30 round.
 2. Select a shape under **Current shape**, then click **Excise** under a statue.
@@ -145,21 +179,25 @@ production and PR previews.
 
 Astro builds the static pages, and React handles the interactive controls.
 
-| Location                            | Contents                       |
-| ----------------------------------- | ------------------------------ |
-| [pages/](src/pages/)                | Astro page routes              |
-| [components/](src/components/)      | React tools and page content   |
-| [verity.ts](src/lib/verity.ts)      | Puzzle rules and solver        |
-| [practice.ts](src/lib/practice.ts)  | Exercise rounds and timer      |
-| [messages.ts](src/i18n/messages.ts) | English and Simplified Chinese |
-| [global.css](src/styles/global.css) | Shared styles                  |
+| Location                               | Contents                       |
+| -------------------------------------- | ------------------------------ |
+| [pages/](src/pages/)                   | Astro page routes              |
+| [components/](src/components/)         | React tools and page content   |
+| [verity.ts](src/lib/verity.ts)         | Puzzle rules and solver        |
+| [repository.ts](src/lib/repository.ts) | Plate and resonance rules      |
+| [navigation.ts](src/lib/navigation.ts) | Page and encounter paths       |
+| [practice.ts](src/lib/practice.ts)     | Exercise rounds and timer      |
+| [messages.ts](src/i18n/messages.ts)    | English and Simplified Chinese |
+| [global.css](src/styles/global.css)    | Shared styles                  |
 
 Vitest covers all 126 valid room configurations, invalid inputs, and exercise
 behavior, including cancellation, completion, reset, and timer expiry.
 Solo tests cover all 162 combinations of statue order, player position, and
 ordered room shapes, including duplicate shapes and retention.
 React interaction tests cover both languages, theme preferences, and keyboard
-selection. Playwright checks hydrated production pages in Chromium, Firefox,
+selection. Repository tests cover all 162 combinations of room, assigned start,
+conductor permutation, and held resonance, plus inference, corrections, and resets.
+Playwright checks hydrated production pages in Chromium, Firefox,
 and WebKit,
 including phone and tablet portrait/landscape layouts, both themes, and
 root/subdirectory navigation. Production deployment waits for tests and the
@@ -178,8 +216,13 @@ Inspired by these tools:
   dissection algorithm.
 - [The Final Shape exercise](https://static.19970301.xyz/the_final_shape/dist/index.html#/).
 - [Traveler’s Chosen Verity guide][solo-guide], including direct solo transfers.
+- [Destructoid’s Repository guide][repository-guide] for plate wiring.
+- [Shacknews’ Salvation’s Edge guide][resonance-guide] for conductor and
+  resonance rules.
 
 [solo-guide]: https://sites.google.com/view/travelerschosen/guides/salvations-edge/verity
+[repository-guide]: https://www.destructoid.com/destiny-2-salvations-edge-third-encounter-raid-guide-repository/
+[resonance-guide]: https://www.shacknews.com/article/140025/salvations-edge-raid-guide-destiny-2
 
 This project independently implements the solver, components, and geometric SVG
 icons.

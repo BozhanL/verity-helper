@@ -11,6 +11,8 @@ interface Props<T extends IconShape> {
   choices: readonly T[];
   value: T | null;
   unavailable?: T | null;
+  disabled?: boolean;
+  names?: Partial<Record<IconShape, string>>;
   locale: Locale;
   onChange: (shape: T) => void;
 }
@@ -22,17 +24,19 @@ export default function ShapePicker<T extends IconShape>({
   choices,
   value,
   unavailable,
+  disabled = false,
+  names,
   locale,
   onChange,
 }: Readonly<Props<T>>): ReactElement {
   const hydrated = useHydrated();
   const messages = getMessages(locale);
-  const names = { ...messages.shapes, ...messages.solids };
+  const labels = { ...messages.shapes, ...messages.solids, ...names };
   return (
     <fieldset className="shape-picker" aria-label={legend}>
       <legend>{label ?? legend}</legend>
       <RadioGroup.Root
-        disabled={!hydrated}
+        disabled={!hydrated || disabled}
         aria-label={legend}
         value={value ?? ""}
         onValueChange={(next) => {
@@ -53,7 +57,7 @@ export default function ShapePicker<T extends IconShape>({
             disabled={shape === unavailable}
           >
             <ShapeIcon shape={shape} />
-            <span>{names[shape]}</span>
+            <span>{labels[shape]}</span>
           </RadioGroup.Item>
         ))}
       </RadioGroup.Root>

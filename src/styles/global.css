@@ -1095,7 +1095,167 @@
     color: var(--muted);
   }
 
+  .site-navigation {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+  }
+  .tool-navigation {
+    background: transparent;
+  }
+  .tool-navigation a {
+    font-size: 12px;
+  }
+  .encounter-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+  .encounter-card {
+    display: grid;
+    align-content: start;
+    gap: 18px;
+    transition: border-color 150ms;
+  }
+  .encounter-card:hover {
+    border-color: var(--accent);
+  }
+  .encounter-card h2 {
+    color: var(--accent);
+    font-size: 22px;
+  }
+  .encounter-card p,
+  .helper-note {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .encounter-tools {
+    font-size: 12px;
+    color: var(--accent);
+  }
+  .encounter-icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+  .encounter-icon .shape-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .repository-intro {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+  }
+  .readiness {
+    color: var(--muted);
+    font-size: 11px;
+    align-self: center;
+  }
+  .repository-tool > .panel > .panel-heading {
+    margin-bottom: 20px;
+  }
+  .plate-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .receive-guidance {
+    margin-top: 24px;
+    border-top: 1px solid var(--line);
+    padding-top: 22px;
+  }
+  .plate-guidance {
+    display: grid;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 20px;
+    border-radius: 10px;
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+  .plate-guidance h3 {
+    font-size: 20px;
+    line-height: 1.4;
+  }
+  .plate-guidance p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .plate-guidance .shape-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .repository-tool .helper-note {
+    margin-block: 12px;
+  }
+  .repository-intro .helper-note {
+    margin: 0;
+  }
+  .conductor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .conductor-card {
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 11px;
+  }
+  .conductor-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 14px;
+    min-height: 44px;
+  }
+  .conductor-heading .inferred-label {
+    margin: 0;
+  }
+  .conductor-grid .shape-picker .shape-options {
+    grid-template-columns: 1fr;
+  }
+  .conductor-card .shape-choice .shape-icon {
+    flex-shrink: 0;
+  }
+  .conductor-grid .shape-choice {
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+  }
+  .inferred-resonance {
+    margin: 0;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 16px;
+    padding: 24px 12px;
+    min-height: 150px;
+    color: var(--accent);
+    background: var(--accent-light);
+    border-radius: 9px;
+    font-size: 13px;
+    text-align: center;
+  }
+  .inferred-resonance .shape-icon {
+    width: 48px;
+    height: 48px;
+  }
+
   @media (max-width: 1050px) {
+    .site-navigation {
+      order: 3;
+      width: 100%;
+    }
     .site-header {
       flex-wrap: wrap;
     }
@@ -1145,6 +1305,10 @@
   }
 
   @media (max-width: 760px) {
+    .encounter-grid,
+    .conductor-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
     .site-header {
       padding: 19px 20px;
       flex-wrap: wrap;

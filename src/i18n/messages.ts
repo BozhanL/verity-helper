@@ -1,13 +1,64 @@
 import type { Excise } from "../lib/verity";
 
 export type Locale = "en" | "zh";
-export const PAGES = ["calculator", "solo", "exercise"] as const;
+export const PAGES = [
+  "home",
+  "repository",
+  "calculator",
+  "solo",
+  "exercise",
+] as const;
 export type Page = (typeof PAGES)[number];
 
 const en = {
-  brand: "Verity",
-  subtitle: "Salvation’s Edge",
+  brand: "Salvation’s Edge",
+  subtitle: "Encounter helpers",
   navigation: "Main navigation",
+  toolNavigation: "Verity tools",
+  homeTitle: "Choose your encounter",
+  homeDescription:
+    "Plate and resonance guidance for Repository. Calculators and practice for Verity.",
+  verityDescription:
+    "Plan outside dissection, distribute solo-room shapes, or practice the fourth encounter.",
+  siteEyebrow: "DESTINY 2 / SALVATION’S EDGE",
+  repositoryEncounter: "3 · Repository",
+  verityEncounter: "4 · Verity calculator",
+  repositoryTool: {
+    title: "Repository end-plate helper",
+    description:
+      "Find your receiving plate, match your resonance, and call the correct sender.",
+    encounter: "DESTINY 2 / ENCOUNTER 03",
+    orientation:
+      "Left, middle, and right are viewed from the entrance, facing the exit.",
+    setup: "Your plate and room",
+    startPlate: "Assigned start plate",
+    room: "Room / phase",
+    rooms: { 1: "Room 1", 2: "Room 2", 3: "Room 3" },
+    receive: "Receive the pulse",
+    receiveAt: "Receive at the {position} end plate",
+    askSender: "Ask the {position} start plate sender to send.",
+    chooseRoute: "Choose your start plate and room.",
+    conductors: "Conductor callouts",
+    conductor: "Conductor resonance",
+    calloutsHint:
+      "Enter any two different callouts. The third is automatic. Clear a callout to enter a different conductor.",
+    clearConductor: "Clear {position} conductor callout",
+    clear: "Clear",
+    held: "Your current resonance",
+    heldHint: "Your last pickup determines your current resonance type.",
+    resonances: {
+      circle: "Circle · Spherical",
+      triangle: "Triangle · Pyramidal",
+      square: "Square · Hexahedron",
+    },
+    closing: "Close the conductor",
+    closeAt: "Close at the {position} end plate",
+    stayAt: "Stay at the {position} end plate to close",
+    chooseClosing: "Enter two conductor callouts and your current resonance.",
+    loading: "Loading controls…",
+    ready: "Controls ready.",
+    reference: "Repository guide",
+  },
   calculator: "Calculator",
   solo: "Solo room",
   soloTitle: "Solo room calculator",
@@ -90,9 +141,51 @@ const en = {
 };
 
 const zh: typeof en = {
-  brand: "真理",
-  subtitle: "救赎边缘",
+  brand: "救赎边缘",
+  subtitle: "关卡辅助工具",
   navigation: "主导航",
+  toolNavigation: "真理工具",
+  homeTitle: "选择关卡",
+  homeDescription: "第三关的终点板与共振指引，以及第四关的计算器和练习工具。",
+  verityDescription: "规划外场剖切、分配单人房图形，或练习第四关的机制。",
+  siteEyebrow: "命运 2 / 救赎边缘",
+  repositoryEncounter: "第三关 · 贮藏库",
+  verityEncounter: "第四关 · 真理计算器",
+  repositoryTool: {
+    title: "第三关终点板助手",
+    description:
+      "找到接收脉冲的终点板，根据共振选择导体，并提醒对应的起点玩家发送。",
+    encounter: "命运 2 / 第三关",
+    orientation: "左、中、右均以站在入口面向出口时的方向为准。",
+    setup: "你的起点与房间",
+    startPlate: "分配的起点板",
+    room: "房间 / 阶段",
+    rooms: { 1: "房间 1", 2: "房间 2", 3: "房间 3" },
+    receive: "接收脉冲",
+    receiveAt: "前往{position}终点板接收脉冲",
+    askSender: "请{position}起点板的玩家发送脉冲。",
+    chooseRoute: "请选择起点板和房间。",
+    conductors: "导体报点",
+    conductor: "导体共振类型",
+    calloutsHint:
+      "输入任意两个不同的报点，第三个会自动推算。清除一个报点后，可改为输入其他导体。",
+    clearConductor: "清除{position}导体报点",
+    clear: "清除",
+    held: "你当前的共振",
+    heldHint: "最后拾取的共振决定你当前的共振类型。",
+    resonances: {
+      circle: "圆形 · 球形共振",
+      triangle: "三角形 · 金字塔共振",
+      square: "正方形 · 六面体共振",
+    },
+    closing: "关闭导体",
+    closeAt: "前往{position}终点板关闭导体",
+    stayAt: "留在{position}终点板关闭导体",
+    chooseClosing: "请输入两个导体报点，并选择当前的共振。",
+    loading: "正在加载控件…",
+    ready: "控件已就绪。",
+    reference: "第三关指南",
+  },
   calculator: "计算器",
   solo: "单人房",
   soloTitle: "单人房计算器",

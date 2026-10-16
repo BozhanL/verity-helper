@@ -12,7 +12,7 @@ for (const locale of ["en", "zh"] as const) {
   test(`${locale}: calculator handles invalid, solved, duplicate, and reset states`, async ({
     page,
   }) => {
-    await openTool(page, prefix);
+    await openTool(page, prefix + "verity/");
     await expect(
       page.getByRole("heading", { name: messages.incomplete }),
     ).toBeVisible();
@@ -61,7 +61,7 @@ for (const locale of ["en", "zh"] as const) {
   test(`${locale}: solo transfers and retention work with touch controls`, async ({
     page,
   }) => {
-    await openTool(page, prefix + "solo/");
+    await openTool(page, prefix + "verity/solo/");
     await expect(
       page.getByRole("radio", {
         name: messages.soloStatue + ": " + messages.positions[2],
@@ -135,7 +135,7 @@ for (const locale of ["en", "zh"] as const) {
       Math.random = (): number => 0;
     });
     await page.clock.install({ time: new Date("2026-01-01T00:00:00Z") });
-    await openTool(page, prefix + "exercise/");
+    await openTool(page, prefix + "verity/exercise/");
     await expect(page.getByRole("img")).toHaveCount(6);
     await page.getByRole("button", { name: messages.start, exact: true }).tap();
     await page
@@ -204,7 +204,7 @@ for (const locale of ["en", "zh"] as const) {
 }
 
 test("radio controls support Tab, arrow keys, and Space", async ({ page }) => {
-  await openTool(page, "");
+  await openTool(page, "verity/");
   const left = page.getByRole("radiogroup", { name: "Left · Inside statues" });
   const circle = left.getByRole("radio", { name: "Circle" });
   await circle.focus();
@@ -226,7 +226,7 @@ test("radio controls support Tab, arrow keys, and Space", async ({ page }) => {
 test("skip link appears on focus and activates with Enter", async ({
   page,
 }) => {
-  await openTool(page, "");
+  await openTool(page, "verity/");
   const skip = page.getByRole("link", { name: "Skip to content" });
   await expect(skip).toHaveCSS("clip-path", "inset(50%)");
   await skip.focus();

@@ -1,34 +1,63 @@
-# 真理助手
+# 救赎边缘助手
 
 [English](README.md)
 
-《命运 2》救赎边缘突袭第四关的外场剖切与单人房图形分配计算器，另提供外场剖切练习。
+《命运 2》救赎边缘突袭第三关与第四关的辅助工具。
+第三关提供终点板与共振指引；第四关提供外场剖切计算器、单人房图形分配计算器和练习。
 支持英文和简体中文。
 
 ## 使用工具
 
-| 工具   | 英文                    | 简体中文            |
-| ------ | ----------------------- | ------------------- |
-| 计算器 | [Calculator][calc-en]   | [计算器][calc-zh]   |
-| 单人房 | [Solo room][solo-en]    | [单人房][solo-zh]   |
-| 练习   | [Exercise][exercise-en] | [练习][exercise-zh] |
+| 页面           | 英文                        | 简体中文              |
+| -------------- | --------------------------- | --------------------- |
+| 关卡选择       | [Home][home-en]             | [首页][home-zh]       |
+| 第三关：贮藏库 | [End-plate helper][repo-en] | [终点板助手][repo-zh] |
+| 第四关：真理   | [Calculator][calc-en]       | [计算器][calc-zh]     |
+| 真理：单人房   | [Solo room][solo-en]        | [单人房][solo-zh]     |
+| 真理：练习     | [Exercise][exercise-en]     | [练习][exercise-zh]   |
 
-[calc-en]: https://verity.903684.xyz/
-[calc-zh]: https://verity.903684.xyz/zh/
-[solo-en]: https://verity.903684.xyz/solo/
-[solo-zh]: https://verity.903684.xyz/zh/solo/
-[exercise-en]: https://verity.903684.xyz/exercise/
-[exercise-zh]: https://verity.903684.xyz/zh/exercise/
+[home-en]: https://verity.903684.xyz/
+[home-zh]: https://verity.903684.xyz/zh/
+[repo-en]: https://verity.903684.xyz/repository/
+[repo-zh]: https://verity.903684.xyz/zh/repository/
+[calc-en]: https://verity.903684.xyz/verity/
+[calc-zh]: https://verity.903684.xyz/zh/verity/
+[solo-en]: https://verity.903684.xyz/verity/solo/
+[solo-zh]: https://verity.903684.xyz/zh/verity/solo/
+[exercise-en]: https://verity.903684.xyz/verity/exercise/
+[exercise-zh]: https://verity.903684.xyz/zh/verity/exercise/
 
 通过顶部导航切换工具时会保留当前语言；切换语言时会保留当前工具。
-三个工具都需要浏览器启用 JavaScript。
+单人房和练习归属真理计算器；交互工具需要浏览器启用 JavaScript。
 
 通过顶部的**主题**选择**浅色**、**深色**或**跟随系统**。
 “跟随系统”会使用设备的外观设置。浏览器允许存储时，所选主题会被保存，并在切换工具或语言后保留。
 
 工具布局适配手机和平板。图形和雕像选择支持触控、**Tab**、方向键和**空格键**。
 
-## 计算器
+## 第三关：贮藏库
+
+1. 选择**分配的起点板**，再选择**房间 / 阶段**（1、2 或 3）。
+   按**接收脉冲**的指引前往终点板，并请对应起点板的玩家发送脉冲。
+2. 按终点板位置输入任意两个**导体报点**，第三个共振会自动推算。
+   重复类型不可选择；点击**清除**后可改为输入其他导体。
+3. 选择**你当前的共振**：圆形 / 球形、三角形 / 金字塔或正方形 / 六面体。
+   最后拾取的共振决定当前类型。
+4. 按**关闭导体**的指引前往目标终点板，并请与该终点相连的起点玩家发送脉冲。
+   显示**留在**时，表示接收脉冲的终点板就是关闭导体的位置。
+
+左、中、右均以站在入口面向出口时的方向为准，连线如下：
+
+| 房间 | 左侧起点 → 终点 | 中间起点 → 终点 | 右侧起点 → 终点 |
+| ---- | --------------- | --------------- | --------------- |
+| 1    | 左侧            | 中间            | 右侧            |
+| 2    | 中间            | 左侧            | 右侧            |
+| 3    | 中间            | 右侧            | 左侧            |
+
+切换房间会保留起点板，并清除导体报点和当前共振；在同一房间内更换起点板会保留这些输入。
+点击**重置**会清除全部选择。切换页面或语言也会重置助手。
+
+## 第四关：真理计算器
 
 1. 在**内场雕像**中选择左侧和中间的平面图形。
 2. 在**外场立体图形**中选择左侧和中间的立体图形，两座雕像可以选择相同的图形。
@@ -42,7 +71,7 @@
 先从标记 **1** 的雕像剖切方框内的图形，再从标记 **2** 的雕像剖切对应图形。
 每次交换下方显示交换后的房间，最后一步即完成后的房间。
 
-## 单人房
+### 单人房
 
 1. 选择左侧和中间的**内场雕像**图形，右侧自动推算。
 2. 在**你的雕像**中选择自己的位置。
@@ -55,7 +84,7 @@
 如果有两个相同的其他图形，给符合条件的另一名玩家一个，并保留一个。
 两个不同的图形则直接分配给另外两名玩家。
 
-## 练习
+### 练习
 
 1. 点击**开始练习**，开始一轮 3 分 30 秒的随机练习。
 2. 选择**当前图形**，再点击一座雕像下方的**剖切**。
@@ -123,18 +152,21 @@ CI 会通过矩阵在独立的运行器上并行测试这两种配置，每个�
 
 Astro 生成静态页面，React 负责交互控件。
 
-| 位置                                | 内容                      |
-| ----------------------------------- | ------------------------- |
-| [pages/](src/pages/)                | Astro 页面路由            |
-| [components/](src/components/)      | 页面内容与 React 交互工具 |
-| [verity.ts](src/lib/verity.ts)      | 图形规则与求解器          |
-| [practice.ts](src/lib/practice.ts)  | 练习回合与计时            |
-| [messages.ts](src/i18n/messages.ts) | 英文和简体中文文本        |
-| [global.css](src/styles/global.css) | 共享样式                  |
+| 位置                                   | 内容                      |
+| -------------------------------------- | ------------------------- |
+| [pages/](src/pages/)                   | Astro 页面路由            |
+| [components/](src/components/)         | 页面内容与 React 交互工具 |
+| [verity.ts](src/lib/verity.ts)         | 图形规则与求解器          |
+| [repository.ts](src/lib/repository.ts) | 第三关连线与共振规则      |
+| [navigation.ts](src/lib/navigation.ts) | 页面路径与关卡归属        |
+| [practice.ts](src/lib/practice.ts)     | 练习回合与计时            |
+| [messages.ts](src/i18n/messages.ts)    | 英文和简体中文文本        |
+| [global.css](src/styles/global.css)    | 共享样式                  |
 
 Vitest 覆盖全部 126 种有效房间配置、非法输入，以及取消、完成、重置和超时等练习行为。
 单人房测试覆盖雕像顺序、玩家位置和房间图形顺序的全部 162 种组合，包括重复图形与保留规则。
 React 交互测试覆盖两种语言、主题偏好和键盘选择。
+第三关测试覆盖房间、起点板、导体排列与当前共振的全部 162 种组合，以及推算、修正和重置行为。
 Playwright 在 Chromium、Firefox 和 WebKit 中检查激活交互后的生产页面，包括手机和平板的横竖屏布局、浅深主题，以及根路径和子目录导航。
 生产部署会等待测试和生产构建均成功。
 
@@ -149,8 +181,12 @@ Playwright 在 Chromium、Firefox 和 WebKit 中检查激活交互后的生产�
   [u/swegmesterflex](https://www.reddit.com/user/swegmesterflex/)。
 - [终焉之形练习页面](https://static.19970301.xyz/the_final_shape/dist/index.html#/)。
 - [Traveler’s Chosen 真理指南][solo-guide]，包含单人房直接分配规则。
+- [Destructoid 第三关指南][repository-guide]，用于终点板连线。
+- [Shacknews 救赎边缘指南][resonance-guide]，用于导体与共振规则。
 
 [solo-guide]: https://sites.google.com/view/travelerschosen/guides/salvations-edge/verity
+[repository-guide]: https://www.destructoid.com/destiny-2-salvations-edge-third-encounter-raid-guide-repository/
+[resonance-guide]: https://www.shacknews.com/article/140025/salvations-edge-raid-guide-destiny-2
 
 本项目独立实现求解器、组件及几何 SVG 图标。
 

@@ -19,41 +19,43 @@ it("keeps page and language navigation on the matching localized routes", () => 
       locale="zh"
       page="exercise"
       links={{
-        calculator: "/preview/zh/",
-        solo: "/preview/zh/solo/",
-        exercise: "/preview/zh/exercise/",
-        en: "/preview/exercise/",
-        zh: "/preview/zh/exercise/",
+        home: "/preview/zh/",
+        repository: "/preview/zh/repository/",
+        calculator: "/preview/zh/verity/",
+        solo: "/preview/zh/verity/solo/",
+        exercise: "/preview/zh/verity/exercise/",
+        en: "/preview/verity/exercise/",
+        zh: "/preview/zh/verity/exercise/",
       }}
     />,
   );
-  const pages = within(screen.getByRole("navigation", { name: "主导航" }));
+  const pages = within(screen.getByRole("navigation", { name: "真理工具" }));
   expect(
     pages.getByRole("link", { name: "练习" }).getAttribute("aria-current"),
   ).toBe("page");
   expect(pages.getByRole("link", { name: "计算器" }).getAttribute("href")).toBe(
-    "/preview/zh/",
+    "/preview/zh/verity/",
   );
   const languages = within(screen.getByRole("navigation", { name: "语言" }));
   expect(
     languages.getByRole("link", { name: "English" }).getAttribute("href"),
-  ).toBe("/preview/exercise/");
+  ).toBe("/preview/verity/exercise/");
   expect(
     languages.getByRole("link", { name: "简体中文" }).getAttribute("href"),
-  ).toBe("/preview/zh/exercise/");
+  ).toBe("/preview/zh/verity/exercise/");
 });
 
 it.each([
   {
     locale: "en",
-    navigation: "Main navigation",
+    navigation: "Verity tools",
     language: "Language",
     solo: "Solo room",
     prefix: "",
   },
   {
     locale: "zh",
-    navigation: "主导航",
+    navigation: "真理工具",
     language: "语言",
     solo: "单人房",
     prefix: "zh/",
@@ -66,26 +68,30 @@ it.each([
         locale={locale}
         page="solo"
         links={{
-          calculator: "/preview/" + prefix,
-          solo: "/preview/" + prefix + "solo/",
-          exercise: "/preview/" + prefix + "exercise/",
-          en: "/preview/solo/",
-          zh: "/preview/zh/solo/",
+          home: "/preview/" + prefix,
+          repository: "/preview/" + prefix + "repository/",
+          calculator: "/preview/" + prefix + "verity/",
+          solo: "/preview/" + prefix + "verity/solo/",
+          exercise: "/preview/" + prefix + "verity/exercise/",
+          en: "/preview/verity/solo/",
+          zh: "/preview/zh/verity/solo/",
         }}
       />,
     );
     const pages = within(screen.getByRole("navigation", { name: navigation }));
     const link = pages.getByRole("link", { name: solo });
     expect(link.getAttribute("aria-current")).toBe("page");
-    expect(link.getAttribute("href")).toBe("/preview/" + prefix + "solo/");
+    expect(link.getAttribute("href")).toBe(
+      "/preview/" + prefix + "verity/solo/",
+    );
     const languages = within(
       screen.getByRole("navigation", { name: language }),
     );
     expect(
       languages.getByRole("link", { name: "English" }).getAttribute("href"),
-    ).toBe("/preview/solo/");
+    ).toBe("/preview/verity/solo/");
     expect(
       languages.getByRole("link", { name: "简体中文" }).getAttribute("href"),
-    ).toBe("/preview/zh/solo/");
+    ).toBe("/preview/zh/verity/solo/");
   },
 );
