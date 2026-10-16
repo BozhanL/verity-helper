@@ -148,6 +148,13 @@ npm run dev
 Open the address printed in the terminal, usually <http://localhost:4321>.
 Press **Ctrl+C** to stop the development server.
 
+Astro downloads variable Noto Sans for Latin text and Noto Sans SC for Simplified
+Chinese from Google Fonts, then serves both with the site. The Chinese font
+includes the characters used by the translations and updates automatically when
+they change. Noto Sans is preloaded on all pages; Noto Sans SC is preloaded on
+Chinese pages. The first development or production build needs access to
+Google Fonts.
+
 Checks cover types, lint, formatting, unit tests, and browser tests.
 
 | Command                 | Purpose                                        |

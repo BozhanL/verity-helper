@@ -126,6 +126,11 @@ npm run dev
 打开终端显示的地址，通常为 <http://localhost:4321>。
 按 **Ctrl+C** 停止开发服务器。
 
+Astro 会从 Google Fonts 下载用于拉丁文字的 Noto Sans 可变字体和用于简体中文的
+Noto Sans SC 可变字体，并随网站一同提供。中文字体仅包含翻译中使用的字符，翻译变更后会自动更新。
+所有页面都会预加载 Noto Sans，中文页面还会预加载 Noto Sans SC。
+首次启动开发服务器或进行生产构建时，需要能访问 Google Fonts。
+
 检查包括类型、代码、格式检查，以及单元测试和浏览器测试。
 
 | 命令                    | 用途                          |

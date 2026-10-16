@@ -15,6 +15,9 @@ export const ROUTES = (["en", "zh"] as const).flatMap((locale) =>
 
 export async function openPage(page: Page, path: string): Promise<void> {
   await page.goto(path || "./");
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+  });
   await expect(page.getByRole("combobox")).toBeEnabled();
 }
 

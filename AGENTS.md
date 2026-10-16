@@ -101,6 +101,12 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   in `src/lib/verity.ts` and reuse `InsideInputs.tsx` for statue selection.
 - Treat exercise rounds as unaided practice: show the given inside symbols and
   outside solids without solution hints, target mappings, or shape breakdowns.
+- Configure Noto Sans and Noto Sans SC with Astro’s Fonts API in `astro.config.ts`.
+  Use Google Fonts for both families. Preload Noto Sans on all pages and
+  Noto Sans SC on Chinese pages. Derive the Chinese glyph subset from the
+  translations. Compose `--font-noto-sans` and `--font-noto-sans-sc` before system
+  fallbacks in the shared styles. Browser layout checks must wait for fonts and
+  verify Latin and Chinese font downloads with `BASE_PATH`.
 - Keep theme preferences in `src/lib/theme.ts`: light, dark, or system, saved
   under `verity-theme`. Apply the resolved theme before first paint in the
   shared layout; retain the CSS system-theme fallback without JavaScript.
