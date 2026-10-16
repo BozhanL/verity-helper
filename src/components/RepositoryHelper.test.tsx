@@ -69,11 +69,9 @@ it.each(["en", "zh"] as const)(
         name: text.receiveAt.replace("{position}", messages.positions[1]),
       }),
     ).toBeDefined();
-    expect(
-      receiving.getByText(
-        text.askSender.replace("{position}", messages.positions[0]),
-      ),
-    ).toBeDefined();
+    expect(receiving.getByRole("paragraph").textContent).toBe(
+      text.askSender.replace("{position}", messages.positions[0]),
+    );
     callout(0, "square", locale);
     callout(1, "circle", locale);
     expect(
@@ -96,11 +94,9 @@ it.each(["en", "zh"] as const)(
         name: text.closeAt.replace("{position}", messages.positions[2]),
       }),
     ).toBeDefined();
-    expect(
-      closing.getByText(
-        text.askSender.replace("{position}", messages.positions[1]),
-      ),
-    ).toBeDefined();
+    expect(closing.getByRole("paragraph").textContent).toBe(
+      text.askSender.replace("{position}", messages.positions[1]),
+    );
   },
 );
 

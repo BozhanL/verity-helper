@@ -20,6 +20,23 @@ function positionText(template: string, plate: Plate, locale: Locale): string {
   return template.replace("{position}", getMessages(locale).positions[plate]);
 }
 
+function positionInstruction(
+  template: string,
+  plate: Plate,
+  locale: Locale,
+): ReactElement {
+  const [before, after] = template.split("{position}");
+  return (
+    <>
+      {before}
+      <strong className="plate-location">
+        {getMessages(locale).positions[plate]}
+      </strong>
+      {after}
+    </>
+  );
+}
+
 function NumberPicker<T extends number>({
   legend,
   choices,
@@ -171,16 +188,16 @@ function ClosingGuidance({
     return <p className="helper-note">{text.chooseClosing}</p>;
   }
   return (
-    <div className="plate-guidance">
+    <div className="plate-guidance plate-guidance--closing">
       {held !== null && <ShapeIcon shape={held} />}
       <h3>
-        {positionText(
+        {positionInstruction(
           target.end === getEndPlate(room, start) ? text.stayAt : text.closeAt,
           target.end,
           locale,
         )}
       </h3>
-      <p>{positionText(text.askSender, target.start, locale)}</p>
+      <p>{positionInstruction(text.askSender, target.start, locale)}</p>
     </div>
   );
 }
@@ -281,8 +298,8 @@ export default function RepositoryHelper({
             <p className="helper-note">{text.chooseRoute}</p>
           ) : (
             <div className="plate-guidance">
-              <h3>{positionText(text.receiveAt, end, locale)}</h3>
-              <p>{positionText(text.askSender, start, locale)}</p>
+              <h3>{positionInstruction(text.receiveAt, end, locale)}</h3>
+              <p>{positionInstruction(text.askSender, start, locale)}</p>
             </div>
           )}
         </section>
