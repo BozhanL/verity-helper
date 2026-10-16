@@ -51,6 +51,35 @@ async function assertTouchTargets(page: Page): Promise<void> {
   }
 }
 
+async function assertNavigationLayout(page: Page): Promise<void> {
+  const rows = await page.locator(".page-navigation").evaluateAll((elements) =>
+    elements.map((element) => {
+      const row = element.getBoundingClientRect();
+      const links = Array.from(element.querySelectorAll("a"), (link) =>
+        link.getBoundingClientRect(),
+      );
+      const first = links.at(0);
+      const last = links.at(-1);
+      return {
+        label: element.getAttribute("aria-label") ?? "Navigation",
+        widths: links.map((link) => link.width),
+        leftInset: first === undefined ? 0 : first.left - row.left,
+        rightInset: last === undefined ? 0 : row.right - last.right,
+      };
+    }),
+  );
+  for (const row of rows) {
+    expect(
+      Math.max(...row.widths) - Math.min(...row.widths),
+      row.label + " tabs must have equal widths",
+    ).toBeLessThanOrEqual(1);
+    expect(
+      Math.abs(row.leftInset - row.rightInset),
+      row.label + " tabs must fill the bar evenly",
+    ).toBeLessThanOrEqual(1);
+  }
+}
+
 async function exerciseRoute(
   page: Page,
   route: (typeof ROUTES)[number],
@@ -164,6 +193,7 @@ for (const viewport of VIEWPORTS) {
             route.path + " must not overflow horizontally",
           ).toBeLessThanOrEqual(width.viewport);
           await assertTouchTargets(page);
+          await assertNavigationLayout(page);
           if (
             route.locale === "en" &&
             [390, 820, 1440].includes(viewport.width)
