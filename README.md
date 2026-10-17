@@ -173,12 +173,14 @@ Run `npm run build` before `npm run preview`.
 Install browser test engines once with
 `npx playwright install chromium firefox webkit`.
 Then run `npm run test:e2e`; it builds and serves production pages automatically.
-Browser reports are saved in `playwright-report/`, with screenshots and failure
-traces in `test-results/`. Set `BASE_PATH=/review-preview` in the command's
-environment to test a subdirectory build. CI runs both configurations in parallel
-matrix jobs on separate runners, with a 30-minute timeout per job. In a local
-workspace, run the root and subdirectory suites sequentially. Type, lint,
-formatting, and unit checks run in the `test` job.
+Browser reports are saved in `playwright-report/`, with failure screenshots and
+traces in `test-results/`. CI records traces only on the first retry, including
+when that retry passes; the initial attempt has no trace. Local runs have no
+retries and retain the initial failure trace. Set `BASE_PATH=/review-preview` in
+the command's environment to test a subdirectory build. CI runs both
+configurations in parallel matrix jobs on separate runners, with a 30-minute
+timeout per job. In a local workspace, run the root and subdirectory suites
+sequentially. Type, lint, formatting, and unit checks run in the `test` job.
 
 The browser matrix covers Chromium, Firefox, and WebKit with desktop and mobile
 presets. Firefox phone coverage uses a small viewport and touch; full mobile
