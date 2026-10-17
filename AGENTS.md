@@ -29,6 +29,9 @@ Also run browser tests with `BASE_PATH=/review-preview`. Browser suites rebuild
 production builds because they share build output and report directories.
 Use `localhost` for both the preview host and browser base URL.
 Configure browser workers as `75%` locally and `100%` in CI.
+Record CI traces on the first retry to avoid tracing every passing test. Local
+runs have no retries, so retain their first-failure traces. Keep failure
+screenshots and all assertions, browser/device projects, and responsive cases.
 Set fixed responsive viewports with `test.use({ viewport })`
 before page creation.
 Firefox phone coverage uses a phone-sized viewport and touch; Firefox does not

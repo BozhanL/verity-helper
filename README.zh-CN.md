@@ -148,7 +148,9 @@ Noto Sans SC 可变字体，并随网站一同提供。中文字体仅包含翻�
 
 首次运行浏览器测试前，使用 `npx playwright install chromium firefox webkit` 安装浏览器引擎。
 然后运行 `npm run test:e2e`，测试会自动构建并启动生产页面预览。
-浏览器报告保存在 `playwright-report/`，截图和失败追踪保存在 `test-results/`。
+浏览器报告保存在 `playwright-report/`，失败截图和追踪文件保存在 `test-results/`。
+CI 仅在首次重试时记录追踪，即使重试通过也会保留；首次执行不记录追踪。
+本地运行不重试，并保留首次执行失败时的追踪。
 在命令的环境中设置 `BASE_PATH=/review-preview` 即可测试子目录部署。
 CI 会通过矩阵在独立的运行器上并行测试这两种配置，每个任务的超时时间为 30 分钟。
 在同一个本地工作目录中，根路径和子目录测试必须顺序运行。
