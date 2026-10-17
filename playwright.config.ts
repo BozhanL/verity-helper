@@ -19,7 +19,13 @@ export default defineConfig({
       { open: "never", outputFolder: `playwright-report/${artifactName}` },
     ],
   ],
-  use: { baseURL, trace: "retain-on-failure", screenshot: "only-on-failure" },
+  use: {
+    baseURL,
+    // Avoid recording and discarding traces for every passing CI test.
+    // Local runs have no retries, so retain their first-failure trace.
+    trace: env.CI ? "on-first-retry" : "retain-on-failure",
+    screenshot: "only-on-failure",
+  },
   projects: [
     {
       name: "chromium",
