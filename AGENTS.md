@@ -2,6 +2,12 @@
 
 ## Development
 
+The optional `.devcontainer/` environment installs Node.js 24, a compatible npm,
+Codex CLI, editor extensions, and the project's Playwright browsers. Keep its
+tool versions aligned with `package.json` and its setup instructions in both
+README files. Container creation must not sign in, embed credentials, or mount
+host authentication directories; authentication remains a manual user step.
+
 When starting the dev server, use background mode:
 
 ```sh

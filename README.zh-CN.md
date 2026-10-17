@@ -162,6 +162,50 @@ CI 会通过矩阵在独立的运行器上并行测试这两种配置，每个�
 提交信息遵循 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)。
 提交钩子会自动检查信息格式；`npm run commit` 可打开交互提示，帮助你编写提交信息。
 
+### 开发容器
+
+[开发容器](.devcontainer/devcontainer.json) 提供 Node.js 24、npm 11.11、
+GitHub CLI，以及官方 [Codex CLI][codex-cli] 和
+[Codex VS Code 扩展][codex-ide]（`openai.chatgpt`），并包含 Astro、Tailwind、
+ESLint、Prettier 和 Playwright 编辑器扩展。
+配置基于 [rehua 的参考配置][devcontainer-reference]，按本项目的静态 Astro
+架构调整，无需数据库或访问 Docker 套接字。
+
+1. 安装 Docker 和 VS Code 的 **Dev Containers** 扩展，打开本地仓库，
+   执行 **Dev Containers: Reopen in Container**。
+   也可以为此分支创建 GitHub Codespace。
+2. 等待初始化完成。容器先运行 `npm ci --no-audit`，再使用项目锁定的
+   Playwright 版本安装 Chromium、Firefox、WebKit 及其 Linux 依赖。
+   首次配置需要联网下载容器镜像、工具、依赖包和浏览器。
+3. 在容器终端运行 `npm run dev -- --host 0.0.0.0`，打开转发端口 **4321**。
+   预览生产构建时，先运行 `npm run build`，再运行
+   `npm run preview -- --host 0.0.0.0 --port 4322`，打开端口 **4322**。
+   浏览器测试也使用此端口，因此测试前请停止手动启动的预览。
+
+在容器内运行上文中的检查；根路径测试结束后，再运行
+`BASE_PATH=/review-preview npm run test:e2e`。
+拉取依赖变更后，重新运行 `npm ci --no-audit` 和
+`npx playwright install --with-deps chromium firefox webkit`。
+修改容器配置或 Dockerfile 后，请重新构建容器；npm 和 Codex CLI 的固定版本
+在 Dockerfile 中设置。
+
+在容器窗口打开 Codex 侧栏，选择 **Sign in with ChatGPT**；或在容器终端运行
+`codex login --device-auth`，在浏览器中打开提示的链接并输入验证码。
+账号或工作区需要启用设备登录。运行 `codex login status` 确认状态，然后运行
+`codex` 开始使用，并在 Codex 中选择账号可用的模型和推理强度。
+API 密钥或浏览器登录的其他方式见官方[身份验证指南][codex-auth]。
+
+身份验证需要单独手动完成。Codex 通常将登录信息缓存到容器用户的 `~/.codex`
+目录或凭据存储中。本配置不会挂载主机凭据或身份验证数据卷，重新构建后通常需要再次登录。
+不要将 API 密钥、令牌、`auth.json` 或私钥放入仓库文件、Docker 构建参数或日志中。
+可运行 `codex logout` 清除已保存的登录。GitHub CLI 与 Codex 分别认证；
+使用 GitHub 命令前，可运行 `gh auth status` 检查状态。
+
+[devcontainer-reference]: https://github.com/BozhanL/rehua/blob/main/.devcontainer/devcontainer.json
+[codex-cli]: https://github.com/openai/codex#installing-and-running-codex-cli
+[codex-ide]: https://developers.openai.com/codex/ide
+[codex-auth]: https://developers.openai.com/codex/auth
+
 ## 部署
 
 部署到其他域名或子目录时，可以在构建环境中设置以下可选变量：
