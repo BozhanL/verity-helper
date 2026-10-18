@@ -3,8 +3,9 @@
 ## Development
 
 The optional `.devcontainer/` environment installs Node.js 24, a compatible npm,
-Codex CLI, editor extensions, and the project's Playwright browsers. Keep its
-tool versions aligned with `package.json` and its setup instructions in both
+GitHub CLI, editor extensions (including the Codex VS Code extension), and the
+project's Playwright browsers. The standalone Codex CLI is not installed. Keep
+its tool versions aligned with `package.json` and its setup instructions in both
 README files. Container creation must not sign in, embed credentials, or mount
 host authentication directories; authentication remains a manual user step.
 
