@@ -38,25 +38,19 @@ interactive changes; component tests alone do not catch client startup failures.
 Choose checks according to the changes:
 
 - Documentation-only changes: run only `npm run format` before handoff.
-- Code changes: run `npm run check` and `npm run lint` during development. Run
-  `npm run check-all:par` once at the end, after all changes are complete and
-  before handoff.
+- Code changes: run `npm run check` and `npm run lint` during development.
 - No file changes: skip checks.
-
-Browser tests are slow. Avoid repeated full `test:e2e` or `check-all:par` runs
-during development. Use targeted tests only when needed to investigate a specific
-issue. After final validation, rerun failed or interrupted checks as needed.
 
 Browser regression tests use Playwright against production previews:
 `npm run test:e2e`. Install engines with
 `npx playwright install chromium firefox webkit`.
-`npm run check-all:par` runs all checks, including the root browser suite, in
-parallel, so no separate root browser run is needed. `npm run check-all` runs
-the same checks sequentially.
-For code changes, also run the browser suite once with `BASE_PATH=/review-preview`
-after the final `check-all:par` run. Browser suites rebuild `dist/`; within the
-same workspace, avoid overlapping browser runs or separate production builds
-because they share build output and report directories.
+For full local validation when needed, `npm run check-all:par` runs all checks,
+including the root browser suite, in parallel. `npm run check-all` runs the same
+checks sequentially; neither needs a separate root browser run.
+To cover both deployment paths, run the root suite first, then run
+`npm run test:e2e` with `BASE_PATH=/review-preview`. Browser suites rebuild
+`dist/`; within the same workspace, avoid overlapping browser runs or separate
+production builds because they share build output and report directories.
 Use `localhost` for both the preview host and browser base URL.
 Configure browser workers as `75%` locally and `100%` in CI.
 Record CI traces on the first retry to avoid tracing every passing test. Local

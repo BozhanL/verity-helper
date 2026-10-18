@@ -156,9 +156,14 @@ Chinese pages. The first development or production build needs access to
 Google Fonts.
 
 Checks cover types, lint, formatting, unit tests, and browser tests.
+For code changes, run `npm run check` and `npm run lint` during development.
+For documentation-only changes, run `npm run format`.
 
 | Command                 | Purpose                                        |
 | ----------------------- | ---------------------------------------------- |
+| `npm run check`         | Check types and Astro diagnostics              |
+| `npm run lint`          | Run lint checks                                |
+| `npm run format`        | Check formatting                               |
 | `npm run check-all:par` | Run all checks in parallel                     |
 | `npm run check-all`     | Run all checks sequentially                    |
 | `npm test`              | Run unit and React interaction tests           |
@@ -186,9 +191,9 @@ The browser matrix covers Chromium, Firefox, and WebKit with desktop and mobile
 presets. Firefox phone coverage uses a small viewport and touch; full mobile
 emulation is unavailable in Firefox.
 
-Before opening a pull request, run `npm run check-all:par` to run all checks,
-including production browser tests, in parallel. Use `npm run check-all` to run
-the same checks sequentially.
+For full local validation when needed, run `npm run check-all:par` for all
+checks, including the root browser suite, in parallel. `npm run check-all`
+runs the same checks sequentially.
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 The commit hook checks your message automatically; `npm run commit` opens an
 interactive prompt to help write it.
@@ -218,8 +223,8 @@ static Astro project; it needs no database or Docker socket access.
    `npm run preview -- --host 0.0.0.0 --port 4322` and open port **4322**.
    Stop a manual preview before running browser tests, which use that port.
 
-Run the checks above inside the container, including
-`BASE_PATH=/review-preview npm run test:e2e` after the root suite finishes.
+Use the same checks inside the container. When testing both deployment paths,
+run `BASE_PATH=/review-preview npm run test:e2e` after the root suite finishes.
 After pulling dependency changes, rerun `npm ci --no-audit` and
 `npx playwright install --with-deps chromium firefox webkit`.
 Rebuild the container after changing `devcontainer.json` or `compose.yaml`.
