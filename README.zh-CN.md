@@ -189,6 +189,17 @@ ESLint、Prettier 和 Playwright 编辑器扩展。
 `npx playwright install --with-deps chromium firefox webkit`。
 修改 `devcontainer.json` 或 `compose.yaml` 后，请重新构建容器。
 
+Compose 会在首次使用时创建名为 `codex` 的卷，并将其挂载到
+`/home/node/.codex`，并复用同一 Docker 主机上已有的 `codex` 卷。
+设置和保存在文件中的登录信息会在容器重启及常规重新构建后保留。
+删除此卷（包括运行 `docker compose down --volumes`）
+会清除已保存的登录信息。Codespaces 的[完全重新构建][codespaces-rebuild]也会
+删除 Docker 卷。更换 Docker 主机或新建 Codespace 后，需要重新登录。
+
+登录前，请确保容器内的 `node` 用户可写入 `~/.codex`。如有需要，在容器终端运行
+`sudo chown -R node:node ~/.codex && chmod 700 ~/.codex`。
+在容器用户的 `~/.codex/config.toml` 中设置
+`cli_auth_credentials_store = "file"`，让 Codex 将登录信息保存在挂载的卷中。
 在容器窗口打开 Codex 侧栏，选择 **Sign in with ChatGPT**，
 然后在扩展中选择账号可用的模型和推理强度。
 其他登录方式见官方[身份验证指南][codex-auth]。
@@ -200,6 +211,7 @@ GitHub CLI 与 Codex 分别认证；使用 GitHub 命令前，可运行 `gh auth
 [devcontainer-reference]: https://github.com/BozhanL/rehua/blob/main/.devcontainer/devcontainer.json
 [codex-ide]: https://developers.openai.com/codex/ide
 [codex-auth]: https://developers.openai.com/codex/auth
+[codespaces-rebuild]: https://docs.github.com/en/codespaces/developing-in-a-codespace/rebuilding-the-container-in-a-codespace
 
 ## 部署
 

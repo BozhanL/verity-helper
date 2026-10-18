@@ -222,6 +222,18 @@ After pulling dependency changes, rerun `npm ci --no-audit` and
 `npx playwright install --with-deps chromium firefox webkit`.
 Rebuild the container after changing `devcontainer.json` or `compose.yaml`.
 
+Compose creates the named `codex` volume on first use and mounts it at
+`/home/node/.codex`. It reuses an existing `codex` volume on the same Docker host.
+Settings and file-based login details survive container restarts and normal
+rebuilds. Removing this volume, including with `docker compose down --volumes`,
+clears the saved login. A Codespaces [full rebuild][codespaces-rebuild] also
+removes Docker volumes. A different Docker host or a new Codespace needs its
+own sign-in.
+
+Before signing in, ensure the container's `node` user can write to `~/.codex`.
+If needed, run `sudo chown -R node:node ~/.codex && chmod 700 ~/.codex` in the
+container terminal. Set `cli_auth_credentials_store = "file"` in the container
+user's `~/.codex/config.toml` so Codex stores its login in the mounted volume.
 Open the Codex sidebar in the container window and choose **Sign in with
 ChatGPT**. Choose your available model and reasoning effort in the extension.
 See the official [authentication guide][codex-auth] for other sign-in options.
@@ -234,6 +246,7 @@ using GitHub commands.
 [devcontainer-reference]: https://github.com/BozhanL/rehua/blob/main/.devcontainer/devcontainer.json
 [codex-ide]: https://developers.openai.com/codex/ide
 [codex-auth]: https://developers.openai.com/codex/auth
+[codespaces-rebuild]: https://docs.github.com/en/codespaces/developing-in-a-codespace/rebuilding-the-container-in-a-codespace
 
 ## Deployment
 
