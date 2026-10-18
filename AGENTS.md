@@ -42,7 +42,7 @@ Choose checks according to the changes:
 - No file changes: skip checks.
 
 Browser regression tests use Playwright against production previews.
-`npm run test:e2e` uses the root path by default.
+`npm run test:e2e` uses `cross-env` to set `BASE_PATH=/`.
 `npm run test:e2e:subdirectory` uses `cross-env` to set
 `BASE_PATH=/review-preview` across platforms. Install engines with
 `npx playwright install chromium firefox webkit`.

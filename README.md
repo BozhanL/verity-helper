@@ -179,7 +179,8 @@ Run `npm run build` before `npm run preview`.
 
 Install browser test engines once with
 `npx playwright install chromium firefox webkit`.
-Then run `npm run test:e2e`; it builds and serves production pages automatically.
+Then run `npm run test:e2e`; it builds and serves production pages at `/`
+automatically, overriding any existing `BASE_PATH` value.
 Browser reports are saved in `playwright-report/`, with failure screenshots and
 traces in `test-results/`. CI records traces only on the first retry, including
 when that retry passes; the initial attempt has no trace. Local runs have no

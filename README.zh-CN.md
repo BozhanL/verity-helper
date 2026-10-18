@@ -154,7 +154,8 @@ Noto Sans SC 可变字体，并随网站一同提供。中文字体仅包含翻�
 运行 `npm run preview` 前，先运行 `npm run build`。
 
 首次运行浏览器测试前，使用 `npx playwright install chromium firefox webkit` 安装浏览器引擎。
-然后运行 `npm run test:e2e`，测试会自动构建并启动生产页面预览。
+然后运行 `npm run test:e2e`，测试会自动构建并在 `/` 下启动生产页面预览，
+覆盖已有的 `BASE_PATH` 环境变量。
 浏览器报告保存在 `playwright-report/`，失败截图和追踪文件保存在 `test-results/`。
 CI 仅在首次重试时记录追踪，即使重试通过也会保留；首次执行不记录追踪。
 本地运行不重试，并保留首次执行失败时的追踪。

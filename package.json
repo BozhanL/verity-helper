@@ -24,7 +24,7 @@
     "lint:fix": "eslint --max-warnings 0 --fix .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test",
+    "test:e2e": "cross-env BASE_PATH=/ playwright test",
     "test:e2e:subdirectory": "cross-env BASE_PATH=/review-preview playwright test",
     "test:e2e:all": "concurrently --kill-others-on-fail -m 1 npm:test:e2e npm:test:e2e:subdirectory",
     "prepare": "husky",
