@@ -232,10 +232,12 @@ clears the saved login. A Codespaces [full rebuild][codespaces-rebuild] also
 removes Docker volumes. A different Docker host or a new Codespace needs its
 own sign-in.
 
-Before signing in, ensure the container's `node` user can write to `~/.codex`.
-If needed, run `sudo chown -R node:node ~/.codex && chmod 700 ~/.codex` in the
-container terminal. Set `cli_auth_credentials_store = "file"` in the container
-user's `~/.codex/config.toml` so Codex stores its login in the mounted volume.
+On creation and rebuild, setup gives `node` ownership of `/home/node/.codex`
+and its existing contents, and limits directory access to that user before
+installing dependencies. Saved settings and login files are preserved.
+
+Set `cli_auth_credentials_store = "file"` in the container user's
+`~/.codex/config.toml` so Codex stores its login in the mounted volume.
 Open the Codex sidebar in the container window and choose **Sign in with
 ChatGPT**. Choose your available model and reasoning effort in the extension.
 See the official [authentication guide][codex-auth] for other sign-in options.

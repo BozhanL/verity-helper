@@ -35,6 +35,7 @@
       ]
     }
   },
+  "onCreateCommand": "sudo chown -R node:node /home/node/.codex && chmod 700 /home/node/.codex",
   "postCreateCommand": "npm ci --no-audit && npx playwright install --with-deps chromium firefox webkit",
   "waitFor": "postCreateCommand"
 }

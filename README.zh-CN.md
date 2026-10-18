@@ -198,8 +198,10 @@ Compose 会在首次使用时创建名为 `codex` 的卷，并将其挂载到
 会清除已保存的登录信息。Codespaces 的[完全重新构建][codespaces-rebuild]也会
 删除 Docker 卷。更换 Docker 主机或新建 Codespace 后，需要重新登录。
 
-登录前，请确保容器内的 `node` 用户可写入 `~/.codex`。如有需要，在容器终端运行
-`sudo chown -R node:node ~/.codex && chmod 700 ~/.codex`。
+创建或重新构建容器时，初始化步骤会在安装依赖前，将 `/home/node/.codex`
+及其现有内容的所有权设为 `node`，并将目录访问权限限制为该用户。
+已有设置和登录文件会保留。
+
 在容器用户的 `~/.codex/config.toml` 中设置
 `cli_auth_credentials_store = "file"`，让 Codex 将登录信息保存在挂载的卷中。
 在容器窗口打开 Codex 侧栏，选择 **Sign in with ChatGPT**，

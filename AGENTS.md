@@ -17,7 +17,9 @@ commands there. Configure the container image, init process, and shared memory
 in Compose.
 Keep Codex state in the Compose-managed volume named `codex`, mounted at
 `/home/node/.codex`, so existing logins survive container rebuilds. Compose must
-create the volume on first use. Never reset its contents during container setup.
+create the volume on first use. Use `onCreateCommand` to give `node` ownership of
+this directory and its existing contents, with directory permissions of `700`,
+before installing dependencies. Never reset its contents during container setup.
 
 When starting the dev server, use background mode:
 
