@@ -41,16 +41,18 @@ Choose checks according to the changes:
 - Code changes: run `npm run check` and `npm run lint` during development.
 - No file changes: skip checks.
 
-Browser regression tests use Playwright against production previews:
-`npm run test:e2e`. Install engines with
+Browser regression tests use Playwright against production previews.
+`npm run test:e2e` uses the root path by default.
+`npm run test:e2e:subdirectory` uses `cross-env` to set
+`BASE_PATH=/review-preview` across platforms. Install engines with
 `npx playwright install chromium firefox webkit`.
-For full local validation when needed, `npm run check-all:par` runs all checks,
-including the root browser suite, in parallel. `npm run check-all` runs the same
-checks sequentially; neither needs a separate root browser run.
-To cover both deployment paths, run the root suite first, then run
-`npm run test:e2e` with `BASE_PATH=/review-preview`. Browser suites rebuild
-`dist/`; within the same workspace, avoid overlapping browser runs or separate
-production builds because they share build output and report directories.
+`npm run test:e2e:all` runs the root browser suite first, then the subdirectory
+suite. For full local validation when needed, `npm run check-all:par` runs type,
+lint, formatting, and unit checks in parallel with `npm run test:e2e:all`.
+`npm run check-all` runs all checks sequentially. Both aggregate commands include
+both browser suites. Browser suites rebuild `dist/`; within the same workspace,
+avoid overlapping browser runs or separate production builds because they share
+build output and report directories.
 Use `localhost` for both the preview host and browser base URL.
 Configure browser workers as `75%` locally and `100%` in CI.
 Record CI traces on the first retry to avoid tracing every passing test. Local

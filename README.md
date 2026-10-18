@@ -159,19 +159,21 @@ Checks cover types, lint, formatting, unit tests, and browser tests.
 For code changes, run `npm run check` and `npm run lint` during development.
 For documentation-only changes, run `npm run format`.
 
-| Command                 | Purpose                                        |
-| ----------------------- | ---------------------------------------------- |
-| `npm run check`         | Check types and Astro diagnostics              |
-| `npm run lint`          | Run lint checks                                |
-| `npm run format`        | Check formatting                               |
-| `npm run check-all:par` | Run all checks in parallel                     |
-| `npm run check-all`     | Run all checks sequentially                    |
-| `npm test`              | Run unit and React interaction tests           |
-| `npm run test:e2e`      | Test desktop and mobile browser configurations |
-| `npm run test:watch`    | Rerun tests as files change                    |
-| `npm run format:fix`    | Format the project                             |
-| `npm run build`         | Generate the static site in `dist/`            |
-| `npm run preview`       | Preview the production build locally           |
+| Command                         | Purpose                                   |
+| ------------------------------- | ----------------------------------------- |
+| `npm run check`                 | Check types and Astro diagnostics         |
+| `npm run lint`                  | Run lint checks                           |
+| `npm run format`                | Check formatting                          |
+| `npm run check-all:par`         | Parallel checks; sequential E2E suites    |
+| `npm run check-all`             | Run all checks sequentially               |
+| `npm test`                      | Run unit and React interaction tests      |
+| `npm run test:e2e`              | Test desktop and mobile browsers          |
+| `npm run test:e2e:subdirectory` | Run browser tests under `/review-preview` |
+| `npm run test:e2e:all`          | Run both browser suites sequentially      |
+| `npm run test:watch`            | Rerun tests as files change               |
+| `npm run format:fix`            | Format the project                        |
+| `npm run build`                 | Generate the static site in `dist/`       |
+| `npm run preview`               | Preview the production build locally      |
 
 Run `npm run build` before `npm run preview`.
 
@@ -181,8 +183,9 @@ Then run `npm run test:e2e`; it builds and serves production pages automatically
 Browser reports are saved in `playwright-report/`, with failure screenshots and
 traces in `test-results/`. CI records traces only on the first retry, including
 when that retry passes; the initial attempt has no trace. Local runs have no
-retries and retain the initial failure trace. Set `BASE_PATH=/review-preview` in
-the command's environment to test a subdirectory build. CI runs both
+retries and retain the initial failure trace. Run `npm run test:e2e:subdirectory`
+to test a subdirectory build. This script uses `cross-env` to set
+`BASE_PATH=/review-preview` on Windows, macOS, and Linux. CI runs both
 configurations in parallel matrix jobs on separate runners, with a 30-minute
 timeout per job. In a local workspace, run the root and subdirectory suites
 sequentially. Type, lint, formatting, and unit checks run in the `test` job.
@@ -191,9 +194,10 @@ The browser matrix covers Chromium, Firefox, and WebKit with desktop and mobile
 presets. Firefox phone coverage uses a small viewport and touch; full mobile
 emulation is unavailable in Firefox.
 
-For full local validation when needed, run `npm run check-all:par` for all
-checks, including the root browser suite, in parallel. `npm run check-all`
-runs the same checks sequentially.
+For full local validation when needed, `npm run check-all:par` runs type, lint,
+formatting, and unit checks in parallel with `npm run test:e2e:all`. That script
+runs the root browser suite followed by `/review-preview`. `npm run check-all`
+runs all checks sequentially.
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 The commit hook checks your message automatically; `npm run commit` opens an
 interactive prompt to help write it.
@@ -223,8 +227,8 @@ static Astro project; it needs no database or Docker socket access.
    `npm run preview -- --host 0.0.0.0 --port 4322` and open port **4322**.
    Stop a manual preview before running browser tests, which use that port.
 
-Use the same checks inside the container. When testing both deployment paths,
-run `BASE_PATH=/review-preview npm run test:e2e` after the root suite finishes.
+Use the same checks inside the container. `npm run test:e2e:all` tests both
+deployment paths in sequence.
 After pulling dependency changes, rerun `npm ci --no-audit` and
 `npx playwright install --with-deps chromium firefox webkit`.
 Rebuild the container after changing `devcontainer.json` or `compose.yaml`.

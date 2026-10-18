@@ -135,19 +135,21 @@ Noto Sans SC 可变字体，并随网站一同提供。中文字体仅包含翻�
 修改代码时，在开发过程中运行 `npm run check` 和 `npm run lint`。
 仅修改文档时，运行 `npm run format`。
 
-| 命令                    | 用途                          |
-| ----------------------- | ----------------------------- |
-| `npm run check`         | 检查类型和 Astro 诊断         |
-| `npm run lint`          | 运行代码检查                  |
-| `npm run format`        | 检查格式                      |
-| `npm run check-all:par` | 并行运行全部检查和浏览器测试  |
-| `npm run check-all`     | 顺序运行全部检查和浏览器测试  |
-| `npm test`              | 运行单元测试与 React 交互测试 |
-| `npm run test:e2e`      | 测试桌面和移动浏览器配置      |
-| `npm run test:watch`    | 文件变化时重新运行测试        |
-| `npm run format:fix`    | 格式化项目                    |
-| `npm run build`         | 在 `dist/` 中生成静态站点     |
-| `npm run preview`       | 在本地预览生产构建            |
+| 命令                            | 用途                                  |
+| ------------------------------- | ------------------------------------- |
+| `npm run check`                 | 检查类型和 Astro 诊断                 |
+| `npm run lint`                  | 运行代码检查                          |
+| `npm run format`                | 检查格式                              |
+| `npm run check-all:par`         | 并行检查，顺序运行两组浏览器测试      |
+| `npm run check-all`             | 顺序运行全部检查和浏览器测试          |
+| `npm test`                      | 运行单元测试与 React 交互测试         |
+| `npm run test:e2e`              | 测试桌面和移动浏览器配置              |
+| `npm run test:e2e:subdirectory` | 在 `/review-preview` 下运行浏览器测试 |
+| `npm run test:e2e:all`          | 顺序运行两组浏览器测试                |
+| `npm run test:watch`            | 文件变化时重新运行测试                |
+| `npm run format:fix`            | 格式化项目                            |
+| `npm run build`                 | 在 `dist/` 中生成静态站点             |
+| `npm run preview`               | 在本地预览生产构建                    |
 
 运行 `npm run preview` 前，先运行 `npm run build`。
 
@@ -156,15 +158,17 @@ Noto Sans SC 可变字体，并随网站一同提供。中文字体仅包含翻�
 浏览器报告保存在 `playwright-report/`，失败截图和追踪文件保存在 `test-results/`。
 CI 仅在首次重试时记录追踪，即使重试通过也会保留；首次执行不记录追踪。
 本地运行不重试，并保留首次执行失败时的追踪。
-在命令的环境中设置 `BASE_PATH=/review-preview` 即可测试子目录部署。
+运行 `npm run test:e2e:subdirectory` 可测试子目录部署。
+该命令通过 `cross-env` 设置 `BASE_PATH=/review-preview`，适用于 Windows、macOS 和 Linux。
 CI 会通过矩阵在独立的运行器上并行测试这两种配置，每个任务的超时时间为 30 分钟。
 在同一个本地工作目录中，根路径和子目录测试必须顺序运行。
 类型、代码、格式检查和单元测试在 `test` 任务中运行。
 
 浏览器测试覆盖 Chromium、Firefox 和 WebKit 的桌面及移动配置。Firefox 的手机测试使用小尺寸视口和触控；Firefox 不支持完整的移动设备模拟。
 
-需要完整的本地验证时，可运行 `npm run check-all:par`，并行执行全部检查（包括根路径浏览器测试）。
-`npm run check-all` 可顺序执行相同的检查。
+需要完整的本地验证时，可运行 `npm run check-all:par`，并行执行类型、代码、格式检查、单元测试
+和 `npm run test:e2e:all`。浏览器测试会先运行根路径套件，再运行 `/review-preview` 套件。
+`npm run check-all` 可顺序执行全部检查。
 提交信息遵循 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)。
 提交钩子会自动检查信息格式；`npm run commit` 可打开交互提示，帮助你编写提交信息。
 
@@ -191,8 +195,7 @@ ESLint、Prettier 和 Playwright 编辑器扩展。
    `npm run preview -- --host 0.0.0.0 --port 4322`，打开端口 **4322**。
    浏览器测试也使用此端口，因此测试前请停止手动启动的预览。
 
-容器内使用相同的检查命令。需要测试两种部署路径时，先运行根路径测试，
-再运行 `BASE_PATH=/review-preview npm run test:e2e`。
+容器内使用相同的检查命令。`npm run test:e2e:all` 会顺序测试两种部署路径。
 拉取依赖变更后，重新运行 `npm ci --no-audit` 和
 `npx playwright install --with-deps chromium firefox webkit`。
 修改 `devcontainer.json` 或 `compose.yaml` 后，请重新构建容器。
