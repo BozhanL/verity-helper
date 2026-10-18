@@ -10,8 +10,11 @@ README files. Container creation must not sign in, embed credentials, or mount
 host authentication directories; authentication remains a manual user step.
 
 `devcontainer.json` selects the `app` service in `.devcontainer/compose.yaml`.
-Keep the workspace mount and working directory at `/workspaces/verity-helper`;
-configure the image build, init process, and shared memory in Compose.
+Compose mounts the checkout's parent directory at `/workspaces`, and
+`workspaceFolder` is `/workspaces/${localWorkspaceFolderBasename}`. Keep the
+workspace path aligned with the local checkout folder name and run project
+commands there. Configure the container image, init process, and shared memory
+in Compose.
 Keep Codex state in the Compose-managed volume named `codex`, mounted at
 `/home/node/.codex`, so existing logins survive container rebuilds. Compose must
 create the volume on first use. Never reset its contents during container setup.

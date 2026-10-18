@@ -200,7 +200,9 @@ npm, GitHub CLI, and the official [Codex VS Code extension][codex-ide]
 (`openai.chatgpt`). It also includes editor extensions for Astro, Tailwind,
 ESLint, Prettier, and Playwright.
 It uses [Docker Compose](.devcontainer/compose.yaml) to start the container
-and mount this repository at `/workspaces/verity-helper`.
+and mount the checkout's parent directory at `/workspaces`. The workspace opens
+at `/workspaces/${localWorkspaceFolderBasename}`, so its path follows the local
+checkout folder name (for example, `/workspaces/verity-helper`).
 The configuration adapts the [rehua reference][devcontainer-reference] to this
 static Astro project; it needs no database or Docker socket access.
 

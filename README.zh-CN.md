@@ -168,7 +168,9 @@ CI 会通过矩阵在独立的运行器上并行测试这两种配置，每个�
 以及官方 [Codex VS Code 扩展][codex-ide]（`openai.chatgpt`），并包含 Astro、Tailwind、
 ESLint、Prettier 和 Playwright 编辑器扩展。
 容器通过 [Docker Compose](.devcontainer/compose.yaml) 启动，
-并将本仓库挂载到 `/workspaces/verity-helper`。
+并将本地仓库的父目录挂载到 `/workspaces`。工作区路径为
+`/workspaces/${localWorkspaceFolderBasename}`，随本地仓库文件夹名称变化
+（例如 `/workspaces/verity-helper`）。
 配置基于 [rehua 的参考配置][devcontainer-reference]，按本项目的静态 Astro
 架构调整，无需数据库或访问 Docker 套接字。
 
