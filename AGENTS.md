@@ -8,6 +8,10 @@ tool versions aligned with `package.json` and its setup instructions in both
 README files. Container creation must not sign in, embed credentials, or mount
 host authentication directories; authentication remains a manual user step.
 
+`devcontainer.json` selects the `app` service in `.devcontainer/compose.yaml`.
+Keep the workspace mount and working directory at `/workspaces/verity-helper`;
+configure the image build, init process, and shared memory in Compose.
+
 When starting the dev server, use background mode:
 
 ```sh

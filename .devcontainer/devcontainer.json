@@ -1,14 +1,13 @@
 {
   "name": "Verity Helper",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": "."
-  },
+  "dockerComposeFile": "compose.yaml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "shutdownAction": "stopCompose",
   "remoteUser": "node",
-  "init": true,
-  "runArgs": ["--shm-size=1g"],
   "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {}
+    "ghcr.io/devcontainers/features/github-cli:1.0.13": {},
+    "ghcr.io/devcontainers-extra/features/cz-cli:1.0.2": {}
   },
   "forwardPorts": [4321, 4322],
   "portsAttributes": {

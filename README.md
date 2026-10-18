@@ -196,15 +196,17 @@ interactive prompt to help write it.
 ### Development container
 
 The [dev container](.devcontainer/devcontainer.json) provides Node.js 24,
-npm 11.11, GitHub CLI, and the official [Codex CLI][codex-cli] and
-[Codex VS Code extension][codex-ide] (`openai.chatgpt`). It also includes editor
-extensions for Astro, Tailwind, ESLint, Prettier, and Playwright.
+npm, GitHub CLI, and the official [Codex VS Code extension][codex-ide]
+(`openai.chatgpt`). It also includes editor extensions for Astro, Tailwind,
+ESLint, Prettier, and Playwright.
+It uses [Docker Compose](.devcontainer/compose.yaml) to start the container
+and mount this repository at `/workspaces/verity-helper`.
 The configuration adapts the [rehua reference][devcontainer-reference] to this
 static Astro project; it needs no database or Docker socket access.
 
-1. Install Docker and VS Code's **Dev Containers** extension, open this clone,
-   and run **Dev Containers: Reopen in Container**. Alternatively, create a
-   GitHub Codespace for this branch.
+1. Install Docker with Docker Compose and VS Code's **Dev Containers** extension,
+   open this clone, and run **Dev Containers: Reopen in Container**.
+   Alternatively, create a GitHub Codespace for this branch.
 2. Wait for setup to finish. It runs `npm ci --no-audit`, then installs Chromium,
    Firefox, WebKit, and their Linux dependencies using the project's locked
    Playwright version. Initial setup requires network access to download the
@@ -218,26 +220,18 @@ Run the checks above inside the container, including
 `BASE_PATH=/review-preview npm run test:e2e` after the root suite finishes.
 After pulling dependency changes, rerun `npm ci --no-audit` and
 `npx playwright install --with-deps chromium firefox webkit`.
-Rebuild the container after changing its configuration or Dockerfile; pinned
-npm and Codex CLI versions are set in the Dockerfile.
+Rebuild the container after changing `devcontainer.json` or `compose.yaml`.
 
 Open the Codex sidebar in the container window and choose **Sign in with
-ChatGPT**, or run `codex login --device-auth` in its terminal and complete the
-link/code flow in your browser. Device login must be enabled for your account
-or workspace. Run `codex login status` to verify, then `codex` to start; choose
-your available model and reasoning effort in Codex. See the official
-[authentication guide][codex-auth] for API-key or browser-login alternatives.
+ChatGPT**. Choose your available model and reasoning effort in the extension.
+See the official [authentication guide][codex-auth] for other sign-in options.
 
-Authentication is a separate, manual step. Codex normally caches login details
-under the container user's `~/.codex` or in a credential store. No host
-credentials or authentication volume are mounted by this configuration, so
-expect to sign in again after a rebuild. Keep API keys, tokens, `auth.json`,
+Authentication is a separate, manual step. Keep API keys, tokens, `auth.json`,
 and private keys out of repository files, Docker build arguments, and logs.
-Use `codex logout` to clear a stored login. GitHub CLI authentication is separate
-from Codex; check `gh auth status` before using GitHub commands.
+GitHub CLI authentication is separate from Codex; check `gh auth status` before
+using GitHub commands.
 
 [devcontainer-reference]: https://github.com/BozhanL/rehua/blob/main/.devcontainer/devcontainer.json
-[codex-cli]: https://github.com/openai/codex#installing-and-running-codex-cli
 [codex-ide]: https://developers.openai.com/codex/ide
 [codex-auth]: https://developers.openai.com/codex/auth
 
