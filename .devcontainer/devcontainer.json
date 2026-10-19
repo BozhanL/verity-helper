@@ -6,7 +6,7 @@
   "shutdownAction": "stopCompose",
   "remoteUser": "node",
   "features": {
-    "ghcr.io/devcontainers/features/github-cli:1.0.13": {},
+    "ghcr.io/devcontainers/features/github-cli:1.0.15": {},
     "ghcr.io/devcontainers-extra/features/cz-cli:1.0.2": {}
   },
   "forwardPorts": [4321, 4322],
