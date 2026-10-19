@@ -137,8 +137,8 @@ landscape. Restart remains available as a secondary action during a round.
 ## Local development
 
 The project uses Astro, React, TypeScript, and Tailwind CSS, with Remeda for
-array helpers and Radix for accessible selection controls. Install Node.js 24
-and npm 11 (version 11.11 or later), then run these commands from your local clone:
+array helpers and Radix for accessible selection controls. Install Node.js 26
+and npm 11 (version 11.20.0 or later), then run these commands from your local clone:
 
 ```sh
 npm ci
@@ -205,8 +205,8 @@ interactive prompt to help write it.
 
 ### Development container
 
-The [dev container](.devcontainer/devcontainer.json) provides Node.js 24,
-npm, GitHub CLI, and the official [Codex VS Code extension][codex-ide]
+The [dev container](.devcontainer/devcontainer.json) provides Node.js 26,
+npm 11, GitHub CLI, and the official [Codex VS Code extension][codex-ide]
 (`openai.chatgpt`). It also includes editor extensions for Astro, Tailwind,
 ESLint, Prettier, and Playwright.
 It uses [Docker Compose](.devcontainer/compose.yaml) to start the container
