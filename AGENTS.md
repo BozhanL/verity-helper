@@ -2,7 +2,8 @@
 
 ## Development
 
-The optional `.devcontainer/` environment installs Node.js 26, a compatible npm 11,
+The optional `.devcontainer/` environment installs Node.js 26,
+a compatible npm 11,
 GitHub CLI, editor extensions (including the Codex VS Code extension), and the
 project's Playwright browsers. The standalone Codex CLI is not installed. Keep
 its tool versions aligned with `package.json` and its setup instructions in both
@@ -37,8 +38,9 @@ interactive changes; component tests alone do not catch client startup failures.
 
 Choose checks according to the changes:
 
-- Documentation-only changes: run only `npm run format` before handoff.
-- Code changes: run `npm run check` and `npm run lint` during development.
+- Documentation-only changes: run `npm run format` and `npm run lint` before handoff.
+- Code changes: run `npm run check`, `npm run lint` and `npm run format`
+  before handoff.
 - No file changes: skip checks.
 
 Browser regression tests use Playwright against production previews.
