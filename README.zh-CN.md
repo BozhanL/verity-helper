@@ -116,7 +116,7 @@
 ## 本地开发
 
 项目使用 Astro、React、TypeScript 和 Tailwind CSS，通过 Remeda 处理数组辅助操作，并使用 Radix 构建无障碍选择控件。
-安装 Node.js 24 和 npm 11（11.11 或更高版本），然后在本地仓库目录中运行：
+安装 Node.js 26 和 npm 11（11.20.0 或更高版本），然后在本地仓库目录中运行：
 
 ```sh
 npm ci
@@ -175,7 +175,7 @@ CI 会通过矩阵在独立的运行器上并行测试这两种配置，每个�
 
 ### 开发容器
 
-[开发容器](.devcontainer/devcontainer.json) 提供 Node.js 24、npm、GitHub CLI，
+[开发容器](.devcontainer/devcontainer.json) 提供 Node.js 26、npm 11、GitHub CLI，
 以及官方 [Codex VS Code 扩展][codex-ide]（`openai.chatgpt`），并包含 Astro、Tailwind、
 ESLint、Prettier 和 Playwright 编辑器扩展。
 容器通过 [Docker Compose](.devcontainer/compose.yaml) 启动，
