@@ -132,35 +132,100 @@ Noto Sans SC 可变字体，并随网站一同提供。中文字体仅包含翻�
 首次启动开发服务器或进行生产构建时，需要能访问 Google Fonts。
 
 检查包括类型、代码、格式检查，以及单元测试和浏览器测试。
+修改代码时，在开发过程中运行 `npm run check` 和 `npm run lint`。
+仅修改文档时，运行 `npm run format`。
 
-| 命令                    | 用途                          |
-| ----------------------- | ----------------------------- |
-| `npm run check-all:par` | 并行运行全部检查和浏览器测试  |
-| `npm run check-all`     | 顺序运行全部检查和浏览器测试  |
-| `npm test`              | 运行单元测试与 React 交互测试 |
-| `npm run test:e2e`      | 测试桌面和移动浏览器配置      |
-| `npm run test:watch`    | 文件变化时重新运行测试        |
-| `npm run format:fix`    | 格式化项目                    |
-| `npm run build`         | 在 `dist/` 中生成静态站点     |
-| `npm run preview`       | 在本地预览生产构建            |
+| 命令                            | 用途                                  |
+| ------------------------------- | ------------------------------------- |
+| `npm run check`                 | 检查类型和 Astro 诊断                 |
+| `npm run lint`                  | 运行代码检查                          |
+| `npm run format`                | 检查格式                              |
+| `npm run check-all:par`         | 并行检查，顺序运行两组浏览器测试      |
+| `npm run check-all`             | 顺序运行全部检查和浏览器测试          |
+| `npm test`                      | 运行单元测试与 React 交互测试         |
+| `npm run test:e2e`              | 测试桌面和移动浏览器配置              |
+| `npm run test:e2e:subdirectory` | 在 `/review-preview` 下运行浏览器测试 |
+| `npm run test:e2e:all`          | 顺序运行两组浏览器测试                |
+| `npm run test:watch`            | 文件变化时重新运行测试                |
+| `npm run format:fix`            | 格式化项目                            |
+| `npm run build`                 | 在 `dist/` 中生成静态站点             |
+| `npm run preview`               | 在本地预览生产构建                    |
 
 运行 `npm run preview` 前，先运行 `npm run build`。
 
 首次运行浏览器测试前，使用 `npx playwright install chromium firefox webkit` 安装浏览器引擎。
-然后运行 `npm run test:e2e`，测试会自动构建并启动生产页面预览。
+然后运行 `npm run test:e2e`，测试会自动构建并在 `/` 下启动生产页面预览，
+覆盖已有的 `BASE_PATH` 环境变量。
 浏览器报告保存在 `playwright-report/`，失败截图和追踪文件保存在 `test-results/`。
 CI 仅在首次重试时记录追踪，即使重试通过也会保留；首次执行不记录追踪。
 本地运行不重试，并保留首次执行失败时的追踪。
-在命令的环境中设置 `BASE_PATH=/review-preview` 即可测试子目录部署。
+运行 `npm run test:e2e:subdirectory` 可测试子目录部署。
+该命令通过 `cross-env` 设置 `BASE_PATH=/review-preview`，适用于 Windows、macOS 和 Linux。
 CI 会通过矩阵在独立的运行器上并行测试这两种配置，每个任务的超时时间为 30 分钟。
 在同一个本地工作目录中，根路径和子目录测试必须顺序运行。
 类型、代码、格式检查和单元测试在 `test` 任务中运行。
 
 浏览器测试覆盖 Chromium、Firefox 和 WebKit 的桌面及移动配置。Firefox 的手机测试使用小尺寸视口和触控；Firefox 不支持完整的移动设备模拟。
 
-提交 PR 前，运行 `npm run check-all:par`，并行执行全部检查和生产页面浏览器测试。使用 `npm run check-all` 可顺序执行相同的检查。
+需要完整的本地验证时，可运行 `npm run check-all:par`，并行执行类型、代码、格式检查、单元测试
+和 `npm run test:e2e:all`。浏览器测试会先运行根路径套件，再运行 `/review-preview` 套件。
+`npm run check-all` 可顺序执行全部检查。
 提交信息遵循 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)。
 提交钩子会自动检查信息格式；`npm run commit` 可打开交互提示，帮助你编写提交信息。
+
+### 开发容器
+
+[开发容器](.devcontainer/devcontainer.json) 提供 Node.js 24、npm、GitHub CLI，
+以及官方 [Codex VS Code 扩展][codex-ide]（`openai.chatgpt`），并包含 Astro、Tailwind、
+ESLint、Prettier 和 Playwright 编辑器扩展。
+容器通过 [Docker Compose](.devcontainer/compose.yaml) 启动，
+并将本地仓库的父目录挂载到 `/workspaces`。工作区路径为
+`/workspaces/${localWorkspaceFolderBasename}`，随本地仓库文件夹名称变化
+（例如 `/workspaces/verity-helper`）。
+配置基于 [rehua 的参考配置][devcontainer-reference]，按本项目的静态 Astro
+架构调整，无需数据库或访问 Docker 套接字。
+
+1. 安装包含 Docker Compose 的 Docker 和 VS Code 的 **Dev Containers** 扩展，打开本地仓库，
+   执行 **Dev Containers: Reopen in Container**。
+   也可以为此分支创建 GitHub Codespace。
+2. 等待初始化完成。容器先运行 `npm ci --no-audit`，再使用项目锁定的
+   Playwright 版本安装 Chromium、Firefox、WebKit 及其 Linux 依赖。
+   首次配置需要联网下载容器镜像、工具、依赖包和浏览器。
+3. 在容器终端运行 `npm run dev -- --host 0.0.0.0`，打开转发端口 **4321**。
+   预览生产构建时，先运行 `npm run build`，再运行
+   `npm run preview -- --host 0.0.0.0 --port 4322`，打开端口 **4322**。
+   浏览器测试也使用此端口，因此测试前请停止手动启动的预览。
+
+容器内使用相同的检查命令。`npm run test:e2e:all` 会顺序测试两种部署路径。
+拉取依赖变更后，重新运行 `npm ci --no-audit` 和
+`npx playwright install --with-deps chromium firefox webkit`。
+修改 `devcontainer.json` 或 `compose.yaml` 后，请重新构建容器。
+
+Compose 会在首次使用时创建名为 `codex` 的卷，并将其挂载到
+`/home/node/.codex`，并复用同一 Docker 主机上已有的 `codex` 卷。
+设置和保存在文件中的登录信息会在容器重启及常规重新构建后保留。
+删除此卷（包括运行 `docker compose down --volumes`）
+会清除已保存的登录信息。Codespaces 的[完全重新构建][codespaces-rebuild]也会
+删除 Docker 卷。更换 Docker 主机或新建 Codespace 后，需要重新登录。
+
+创建或重新构建容器时，初始化步骤会在安装依赖前，将 `/home/node/.codex`
+及其现有内容的所有权设为 `node`，并将目录访问权限限制为该用户。
+已有设置和登录文件会保留。
+
+在容器用户的 `~/.codex/config.toml` 中设置
+`cli_auth_credentials_store = "file"`，让 Codex 将登录信息保存在挂载的卷中。
+在容器窗口打开 Codex 侧栏，选择 **Sign in with ChatGPT**，
+然后在扩展中选择账号可用的模型和推理强度。
+其他登录方式见官方[身份验证指南][codex-auth]。
+
+身份验证需要单独手动完成。
+不要将 API 密钥、令牌、`auth.json` 或私钥放入仓库文件、Docker 构建参数或日志中。
+GitHub CLI 与 Codex 分别认证；使用 GitHub 命令前，可运行 `gh auth status` 检查状态。
+
+[devcontainer-reference]: https://github.com/BozhanL/rehua/blob/main/.devcontainer/devcontainer.json
+[codex-ide]: https://developers.openai.com/codex/ide
+[codex-auth]: https://developers.openai.com/codex/auth
+[codespaces-rebuild]: https://docs.github.com/en/codespaces/developing-in-a-codespace/rebuilding-the-container-in-a-codespace
 
 ## 部署
 

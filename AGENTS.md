@@ -2,6 +2,25 @@
 
 ## Development
 
+The optional `.devcontainer/` environment installs Node.js 24, a compatible npm,
+GitHub CLI, editor extensions (including the Codex VS Code extension), and the
+project's Playwright browsers. The standalone Codex CLI is not installed. Keep
+its tool versions aligned with `package.json` and its setup instructions in both
+README files. Container creation must not sign in, embed credentials, or mount
+host authentication directories; authentication remains a manual user step.
+
+`devcontainer.json` selects the `app` service in `.devcontainer/compose.yaml`.
+Compose mounts the checkout's parent directory at `/workspaces`, and
+`workspaceFolder` is `/workspaces/${localWorkspaceFolderBasename}`. Keep the
+workspace path aligned with the local checkout folder name and run project
+commands there. Configure the container image, init process, and shared memory
+in Compose.
+Keep Codex state in the Compose-managed volume named `codex`, mounted at
+`/home/node/.codex`, so existing logins survive container rebuilds. Compose must
+create the volume on first use. Use `onCreateCommand` to give `node` ownership of
+this directory and its existing contents, with directory permissions of `700`,
+before installing dependencies. Never reset its contents during container setup.
+
 When starting the dev server, use background mode:
 
 ```sh
@@ -16,17 +35,24 @@ Astro checks run in production mode and must not overwrite a running dev server'
 React runtime. Verify hydration and shape selection on served pages after
 interactive changes; component tests alone do not catch client startup failures.
 
-If you changed any project files during the task, run `npm run check-all:par`
-before handing the work back to the user. Skip it if you made no file changes.
+Choose checks according to the changes:
 
-Browser regression tests use Playwright against production previews:
-`npm run test:e2e`. Install engines with
+- Documentation-only changes: run only `npm run format` before handoff.
+- Code changes: run `npm run check` and `npm run lint` during development.
+- No file changes: skip checks.
+
+Browser regression tests use Playwright against production previews.
+`npm run test:e2e` uses `cross-env` to set `BASE_PATH=/`.
+`npm run test:e2e:subdirectory` uses `cross-env` to set
+`BASE_PATH=/review-preview` across platforms. Install engines with
 `npx playwright install chromium firefox webkit`.
-`npm run check-all:par` runs all checks, including browser tests, in parallel.
-`npm run check-all` runs the same checks sequentially.
-Also run browser tests with `BASE_PATH=/review-preview`. Browser suites rebuild
-`dist/`; within the same workspace, avoid overlapping browser runs or separate
-production builds because they share build output and report directories.
+`npm run test:e2e:all` runs the root browser suite first, then the subdirectory
+suite. For full local validation when needed, `npm run check-all:par` runs type,
+lint, formatting, and unit checks in parallel with `npm run test:e2e:all`.
+`npm run check-all` runs all checks sequentially. Both aggregate commands include
+both browser suites. Browser suites rebuild `dist/`; within the same workspace,
+avoid overlapping browser runs or separate production builds because they share
+build output and report directories.
 Use `localhost` for both the preview host and browser base URL.
 Configure browser workers as `75%` locally and `100%` in CI.
 Record CI traces on the first retry to avoid tracing every passing test. Local

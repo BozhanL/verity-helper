@@ -156,28 +156,37 @@ Chinese pages. The first development or production build needs access to
 Google Fonts.
 
 Checks cover types, lint, formatting, unit tests, and browser tests.
+For code changes, run `npm run check` and `npm run lint` during development.
+For documentation-only changes, run `npm run format`.
 
-| Command                 | Purpose                                        |
-| ----------------------- | ---------------------------------------------- |
-| `npm run check-all:par` | Run all checks in parallel                     |
-| `npm run check-all`     | Run all checks sequentially                    |
-| `npm test`              | Run unit and React interaction tests           |
-| `npm run test:e2e`      | Test desktop and mobile browser configurations |
-| `npm run test:watch`    | Rerun tests as files change                    |
-| `npm run format:fix`    | Format the project                             |
-| `npm run build`         | Generate the static site in `dist/`            |
-| `npm run preview`       | Preview the production build locally           |
+| Command                         | Purpose                                   |
+| ------------------------------- | ----------------------------------------- |
+| `npm run check`                 | Check types and Astro diagnostics         |
+| `npm run lint`                  | Run lint checks                           |
+| `npm run format`                | Check formatting                          |
+| `npm run check-all:par`         | Parallel checks; sequential E2E suites    |
+| `npm run check-all`             | Run all checks sequentially               |
+| `npm test`                      | Run unit and React interaction tests      |
+| `npm run test:e2e`              | Test desktop and mobile browsers          |
+| `npm run test:e2e:subdirectory` | Run browser tests under `/review-preview` |
+| `npm run test:e2e:all`          | Run both browser suites sequentially      |
+| `npm run test:watch`            | Rerun tests as files change               |
+| `npm run format:fix`            | Format the project                        |
+| `npm run build`                 | Generate the static site in `dist/`       |
+| `npm run preview`               | Preview the production build locally      |
 
 Run `npm run build` before `npm run preview`.
 
 Install browser test engines once with
 `npx playwright install chromium firefox webkit`.
-Then run `npm run test:e2e`; it builds and serves production pages automatically.
+Then run `npm run test:e2e`; it builds and serves production pages at `/`
+automatically, overriding any existing `BASE_PATH` value.
 Browser reports are saved in `playwright-report/`, with failure screenshots and
 traces in `test-results/`. CI records traces only on the first retry, including
 when that retry passes; the initial attempt has no trace. Local runs have no
-retries and retain the initial failure trace. Set `BASE_PATH=/review-preview` in
-the command's environment to test a subdirectory build. CI runs both
+retries and retain the initial failure trace. Run `npm run test:e2e:subdirectory`
+to test a subdirectory build. This script uses `cross-env` to set
+`BASE_PATH=/review-preview` on Windows, macOS, and Linux. CI runs both
 configurations in parallel matrix jobs on separate runners, with a 30-minute
 timeout per job. In a local workspace, run the root and subdirectory suites
 sequentially. Type, lint, formatting, and unit checks run in the `test` job.
@@ -186,12 +195,72 @@ The browser matrix covers Chromium, Firefox, and WebKit with desktop and mobile
 presets. Firefox phone coverage uses a small viewport and touch; full mobile
 emulation is unavailable in Firefox.
 
-Before opening a pull request, run `npm run check-all:par` to run all checks,
-including production browser tests, in parallel. Use `npm run check-all` to run
-the same checks sequentially.
+For full local validation when needed, `npm run check-all:par` runs type, lint,
+formatting, and unit checks in parallel with `npm run test:e2e:all`. That script
+runs the root browser suite followed by `/review-preview`. `npm run check-all`
+runs all checks sequentially.
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 The commit hook checks your message automatically; `npm run commit` opens an
 interactive prompt to help write it.
+
+### Development container
+
+The [dev container](.devcontainer/devcontainer.json) provides Node.js 24,
+npm, GitHub CLI, and the official [Codex VS Code extension][codex-ide]
+(`openai.chatgpt`). It also includes editor extensions for Astro, Tailwind,
+ESLint, Prettier, and Playwright.
+It uses [Docker Compose](.devcontainer/compose.yaml) to start the container
+and mount the checkout's parent directory at `/workspaces`. The workspace opens
+at `/workspaces/${localWorkspaceFolderBasename}`, so its path follows the local
+checkout folder name (for example, `/workspaces/verity-helper`).
+The configuration adapts the [rehua reference][devcontainer-reference] to this
+static Astro project; it needs no database or Docker socket access.
+
+1. Install Docker with Docker Compose and VS Code's **Dev Containers** extension,
+   open this clone, and run **Dev Containers: Reopen in Container**.
+   Alternatively, create a GitHub Codespace for this branch.
+2. Wait for setup to finish. It runs `npm ci --no-audit`, then installs Chromium,
+   Firefox, WebKit, and their Linux dependencies using the project's locked
+   Playwright version. Initial setup requires network access to download the
+   container image, tools, packages, and browsers.
+3. In the container terminal, run `npm run dev -- --host 0.0.0.0` and open
+   forwarded port **4321**. For a production preview, run `npm run build`, then
+   `npm run preview -- --host 0.0.0.0 --port 4322` and open port **4322**.
+   Stop a manual preview before running browser tests, which use that port.
+
+Use the same checks inside the container. `npm run test:e2e:all` tests both
+deployment paths in sequence.
+After pulling dependency changes, rerun `npm ci --no-audit` and
+`npx playwright install --with-deps chromium firefox webkit`.
+Rebuild the container after changing `devcontainer.json` or `compose.yaml`.
+
+Compose creates the named `codex` volume on first use and mounts it at
+`/home/node/.codex`. It reuses an existing `codex` volume on the same Docker host.
+Settings and file-based login details survive container restarts and normal
+rebuilds. Removing this volume, including with `docker compose down --volumes`,
+clears the saved login. A Codespaces [full rebuild][codespaces-rebuild] also
+removes Docker volumes. A different Docker host or a new Codespace needs its
+own sign-in.
+
+On creation and rebuild, setup gives `node` ownership of `/home/node/.codex`
+and its existing contents, and limits directory access to that user before
+installing dependencies. Saved settings and login files are preserved.
+
+Set `cli_auth_credentials_store = "file"` in the container user's
+`~/.codex/config.toml` so Codex stores its login in the mounted volume.
+Open the Codex sidebar in the container window and choose **Sign in with
+ChatGPT**. Choose your available model and reasoning effort in the extension.
+See the official [authentication guide][codex-auth] for other sign-in options.
+
+Authentication is a separate, manual step. Keep API keys, tokens, `auth.json`,
+and private keys out of repository files, Docker build arguments, and logs.
+GitHub CLI authentication is separate from Codex; check `gh auth status` before
+using GitHub commands.
+
+[devcontainer-reference]: https://github.com/BozhanL/rehua/blob/main/.devcontainer/devcontainer.json
+[codex-ide]: https://developers.openai.com/codex/ide
+[codex-auth]: https://developers.openai.com/codex/auth
+[codespaces-rebuild]: https://docs.github.com/en/codespaces/developing-in-a-codespace/rebuilding-the-container-in-a-codespace
 
 ## Deployment
 

@@ -1,0 +1,41 @@
+{
+  "name": "Verity Helper",
+  "dockerComposeFile": "compose.yaml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "shutdownAction": "stopCompose",
+  "remoteUser": "node",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1.0.13": {},
+    "ghcr.io/devcontainers-extra/features/cz-cli:1.0.2": {}
+  },
+  "forwardPorts": [4321, 4322],
+  "portsAttributes": {
+    "4321": {
+      "label": "Astro development",
+      "onAutoForward": "notify"
+    },
+    "4322": {
+      "label": "Astro preview / Playwright",
+      "onAutoForward": "silent"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "astro-build.astro-vscode",
+        "bradlc.vscode-tailwindcss",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "github.vscode-github-actions",
+        "GitHub.vscode-pull-request-github",
+        "ms-playwright.playwright",
+        "openai.chatgpt",
+        "redhat.vscode-yaml"
+      ]
+    }
+  },
+  "onCreateCommand": "sudo chown -R node:node /home/node/.codex && chmod 700 /home/node/.codex",
+  "postCreateCommand": "npm ci --no-audit && npx playwright install --with-deps chromium firefox webkit",
+  "waitFor": "postCreateCommand"
+}

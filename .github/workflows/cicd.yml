@@ -54,9 +54,9 @@ jobs:
       matrix:
         include:
           - target: production
-            base_path: /
+            script: test:e2e
           - target: subdirectory
-            base_path: /review-preview
+            script: test:e2e:subdirectory
 
     steps:
       - name: 🏗 Checkout repository
@@ -76,9 +76,7 @@ jobs:
         run: npx playwright install --with-deps chromium firefox webkit
 
       - name: 🧪 Run E2E tests
-        env:
-          BASE_PATH: ${{ matrix.base_path }}
-        run: npm run test:e2e
+        run: npm run ${{ matrix.script }}
 
       - name: 📦 Upload browser failure evidence
         if: ${{ failure() }}

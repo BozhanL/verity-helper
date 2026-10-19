@@ -1,0 +1,13 @@
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/typescript-node:24-trixie
+    init: true
+    shm_size: 1gb
+    volumes:
+      - ../..:/workspaces:cached
+      - codex:/home/node/.codex
+    command: sleep infinity
+
+volumes:
+  codex:
+    name: codex
