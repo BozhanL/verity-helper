@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@astrojs/react": "7.0.1",
-    "@radix-ui/react-radio-group": "1.5.0",
+    "@radix-ui/react-radio-group": "1.5.1",
     "@tailwindcss/vite": "4.3.3",
     "astro": "7.3.8",
     "react": "19.3.0",
