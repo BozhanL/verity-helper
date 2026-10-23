@@ -47,7 +47,7 @@
     "astro": "7.3.8",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "remeda": "2.51.0",
+    "remeda": "2.52.0",
     "tailwindcss": "4.3.3"
   },
   "devDependencies": {
