@@ -52,9 +52,9 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
-    "@commitlint/cli": "21.2.3",
-    "@commitlint/config-conventional": "21.2.3",
-    "@commitlint/cz-commitlint": "21.2.3",
+    "@commitlint/cli": "21.2.4",
+    "@commitlint/config-conventional": "21.2.4",
+    "@commitlint/cz-commitlint": "21.2.4",
     "@playwright/test": "1.64.1",
     "@testing-library/react": "16.3.3",
     "@types/node": "24.19.2",
