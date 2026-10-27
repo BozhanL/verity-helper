@@ -66,7 +66,7 @@
     "eslint": "10.13.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-astro": "3.2.1",
-    "eslint-plugin-better-tailwindcss": "4.9.1",
+    "eslint-plugin-better-tailwindcss": "4.10.0",
     "eslint-plugin-jsx-a11y-x": "0.2.0",
     "eslint-plugin-markdownlint": "1.0.0",
     "eslint-plugin-sonarjs": "4.2.2",
