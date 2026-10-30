@@ -25,7 +25,7 @@ const VIEWPORTS = [
 
 async function assertTouchTargets(page: Page): Promise<void> {
   const controls = page.locator(
-    "button:visible, select:visible, summary:visible, .page-navigation a, .language-navigation a:visible, .reference-links a, .result-links a, .result-actions a, .encounter-card, .brand",
+    "button:visible, select:visible, summary:visible, .page-navigation a, .language-navigation a:visible, .reference-links a, .result-links a, .result-actions a, .solo-phase a, .encounter-card, .brand",
   );
   const targets = await controls.evaluateAll((elements) =>
     elements.map((element) => {

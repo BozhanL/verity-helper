@@ -222,6 +222,26 @@ export interface SoloPlan {
   readonly keep: readonly Shape[];
 }
 
+export const SOLO_PHASES = ["opening", "after"] as const;
+export type SoloPhase = (typeof SOLO_PHASES)[number];
+
+/** Check received shapes only after all solo players finish their opening trades.
+ * Community direct-transfer strategy:
+ * https://sites.google.com/view/travelerschosen/guides/salvations-edge/verity
+ */
+export function planSoloAfterTrades(
+  inside: Triple<Shape>,
+  self: Statue,
+  available: Pair,
+): SoloPlan | null {
+  if (!isValidInside(inside) || available.includes(inside[self])) {
+    return null;
+  }
+  return available[0] === available[1]
+    ? planSoloTransfers(inside, self, available)
+    : { give: [], keep: available };
+}
+
 /** Plan direct solo-room transfers for the two currently available shapes. */
 export function planSoloTransfers(
   inside: Triple<Shape>,

@@ -85,7 +85,7 @@
 
 1. 选择左侧和中间的**内场雕像**图形，右侧自动推算。
 2. 在**你的雕像**中选择自己的位置。
-3. 选择两个**房间图形**，查看**图形分配**。
+3. 使用**初始交换**输入开局墙上的两个**房间图形**，查看**图形分配**。
 
 每张卡片按位置和手持图形标明雕像。**送出**表示给该玩家的图形，**保留**表示留在自己房间的图形。
 图形不会分配给自己，也不会分配给手持相同图形的玩家。
@@ -96,6 +96,17 @@
 如果有两个自己的图形，各给另外两名玩家一个。
 如果有两个相同的其他图形，给符合条件的另一名玩家一个，并保留一个。
 两个不同的图形则直接分配给另外两名玩家。
+
+这是社区的**直接传递**策略，请先与三位单人房玩家统一方法；它与先收集两个自身图形的策略不同。
+你和两位队友都已送出各自的两个初始图形后，选择**初始交换后**确认该阶段，重新输入墙上的图形。
+工具会保留已经正确的组合；如果收到两个相同图形，则提示送出一个、保留一个。
+如果仍有自身雕像上的图形，请等待并与队友核对。后续交换后再次检查，不要对最终钥匙重复初始交换。
+切换阶段会清空房间图形并保留雕像选择；**重置选择**会回到初始交换。
+
+同时拾取两个图形前，请确认三位单人房玩家都已有最终组合。外场剖切也必须完成才能离开。
+工具只核对你输入的图形，无法确认队友或外场进度。
+此流程参考 [Traveler’s Chosen 社区策略][solo-guide]及
+[Destructoid 真理攻略][verity-guide]中的配合建议，并非 Bungie 官方规则说明，也不适用于挑战模式。
 
 ### 练习
 
@@ -273,6 +284,7 @@ Playwright 在 Chromium、Firefox 和 WebKit 中检查激活交互后的生产�
 - [Destructoid 第三关指南][repository-guide]，用于终点板连线。
 - [Shacknews 救赎边缘指南][resonance-guide]，用于导体与共振规则。
 
+[verity-guide]: https://www.destructoid.com/destiny-2-salvations-edge-fourth-encounter-raid-guide-verity/
 [solo-guide]: https://sites.google.com/view/travelerschosen/guides/salvations-edge/verity
 [repository-guide]: https://www.destructoid.com/destiny-2-salvations-edge-third-encounter-raid-guide-repository/
 [resonance-guide]: https://www.shacknews.com/article/140025/salvations-edge-raid-guide-destiny-2
