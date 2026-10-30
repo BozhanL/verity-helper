@@ -7,6 +7,8 @@ import {
 } from "./verity";
 
 export const ROUND_SECONDS = 210;
+export const PRACTICE_MODES = ["timed", "untimed"] as const;
+export type PracticeMode = (typeof PRACTICE_MODES)[number];
 
 export const PREVIEW_PUZZLE: Puzzle = {
   inside: ["circle", "triangle", "square"],
@@ -18,6 +20,7 @@ export const PREVIEW_PUZZLE: Puzzle = {
 };
 
 export interface PracticeState {
+  readonly mode: PracticeMode;
   readonly puzzle: Puzzle;
   readonly phase: "ready" | "running" | "won" | "expired";
   readonly remaining: number;
@@ -27,13 +30,14 @@ export interface PracticeState {
 }
 
 export type PracticeAction =
-  | { type: "start"; puzzle: Puzzle; now: number }
+  | { type: "start"; puzzle: Puzzle; now: number; mode?: PracticeMode }
   | { type: "tick"; now: number }
   | { type: "excise"; selection: Excise; now: number }
   | { type: "cancel" };
 
 export function createPracticeState(): PracticeState {
   return {
+    mode: "timed",
     puzzle: PREVIEW_PUZZLE,
     phase: "ready",
     remaining: ROUND_SECONDS,
@@ -92,10 +96,12 @@ export function practiceReducer(
   switch (action.type) {
     case "start":
       return {
+        mode: action.mode ?? "timed",
         puzzle: action.puzzle,
         phase: "running",
         remaining: ROUND_SECONDS,
-        deadline: action.now + ROUND_SECONDS * 1000,
+        deadline:
+          action.mode === "untimed" ? null : action.now + ROUND_SECONDS * 1000,
         pending: null,
         swaps: [],
       };

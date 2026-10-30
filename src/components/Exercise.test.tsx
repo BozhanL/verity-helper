@@ -35,6 +35,56 @@ function choose(shape: verity.Shape): void {
 }
 
 describe("exercise controls", () => {
+  it.each(["en", "zh"] as const)(
+    "%s: untimed practice survives elapsed time and applies mode changes only on restart",
+    (locale) => {
+      const messages = getMessages(locale);
+      render(<Exercise locale={locale} />);
+      fireEvent.click(
+        screen.getByRole("radio", { name: messages.practiceModes.untimed }),
+      );
+      fireEvent.click(screen.getByRole("button", { name: messages.start }));
+      expect(screen.queryByRole("timer")).toBeNull();
+      expect(screen.queryByRole("progressbar")).toBeNull();
+      expect(screen.getByText(messages.noTimeLimit)).toBeDefined();
+      const cut = describeExcise(locale, { statue: 0, shape: "circle" });
+      fireEvent.click(screen.getByRole("button", { name: cut }));
+      fireEvent.click(
+        screen.getByRole("radio", { name: messages.practiceModes.timed }),
+      );
+      expect(
+        screen.getByRole("button", { name: cut, pressed: true }),
+      ).toBeDefined();
+      act(() => {
+        vi.advanceTimersByTime(600000);
+      });
+      expect(
+        screen.getByRole("heading", { name: messages.running }),
+      ).toBeDefined();
+      expect(screen.queryByRole("timer")).toBeNull();
+      fireEvent.click(screen.getByRole("button", { name: messages.cancel }));
+      fireEvent.click(
+        screen.getByRole("button", { name: messages.newExercise }),
+      );
+      expect(screen.getByRole("timer").textContent).toBe("3:30");
+      expect(
+        screen.queryByRole("button", { name: messages.cancel }),
+      ).toBeNull();
+      fireEvent.click(
+        screen.getByRole("radio", { name: messages.practiceModes.untimed }),
+      );
+      act(() => {
+        vi.advanceTimersByTime(210000);
+      });
+      expect(
+        screen.getByRole("heading", { name: messages.expired }),
+      ).toBeDefined();
+      fireEvent.click(
+        screen.getByRole("button", { name: messages.newExercise }),
+      );
+      expect(screen.queryByRole("timer")).toBeNull();
+    },
+  );
   it("requires starting a round and supports selecting and cancelling an excision", () => {
     render(<Exercise locale="en" />);
     expect(screen.getByRole("timer").textContent).toBe("3:30");

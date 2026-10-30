@@ -22,6 +22,51 @@ function start(): PracticeState {
 }
 
 describe("practice round", () => {
+  it("keeps untimed rounds playable past the timed deadline and still detects completion", () => {
+    let state = practiceReducer(createPracticeState(), {
+      type: "start",
+      puzzle: PREVIEW_PUZZLE,
+      now: 1000,
+      mode: "untimed",
+    });
+    expect(state).toMatchObject({
+      mode: "untimed",
+      phase: "running",
+      deadline: null,
+    });
+    expect(practiceReducer(state, { type: "tick", now: 999999 })).toBe(state);
+    const swaps = solve(PREVIEW_PUZZLE);
+    if (swaps === null) {
+      throw new Error("Preview puzzle must be solvable.");
+    }
+    for (const swap of swaps) {
+      for (const selection of swap) {
+        state = practiceReducer(state, {
+          type: "excise",
+          selection,
+          now: 999999,
+        });
+      }
+    }
+    expect(state.phase).toBe("won");
+    expect(canExcise(state, FIRST)).toBe(false);
+    const timed = practiceReducer(state, {
+      type: "start",
+      puzzle: PREVIEW_PUZZLE,
+      now: 1000000,
+      mode: "timed",
+    });
+    expect(timed).toMatchObject({
+      mode: "timed",
+      deadline: 1210000,
+      remaining: 210,
+      pending: null,
+      swaps: [],
+    });
+    expect(practiceReducer(timed, { type: "tick", now: 1210000 }).phase).toBe(
+      "expired",
+    );
+  });
   it("starts a complete 210-second round only when requested", () => {
     const ready = createPracticeState();
     expect(ready.phase).toBe("ready");
