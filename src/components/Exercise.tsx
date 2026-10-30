@@ -1,11 +1,14 @@
+import * as RadioGroup from "@radix-ui/react-radio-group";
 import { useEffect, useReducer, useState, type ReactElement } from "react";
 import { describeExcise, getMessages, type Locale } from "../i18n/messages";
 import {
   canExcise,
   createPracticeState,
   formatTime,
+  PRACTICE_MODES,
   practiceReducer,
   ROUND_SECONDS,
+  type PracticeMode,
   type PracticeState,
 } from "../lib/practice";
 import { generatePuzzle, SHAPES, STATUES, type Shape } from "../lib/verity";
@@ -53,10 +56,12 @@ export default function Exercise({
     createPracticeState,
   );
   const [selectedShape, setSelectedShape] = useState<Shape>("circle");
+  const [nextMode, setNextMode] = useState<PracticeMode>("timed");
   const running = state.phase === "running";
+  const timed = (state.phase === "ready" ? nextMode : state.mode) === "timed";
 
   useEffect(() => {
-    if (!running) {
+    if (!running || !timed) {
       return undefined;
     }
     const timer = globalThis.setInterval(() => {
@@ -65,27 +70,73 @@ export default function Exercise({
     return (): void => {
       globalThis.clearInterval(timer);
     };
-  }, [running]);
+  }, [running, timed]);
 
   function startRound(): void {
     setSelectedShape("circle");
-    dispatch({ type: "start", puzzle: generatePuzzle(), now: Date.now() });
+    dispatch({
+      type: "start",
+      puzzle: generatePuzzle(),
+      now: Date.now(),
+      mode: nextMode,
+    });
   }
 
   return (
     <div className="tool">
       <ToolReadiness locale={locale} />
       <section className="panel">
+        <fieldset
+          className="shape-picker practice-mode-picker"
+          aria-label={messages.practiceMode}
+        >
+          <legend>{messages.practiceMode}</legend>
+          <RadioGroup.Root
+            className="practice-modes"
+            aria-label={messages.practiceMode}
+            aria-describedby="practice-mode-hint"
+            value={nextMode}
+            disabled={!hydrated}
+            onValueChange={(value) => {
+              const mode = PRACTICE_MODES.find(
+                (candidate) => candidate === value,
+              );
+              if (mode !== undefined) {
+                setNextMode(mode);
+              }
+            }}
+          >
+            {PRACTICE_MODES.map((mode) => (
+              <RadioGroup.Item
+                {...CONTROL_PROPS}
+                key={mode}
+                value={mode}
+                className="button button--secondary practice-mode"
+              >
+                {messages.practiceModes[mode]}
+              </RadioGroup.Item>
+            ))}
+          </RadioGroup.Root>
+          <p id="practice-mode-hint" className="practice-mode-hint">
+            {messages.practiceModeHint}
+          </p>
+        </fieldset>
         <div className="round-toolbar">
           <div
             className={
-              "timer " + (state.remaining <= 30 ? "timer--urgent" : "")
+              "timer " + (timed && state.remaining <= 30 ? "timer--urgent" : "")
             }
           >
-            <span>{messages.remaining}</span>
-            <strong role="timer" aria-label={messages.remaining}>
-              {formatTime(state.remaining)}
-            </strong>
+            <span>{timed ? messages.remaining : messages.noTimeLimit}</span>
+            {timed ? (
+              <strong role="timer" aria-label={messages.remaining}>
+                {formatTime(state.remaining)}
+              </strong>
+            ) : (
+              <strong className="untimed-label">
+                {messages.practiceModes.untimed}
+              </strong>
+            )}
           </div>
           <div className="round-metric">
             <span>{messages.completedSwaps}</span>
@@ -103,12 +154,14 @@ export default function Exercise({
             {state.phase === "ready" ? messages.start : messages.newExercise}
           </button>
         </div>
-        <progress
-          className="round-progress"
-          max={ROUND_SECONDS}
-          value={state.remaining}
-          aria-label={messages.remaining}
-        />
+        {timed && (
+          <progress
+            className="round-progress"
+            max={ROUND_SECONDS}
+            value={state.remaining}
+            aria-label={messages.remaining}
+          />
+        )}
         <RoundStatus state={state} locale={locale} />
       </section>
       <div className="exercise-layout">

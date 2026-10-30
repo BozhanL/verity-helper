@@ -132,6 +132,10 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   in `src/lib/verity.ts` and reuse `InsideInputs.tsx` for statue selection.
 - Treat exercise rounds as unaided practice: show the given inside symbols and
   outside solids without solution hints, target mappings, or shape breakdowns.
+  Timed practice defaults to 210 seconds. Untimed practice has no deadline,
+  countdown, or progress bar and uses the same puzzle rules. Mode selection is
+  for the next round only; changing it must preserve the active puzzle, pending
+  cut, and timer until the player explicitly starts a new exercise.
 - Configure Noto Sans and Noto Sans SC with Astro’s Fonts API in `astro.config.ts`.
   Use Google Fonts for both families. Preload Noto Sans on all pages and
   Noto Sans SC on Chinese pages. Derive the Chinese glyph subset from the

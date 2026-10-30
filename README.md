@@ -116,7 +116,8 @@ Different shapes are distributed directly to the two other players.
 
 ### Exercise
 
-1. Click **Start exercise** to begin a random 3:30 round.
+1. Under **Next exercise**, choose **Timed · 3:30** (the default) or **Untimed**.
+   Click **Start exercise** to begin a random round.
 2. Select a shape under **Current shape**, then click **Excise** under a statue.
 3. Choose a different shape and click **Excise** under another statue to
    complete the swap.
@@ -126,9 +127,14 @@ over. Your goal is to give each outside statue the two shapes that differ from
 its matching inside symbol. The exercise shows only the given inside symbols
 and outside solids, so you can practice without solution hints.
 
-The timer stops when you finish and blocks further moves when time runs out.
-It keeps counting down in background tabs. Switching tools or languages resets
-the round.
+Timed rounds stop the clock when you finish and block further moves when time
+runs out. The clock keeps counting down in background tabs. Untimed rounds have
+no countdown or expiry and use the same puzzles, controls, and completion rules.
+Changing **Next exercise** affects only the next **Start exercise** or
+**New exercise**; it preserves the active board, pending cut, and timer.
+Untimed practice gives learners more time.
+It is a practice option, not a change to the raid’s timer. Switching tools or
+languages resets the round.
 
 On phones, the compact shape picker stays near the board while scrolling when
 there is enough screen height. It scrolls normally on short screens and in phone
