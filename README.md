@@ -132,8 +132,7 @@ runs out. The clock keeps counting down in background tabs. Untimed rounds have
 no countdown or expiry and use the same puzzles, controls, and completion rules.
 Changing **Next exercise** affects only the next **Start exercise** or
 **New exercise**; it preserves the active board, pending cut, and timer.
-Untimed practice gives learners more time, following
-[W3C’s timing-adjustment guidance](https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html).
+Untimed practice gives learners more time.
 It is a practice option, not a change to the raid’s timer. Switching tools or
 languages resets the round.
 
