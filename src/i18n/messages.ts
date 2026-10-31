@@ -68,6 +68,23 @@ const en = {
   solo: "Solo room",
   soloTitle: "Solo room calculator",
   soloDescription: "Find where to give each of your two room shapes.",
+  soloPhase: "Trade stage",
+  soloPhases: { opening: "Opening trades", after: "After opening trades" },
+  soloStrategy:
+    "Direct transfers for normal mixed-shape keys. Agree on this method with all three solo players; challenge routes are not covered.",
+  soloOpeningHint:
+    "Enter your starting wall shapes. Send them one at a time, then wait for all three players to finish their opening trades.",
+  soloAfterHint:
+    "Use this stage only after you and both teammates have sent away both starting shapes. Read the wall again after any further trades.",
+  soloAfterInvalid:
+    "Your statue’s symbol is still present. Wait for trades to finish, recheck the wall, and coordinate with your teammates.",
+  soloAfterTitle: "Recheck solo trades.",
+  soloKeyReady: "Keep both shapes for your key.",
+  soloKeyHint:
+    "Wait until all three solo players have their final pair before collecting both shapes. Outside dissection must also be complete to escape. This check does not verify your teammates or the outside room.",
+  soloTradeHint:
+    "Send one copy and keep one. Wait for your teammates’ trades, then recheck the wall.",
+  soloReference: "Community direct-transfer guide",
   soloStatue: "Your statue",
   soloRoomShapes: "Room shapes",
   soloFirstShape: "First room shape",
@@ -214,6 +231,22 @@ const zh: typeof en = {
   solo: "单人房",
   soloTitle: "单人房计算器",
   soloDescription: "选择房间内的两个图形，查看应该给谁。",
+  soloPhase: "交换阶段",
+  soloPhases: { opening: "初始交换", after: "初始交换后" },
+  soloStrategy:
+    "直接传递策略用于普通混合图形钥匙。请先与三位单人房玩家统一方法；不支持挑战路线。",
+  soloOpeningHint:
+    "输入开局墙上的图形，每次只拾取并送出一个，然后等待三人都完成初始交换。",
+  soloAfterHint:
+    "仅在你和两位队友都已送出各自的两个初始图形后使用此阶段。后续交换完成后，再次观察墙面并核对收到的图形。",
+  soloAfterInvalid:
+    "房间仍有你雕像上的图形。请等待交换完成，重新核对墙面，并与队友沟通。",
+  soloAfterTitle: "请核对单人房交换。",
+  soloKeyReady: "保留两个图形，用于组成钥匙。",
+  soloKeyHint:
+    "等待三位单人房玩家都获得最终图形组合后，再同时拾取两个图形。外场剖切也必须完成才能离开。此检查无法确认队友或外场的进度。",
+  soloTradeHint: "送出一个，保留一个。等待队友交换完成后，再次核对墙面。",
+  soloReference: "社区直接传递指南",
   soloStatue: "你的雕像",
   soloRoomShapes: "房间图形",
   soloFirstShape: "第一个房间图形",

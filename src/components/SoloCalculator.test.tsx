@@ -46,6 +46,57 @@ function selectSelf(): void {
 }
 
 describe("solo-room calculator", () => {
+  it.each(["en", "zh"] as const)(
+    "%s: checks received shapes, clears stale inputs on stage changes, and resets",
+    (locale) => {
+      const messages = getMessages(locale);
+      render(<SoloCalculator locale={locale} />);
+      chooseStatues(locale);
+      fireEvent.click(
+        screen.getByRole("radio", {
+          name:
+            messages.soloStatue +
+            ": " +
+            messages.positions[2] +
+            " (" +
+            messages.shapes.square +
+            ")",
+        }),
+      );
+      chooseRoom("triangle", "square", locale);
+      choose(messages.soloPhase, messages.soloPhases.after);
+      expect(
+        screen.getByRole("heading", { name: messages.soloChooseRoom }),
+      ).toBeDefined();
+      chooseRoom("circle", "triangle", locale);
+      const result = within(
+        screen.getByRole("region", { name: messages.soloDistribution }),
+      );
+      expect(
+        result.getByRole("heading", { name: messages.soloKeyReady }),
+      ).toBeDefined();
+      expect(result.getByText(messages.soloKeyHint)).toBeDefined();
+      expect(result.queryByText(messages.soloGive, { exact: true })).toBeNull();
+      chooseRoom("circle", "circle", locale);
+      expect(result.getByText(messages.soloTradeHint)).toBeDefined();
+      expect(result.getAllByRole("img")).toHaveLength(3);
+      chooseRoom("square", "triangle", locale);
+      expect(result.getByRole("alert").textContent).toContain(
+        messages.soloAfterInvalid,
+      );
+      expect(result.queryAllByRole("img")).toHaveLength(0);
+      fireEvent.click(screen.getByRole("button", { name: messages.reset }));
+      expect(
+        screen.getByRole("radio", {
+          name: messages.soloPhases.opening,
+          checked: true,
+        }),
+      ).toBeDefined();
+      expect(
+        screen.getByRole("heading", { name: messages.soloChooseStatues }),
+      ).toBeDefined();
+    },
+  );
   it("requires an explicit player position as well as the statue and room shapes", () => {
     render(<SoloCalculator locale="en" />);
     expect(
@@ -168,7 +219,10 @@ describe("solo-room calculator", () => {
       screen.getByRole("img", { name: "Give Square to Middle (Triangle)" }),
     ).toBeDefined();
     fireEvent.click(screen.getByRole("button", { name: "Reset selections" }));
-    expect(screen.queryAllByRole("radio", { checked: true })).toHaveLength(0);
+    expect(screen.getAllByRole("radio", { checked: true })).toHaveLength(1);
+    expect(
+      screen.getByRole("radio", { name: "Opening trades", checked: true }),
+    ).toBeDefined();
   });
 
   it("provides the same distribution and controls in Simplified Chinese", () => {

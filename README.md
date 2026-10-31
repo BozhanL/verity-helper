@@ -101,7 +101,8 @@ the page scrolls only when you choose a link.
 
 1. Select the left and middle **Inside statues** symbols; the right is automatic.
 2. Under **Your statue**, select your own position.
-3. Select both **Room shapes** to see the **Shape distribution**.
+3. Use **Opening trades** for your starting shapes. Select both **Room shapes**
+   to see the **Shape distribution**.
 
 Each card identifies a statue by its position and held symbol. **Give** shows
 the shape to send there; **Keep** shows what stays in your room. A shape is
@@ -113,6 +114,23 @@ The same **View result** and **Edit inputs** links are available here.
 With two copies of your own symbol, give one to each other player. With two
 copies of another symbol, give one to the eligible other player and keep one.
 Different shapes are distributed directly to the two other players.
+
+This is the community **direct-transfer** strategy; agree on it with all three
+solo players. It differs from gathering two copies of your own symbol first.
+After you and both teammates have sent away both starting shapes, select
+**After opening trades** to confirm that stage and enter the wall shapes again.
+The helper keeps a completed pair, or tells you
+to send one duplicate and keep one. If your own symbol remains, wait and recheck
+with the team. Recheck after further trades; do not repeat the opening plan on a
+finished key. Changing the stage clears room inputs and preserves statue choices.
+**Reset selections** returns to Opening trades.
+
+Before collecting both shapes, confirm all three solo players have their final
+pair. Outside dissection must also be complete to escape. The helper checks only
+your input, not teammate or outside progress. This flow follows the
+[Traveler’s Chosen community strategy][solo-guide] and the coordination advice in
+[Destructoid’s Verity walkthrough][verity-guide]; it is not an official Bungie
+rule specification or a challenge-mode solver.
 
 ### Exercise
 
@@ -328,6 +346,7 @@ Inspired by these tools:
 - [Shacknews’ Salvation’s Edge guide][resonance-guide] for conductor and
   resonance rules.
 
+[verity-guide]: https://www.destructoid.com/destiny-2-salvations-edge-fourth-encounter-raid-guide-verity/
 [solo-guide]: https://sites.google.com/view/travelerschosen/guides/salvations-edge/verity
 [repository-guide]: https://www.destructoid.com/destiny-2-salvations-edge-third-encounter-raid-guide-repository/
 [resonance-guide]: https://www.shacknews.com/article/140025/salvations-edge-raid-guide-destiny-2

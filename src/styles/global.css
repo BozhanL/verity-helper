@@ -1062,6 +1062,22 @@
     padding-top: 12px;
     border-top: 1px solid var(--line);
   }
+  .solo-phase {
+    margin-bottom: 16px;
+  }
+  .input-hint {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .input-hint a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--accent);
+    text-decoration: underline;
+  }
   .solo-positions,
   .solo-shape-inputs {
     display: grid;

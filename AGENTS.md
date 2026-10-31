@@ -130,6 +130,12 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   or a statue holding the given shape. For two identical shapes different from
   your symbol, give one to the eligible teammate and keep one. Keep these rules
   in `src/lib/verity.ts` and reuse `InsideInputs.tsx` for statue selection.
+  Distinguish opening trades from checking received shapes after everyone has
+  finished opening trades. A finished pair is kept; a duplicate teammate shape
+  sends one copy and keeps one. An own-symbol pair in the latter stage needs
+  team coordination. Stage changes clear room shapes and preserve statue inputs;
+  full reset returns to opening trades. Label the direct-transfer method as a
+  community strategy, and never claim the helper verifies teammate progress.
 - Treat exercise rounds as unaided practice: show the given inside symbols and
   outside solids without solution hints, target mappings, or shape breakdowns.
   Timed practice defaults to 210 seconds. Untimed practice has no deadline,

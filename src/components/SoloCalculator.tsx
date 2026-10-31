@@ -3,14 +3,18 @@ import { useState, type ReactElement } from "react";
 import { getMessages, type Locale } from "../i18n/messages";
 import {
   inferInside,
+  planSoloAfterTrades,
   planSoloTransfers,
   SHAPES,
+  SOLO_PHASES,
   STATUES,
   type Shape,
+  type SoloPhase,
   type SoloPlan,
   type Statue,
   type Triple,
 } from "../lib/verity";
+import { SolidDisplay } from "./Board";
 import { CONTROL_PROPS } from "./controlProps";
 import InsideInputs from "./InsideInputs";
 import ShapeIcon from "./ShapeIcon";
@@ -132,12 +136,14 @@ function SoloResult({
   self,
   first,
   second,
+  phase,
 }: Readonly<{
   locale: Locale;
   inside: Triple<Shape> | null;
   self: Statue | null;
   first: Shape | null;
   second: Shape | null;
+  phase: SoloPhase;
 }>): ReactElement {
   const messages = getMessages(locale);
   let incomplete = messages.soloChooseRoom;
@@ -154,17 +160,40 @@ function SoloResult({
       </div>
     );
   }
-  const plan = planSoloTransfers(inside, self, [first, second]);
+  const plan =
+    phase === "opening"
+      ? planSoloTransfers(inside, self, [first, second])
+      : planSoloAfterTrades(inside, self, [first, second]);
   if (plan === null) {
     return (
       <div className="feedback feedback--error" role="alert">
-        <h3>{messages.invalid}</h3>
-        <p>{messages.soloInvalid}</p>
+        <h3>
+          {phase === "opening" ? messages.invalid : messages.soloAfterTitle}
+        </h3>
+        <p>
+          {phase === "opening"
+            ? messages.soloInvalid
+            : messages.soloAfterInvalid}
+        </p>
+      </div>
+    );
+  }
+  if (plan.keep.length === 2) {
+    return (
+      <div className="feedback feedback--success">
+        <h3>{messages.soloKeyReady}</h3>
+        <SolidDisplay pair={[first, second]} locale={locale} />
+        <p>{messages.soloKeyHint}</p>
       </div>
     );
   }
   return (
-    <Distribution locale={locale} inside={inside} self={self} plan={plan} />
+    <>
+      <Distribution locale={locale} inside={inside} self={self} plan={plan} />
+      {phase === "after" && (
+        <p className="input-hint">{messages.soloTradeHint}</p>
+      )}
+    </>
   );
 }
 
@@ -178,6 +207,7 @@ export default function SoloCalculator({
   const [self, setSelf] = useState<Statue | null>(null);
   const [first, setFirst] = useState<Shape | null>(null);
   const [second, setSecond] = useState<Shape | null>(null);
+  const [phase, setPhase] = useState<SoloPhase>("opening");
   const inside =
     left !== null && middle !== null ? inferInside(left, middle) : null;
   function resetInside(): void {
@@ -194,6 +224,7 @@ export default function SoloCalculator({
   function resetAll(): void {
     resetInside();
     resetRoom();
+    setPhase("opening");
   }
 
   return (
@@ -279,6 +310,50 @@ export default function SoloCalculator({
               {messages.resetShort}
             </button>
           </div>
+          <fieldset
+            className="shape-picker solo-phase"
+            aria-label={messages.soloPhase}
+          >
+            <legend>{messages.soloPhase}</legend>
+            <RadioGroup.Root
+              className="solo-shape-inputs"
+              aria-label={messages.soloPhase}
+              aria-describedby="solo-phase-hint"
+              value={phase}
+              disabled={!hydrated}
+              onValueChange={(value) => {
+                const next = SOLO_PHASES.find(
+                  (candidate) => candidate === value,
+                );
+                if (next !== undefined) {
+                  setPhase(next);
+                  resetRoom();
+                }
+              }}
+            >
+              {SOLO_PHASES.map((option) => (
+                <RadioGroup.Item
+                  {...CONTROL_PROPS}
+                  key={option}
+                  value={option}
+                  className="solo-position"
+                >
+                  {messages.soloPhases[option]}
+                </RadioGroup.Item>
+              ))}
+            </RadioGroup.Root>
+            <p className="input-hint" id="solo-phase-hint">
+              {phase === "opening"
+                ? messages.soloOpeningHint
+                : messages.soloAfterHint}
+            </p>
+            <p className="input-hint">
+              {messages.soloStrategy}{" "}
+              <a href="https://sites.google.com/view/travelerschosen/guides/salvations-edge/verity">
+                {messages.soloReference}
+              </a>
+            </p>
+          </fieldset>
           <div className="solo-shape-inputs">
             <ShapePicker
               legend={messages.soloFirstShape}
@@ -340,6 +415,7 @@ export default function SoloCalculator({
           self={self}
           first={first}
           second={second}
+          phase={phase}
         />
       </section>
     </div>
