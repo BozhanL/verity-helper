@@ -21,6 +21,7 @@ export const PREVIEW_PUZZLE: Puzzle = {
 
 export interface PracticeState {
   readonly mode: PracticeMode;
+  readonly initialPuzzle: Puzzle | null;
   readonly puzzle: Puzzle;
   readonly phase: "ready" | "running" | "won" | "expired";
   readonly remaining: number;
@@ -31,6 +32,7 @@ export interface PracticeState {
 
 export type PracticeAction =
   | { type: "start"; puzzle: Puzzle; now: number; mode?: PracticeMode }
+  | { type: "retry"; now: number; mode?: PracticeMode }
   | { type: "tick"; now: number }
   | { type: "excise"; selection: Excise; now: number }
   | { type: "cancel" };
@@ -38,10 +40,28 @@ export type PracticeAction =
 export function createPracticeState(): PracticeState {
   return {
     mode: "timed",
+    initialPuzzle: null,
     puzzle: PREVIEW_PUZZLE,
     phase: "ready",
     remaining: ROUND_SECONDS,
     deadline: null,
+    pending: null,
+    swaps: [],
+  };
+}
+
+function startPractice(
+  puzzle: Puzzle,
+  mode: PracticeMode,
+  now: number,
+): PracticeState {
+  return {
+    mode,
+    initialPuzzle: puzzle,
+    puzzle,
+    phase: "running",
+    remaining: ROUND_SECONDS,
+    deadline: mode === "untimed" ? null : now + ROUND_SECONDS * 1000,
     pending: null,
     swaps: [],
   };
@@ -95,16 +115,15 @@ export function practiceReducer(
 ): PracticeState {
   switch (action.type) {
     case "start":
-      return {
-        mode: action.mode ?? "timed",
-        puzzle: action.puzzle,
-        phase: "running",
-        remaining: ROUND_SECONDS,
-        deadline:
-          action.mode === "untimed" ? null : action.now + ROUND_SECONDS * 1000,
-        pending: null,
-        swaps: [],
-      };
+      return startPractice(action.puzzle, action.mode ?? "timed", action.now);
+    case "retry":
+      return state.initialPuzzle === null
+        ? state
+        : startPractice(
+            state.initialPuzzle,
+            action.mode ?? state.mode,
+            action.now,
+          );
     case "tick":
       return updateClock(state, action.now);
     case "excise":
