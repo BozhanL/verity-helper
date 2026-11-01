@@ -142,6 +142,14 @@ const en = {
   swaps: "swaps",
   excisions: "excisions",
   afterSwap: "After this swap",
+  swapProgress: "Marked {done} of {total} swaps",
+  swapProgressHint:
+    "Mark each swap after both cuts and checking the shown result. Marks reset when inputs change or you leave this page.",
+  markSwapDone: "Mark swap {step} done",
+  swapMarked: "Marked done",
+  undoSwapMark: "Undo last mark",
+  allSwapsMarked:
+    "All swaps marked. Verify the outside solids and coordinate with the solo team before escaping.",
   target: "Target",
   excise: "Excise",
   cutInstruction: "Excise {shape} from {position}",
@@ -300,6 +308,14 @@ const zh: typeof en = {
   swaps: "次交换",
   excisions: "次剖切",
   afterSwap: "交换后",
+  swapProgress: "已标记 {done} / {total} 次交换",
+  swapProgressHint:
+    "完成两次剖切并核对所示结果后，再标记该次交换。修改输入或离开页面会清除标记。",
+  markSwapDone: "标记第 {step} 次交换完成",
+  swapMarked: "已标记完成",
+  undoSwapMark: "撤销上次标记",
+  allSwapsMarked:
+    "所有交换已标记完成。请核对外场图形，并与单人房队友确认后再离开。",
   target: "目标图形",
   excise: "剖切",
   cutInstruction: "从{position}雕像剖切{shape}",

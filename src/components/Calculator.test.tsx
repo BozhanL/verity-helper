@@ -7,6 +7,7 @@ import {
   within,
 } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
+import { getMessages } from "../i18n/messages";
 import Calculator from "./Calculator";
 
 afterEach(cleanup);
@@ -25,6 +26,126 @@ function chooseInside(): void {
 }
 
 describe("calculator controls", () => {
+  it.each(["en", "zh"] as const)(
+    "%s: marks complete swaps in order, ignores repeated marks, and undoes without changing the plan",
+    (locale) => {
+      const messages = getMessages(locale);
+      const { container } = render(<Calculator locale={locale} />);
+      choose(
+        messages.positions[0] + " · " + messages.inside,
+        messages.shapes.circle,
+      );
+      choose(
+        messages.positions[1] + " · " + messages.inside,
+        messages.shapes.triangle,
+      );
+      choose(
+        messages.positions[0] + " · " + messages.outside,
+        messages.solids.sphere,
+      );
+      choose(
+        messages.positions[1] + " · " + messages.outside,
+        messages.solids.pyramid,
+      );
+      function mark(step: number): HTMLElement {
+        return screen.getByRole("button", {
+          name: messages.markSwapDone.replace("{step}", String(step)),
+        });
+      }
+      function progress(done: number): string {
+        return messages.swapProgress
+          .replace("{done}", String(done))
+          .replace("{total}", "3");
+      }
+      const instructions = Array.from(
+        container.querySelectorAll(".swap-instruction, .after-swap"),
+        (element) => element.outerHTML,
+      );
+      expect(mark(2)).toHaveProperty("disabled", true);
+      fireEvent.click(mark(2));
+      expect(screen.getByText(progress(0))).toBeDefined();
+      fireEvent.click(mark(1));
+      fireEvent.click(mark(1));
+      expect(screen.getByText(progress(1))).toBeDefined();
+      expect(
+        container.querySelector('[aria-current="step"] h3')?.textContent,
+      ).toBe(messages.swap + " 2");
+      fireEvent.click(
+        screen.getByRole("button", { name: messages.undoSwapMark }),
+      );
+      fireEvent.click(
+        screen.getByRole("button", { name: messages.undoSwapMark }),
+      );
+      expect(screen.getByText(progress(0))).toBeDefined();
+      for (const step of [1, 2, 3]) {
+        fireEvent.click(mark(step));
+      }
+      expect(screen.getByText(messages.allSwapsMarked)).toBeDefined();
+      expect(container.querySelector('[aria-current="step"]')).toBeNull();
+      expect(
+        Array.from(
+          container.querySelectorAll(".swap-instruction, .after-swap"),
+          (element) => element.outerHTML,
+        ),
+      ).toEqual(instructions);
+      fireEvent.click(
+        screen.getByRole("button", { name: messages.undoSwapMark }),
+      );
+      expect(screen.queryByText(messages.allSwapsMarked)).toBeNull();
+      expect(mark(3)).toHaveProperty("disabled", false);
+    },
+  );
+
+  it("clears stale progress on valid corrections, invalid input, and resets", () => {
+    const messages = getMessages("en");
+    render(<Calculator locale="en" />);
+    chooseInside();
+    choose("Left · Outside solids", "Sphere");
+    choose("Middle · Outside solids", "Pyramid");
+    function mark(): void {
+      fireEvent.click(screen.getByRole("button", { name: "Mark swap 1 done" }));
+    }
+    function expectFresh(): void {
+      expect(
+        screen.getByRole("button", { name: "Mark swap 1 done" }),
+      ).toHaveProperty("disabled", false);
+      expect(
+        screen.getByRole("button", { name: messages.undoSwapMark }),
+      ).toHaveProperty("disabled", true);
+    }
+    mark();
+    choose("Left · Outside solids", "Sphere");
+    expect(screen.getByText("Marked 1 of 3 swaps")).toBeDefined();
+    choose("Left · Outside solids", "Cube");
+    expectFresh();
+    mark();
+    choose("Left · Inside statues", "Square");
+    expectFresh();
+    mark();
+    choose("Left · Outside solids", "Pyramid");
+    expect(screen.getByRole("alert")).toBeDefined();
+    expect(
+      screen.queryByRole("button", { name: messages.undoSwapMark }),
+    ).toBeNull();
+    choose("Left · Outside solids", "Sphere");
+    expectFresh();
+    for (const reset of [
+      messages.resetOutside,
+      messages.resetInside,
+      messages.reset,
+    ]) {
+      mark();
+      fireEvent.click(screen.getByRole("button", { name: reset }));
+      expect(
+        screen.queryByRole("button", { name: messages.undoSwapMark }),
+      ).toBeNull();
+      chooseInside();
+      choose("Left · Outside solids", "Sphere");
+      choose("Middle · Outside solids", "Pyramid");
+      expectFresh();
+    }
+  });
+
   it("calculates and resets a three-swap room", () => {
     render(<Calculator locale="en" />);
     chooseInside();

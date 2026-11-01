@@ -75,7 +75,12 @@ function Result({
           {swaps.length * 2} {messages.excisions}
         </span>
       </div>
-      <Sequence swaps={swaps} board={outside} locale={locale} />
+      <Sequence
+        key={JSON.stringify([inside, outside])}
+        swaps={swaps}
+        board={outside}
+        locale={locale}
+      />
     </>
   );
 }

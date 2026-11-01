@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import { useState, type ReactElement } from "react";
 import { describeExcise, getMessages, type Locale } from "../i18n/messages";
 import {
   applySwap,
@@ -9,7 +9,9 @@ import {
   type Swap,
 } from "../lib/verity";
 import { MiniBoard } from "./Board";
+import { CONTROL_PROPS } from "./controlProps";
 import ShapeIcon from "./ShapeIcon";
+import { useHydrated } from "./useHydrated";
 
 function SwapPosition({
   statue,
@@ -106,27 +108,79 @@ export default function Sequence({
   locale: Locale;
 }>): ReactElement {
   const messages = getMessages(locale);
+  const hydrated = useHydrated();
+  const [completed, setCompleted] = useState(0);
   let current = board;
   return (
-    <ol className="sequence">
-      {swaps.map((swap, index) => {
-        current = applySwap(current, swap);
-        return (
-          <li key={JSON.stringify([current, swap])}>
-            <div className="sequence-heading">
-              <span className="step-number">{index + 1}</span>
-              <h3>
-                {messages.swap} {index + 1}
-              </h3>
-            </div>
-            <SwapInstruction swap={swap} locale={locale} />
-            <div className="after-swap">
-              <span>{messages.afterSwap}</span>
-              <MiniBoard board={current} locale={locale} />
-            </div>
-          </li>
-        );
-      })}
-    </ol>
+    <>
+      <div className="sequence-progress">
+        <p role="status">
+          {messages.swapProgress
+            .replace("{done}", String(completed))
+            .replace("{total}", String(swaps.length))}
+        </p>
+        <button
+          {...CONTROL_PROPS}
+          type="button"
+          className="text-button"
+          disabled={!hydrated || completed === 0}
+          onClick={() => {
+            setCompleted(Math.max(0, completed - 1));
+          }}
+        >
+          {messages.undoSwapMark}
+        </button>
+      </div>
+      <p className="input-hint" id="swap-progress-hint">
+        {messages.swapProgressHint}
+      </p>
+      {completed === swaps.length && (
+        <p className="feedback feedback--success" role="status">
+          {messages.allSwapsMarked}
+        </p>
+      )}
+      <ol className="sequence">
+        {swaps.map((swap, index) => {
+          current = applySwap(current, swap);
+          return (
+            <li
+              key={JSON.stringify([current, swap])}
+              aria-current={index === completed ? "step" : undefined}
+              className={index < completed ? "sequence-completed" : undefined}
+            >
+              <div className="sequence-heading">
+                <span className="step-number">{index + 1}</span>
+                <h3>
+                  {messages.swap} {index + 1}
+                </h3>
+              </div>
+              <SwapInstruction swap={swap} locale={locale} />
+              <div className="after-swap">
+                <span>{messages.afterSwap}</span>
+                <MiniBoard board={current} locale={locale} />
+              </div>
+              <button
+                {...CONTROL_PROPS}
+                type="button"
+                className="button button--secondary sequence-mark"
+                aria-label={messages.markSwapDone.replace(
+                  "{step}",
+                  String(index + 1),
+                )}
+                aria-describedby="swap-progress-hint"
+                disabled={!hydrated || index !== completed}
+                onClick={() => {
+                  setCompleted(index + 1);
+                }}
+              >
+                {index < completed
+                  ? messages.swapMarked
+                  : messages.markSwapDone.replace("{step}", String(index + 1))}
+              </button>
+            </li>
+          );
+        })}
+      </ol>
+    </>
   );
 }
