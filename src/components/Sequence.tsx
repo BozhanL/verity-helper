@@ -13,6 +13,13 @@ import { CONTROL_PROPS } from "./controlProps";
 import ShapeIcon from "./ShapeIcon";
 import { useHydrated } from "./useHydrated";
 
+interface Progress {
+  readonly completed: number;
+  readonly selections: readonly [boolean, boolean];
+}
+
+const EMPTY_PROGRESS: Progress = { completed: 0, selections: [false, false] };
+
 function SwapPosition({
   statue,
   cuts,
@@ -109,7 +116,31 @@ export default function Sequence({
 }>): ReactElement {
   const messages = getMessages(locale);
   const hydrated = useHydrated();
-  const [completed, setCompleted] = useState(0);
+  const [history, setHistory] = useState<readonly Progress[]>([EMPTY_PROGRESS]);
+  const { completed, selections } = history.at(-1) ?? EMPTY_PROGRESS;
+
+  function mark(swapIndex: number, selection: 0 | 1 | "both"): void {
+    setHistory((previous) => {
+      const latest = previous.at(-1) ?? EMPTY_PROGRESS;
+      if (
+        swapIndex !== latest.completed ||
+        (selection !== "both" && latest.selections[selection])
+      ) {
+        return previous;
+      }
+      const next: Progress["selections"] = [
+        selection === "both" || selection === 0 || latest.selections[0],
+        selection === "both" || selection === 1 || latest.selections[1],
+      ];
+      return [
+        ...previous,
+        next.every(Boolean)
+          ? { completed: latest.completed + 1, selections: [false, false] }
+          : { completed: latest.completed, selections: next },
+      ];
+    });
+  }
+
   let current = board;
   return (
     <>
@@ -123,9 +154,11 @@ export default function Sequence({
           {...CONTROL_PROPS}
           type="button"
           className="text-button"
-          disabled={!hydrated || completed === 0}
+          disabled={!hydrated || history.length === 1}
           onClick={() => {
-            setCompleted(Math.max(0, completed - 1));
+            setHistory((previous) =>
+              previous.length > 1 ? previous.slice(0, -1) : previous,
+            );
           }}
         >
           {messages.undoSwapMark}
@@ -142,6 +175,11 @@ export default function Sequence({
       <ol className="sequence">
         {swaps.map((swap, index) => {
           current = applySwap(current, swap);
+          let marks: Progress["selections"] =
+            index === completed ? selections : [false, false];
+          if (index < completed) {
+            marks = [true, true];
+          }
           return (
             <li
               key={JSON.stringify([current, swap])}
@@ -155,6 +193,47 @@ export default function Sequence({
                 </h3>
               </div>
               <SwapInstruction swap={swap} locale={locale} />
+              <div className="selection-marks">
+                {([0, 1] as const).map((selection) => {
+                  const cut = swap[selection];
+                  return (
+                    <button
+                      {...CONTROL_PROPS}
+                      key={selection}
+                      type="button"
+                      className="button button--secondary selection-mark"
+                      aria-label={messages.markSelectionDone
+                        .replace("{step}", String(index + 1))
+                        .replace("{selection}", String(selection + 1))
+                        .replace("{cut}", describeExcise(locale, cut))}
+                      aria-pressed={marks[selection]}
+                      aria-describedby="swap-progress-hint"
+                      disabled={
+                        !hydrated || index !== completed || marks[selection]
+                      }
+                      onClick={() => {
+                        mark(index, selection);
+                      }}
+                    >
+                      <span>
+                        {selection + 1}. {messages.shapes[cut.shape]} ·{" "}
+                        {messages.positions[cut.statue]}
+                      </span>
+                      <span>
+                        {marks[selection]
+                          ? messages.selectionMarked
+                          : messages.markSelection}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="selection-progress" role="status">
+                {messages.selectionProgress.replace(
+                  "{done}",
+                  String(marks.filter(Boolean).length),
+                )}
+              </p>
               <div className="after-swap">
                 <span>{messages.afterSwap}</span>
                 <MiniBoard board={current} locale={locale} />
@@ -170,7 +249,7 @@ export default function Sequence({
                 aria-describedby="swap-progress-hint"
                 disabled={!hydrated || index !== completed}
                 onClick={() => {
-                  setCompleted(index + 1);
+                  mark(index, "both");
                 }}
               >
                 {index < completed

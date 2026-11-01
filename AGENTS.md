@@ -117,8 +117,11 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   Generate navigation with Astro's i18n helpers so `BASE_PATH` is respected.
 - Prefer shape diagrams and short labels. Give diagrams localized accessible
   descriptions, and retain accessible names on controls.
-- Dissection progress is a manual checklist of complete paired swaps. Mark only
-  the next swap, allow undoing the last mark, and clear progress when any puzzle
+- Dissection progress is a manual checklist. Allow either shape/statue selection
+  in the current swap to be marked independently; advance after both are marked.
+  Keep the whole-swap shortcut, including after a partial mark. Undo restores
+  the state before the last action, so undoing the shortcut preserves an earlier
+  partial mark. Ignore repeated marks and clear all history when any puzzle
   input changes. Keep the full sequence visible; marks do not verify the live
   encounter or solo-team progress and are not persisted across page loads.
 - Keep one adaptive interface: Exercise and pre-raid experimentation are the

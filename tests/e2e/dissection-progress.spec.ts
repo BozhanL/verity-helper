@@ -36,31 +36,63 @@ for (const locale of ["en", "zh"] as const) {
           { exact: true },
         );
       }
+      function selection(
+        step: number,
+        choice: number,
+      ): ReturnType<typeof page.getByRole> {
+        const prefix = messages.markSelectionDone
+          .replace("{step}", String(step))
+          .replace("{selection}", String(choice))
+          .replace("{cut}", "");
+        return page.locator(`button[aria-label^=${JSON.stringify(prefix)}]`);
+      }
+      const undo = page.getByRole("button", {
+        name: messages.undoSwapMark,
+        exact: true,
+      });
       await populate();
       await expect(mark(2)).toBeDisabled();
-      await mark(1).focus();
+      await expect(selection(2, 1)).toBeDisabled();
+      await selection(1, 2).focus();
       await page.keyboard.press("Space");
-      await expect(progress(1)).toBeVisible();
-      await expect(mark(1)).toBeDisabled();
+      await page.keyboard.press("Space");
+      await expect(selection(1, 2)).toHaveAttribute("aria-pressed", "true");
+      await expect(selection(1, 1)).toHaveAttribute("aria-pressed", "false");
+      await expect(progress(0)).toBeVisible();
+      await expect(mark(1)).toBeEnabled();
       await page
         .getByRole("link", { name: messages.editInputs, exact: true })
         .tap();
       await page
         .getByRole("link", { name: messages.viewResult + " ↓", exact: true })
         .tap();
-      await expect(progress(1)).toBeVisible();
+      await expect(selection(1, 2)).toHaveAttribute("aria-pressed", "true");
+      await expect(
+        page.getByText(messages.selectionProgress.replace("{done}", "1"), {
+          exact: true,
+        }),
+      ).toBeVisible();
       await expect(
         page.locator('.sequence > li[aria-current="step"]'),
-      ).toContainText(messages.swap + " 2");
+      ).toContainText(messages.swap + " 1");
       await page.screenshot({
         path: testInfo.outputPath(`progress-${locale}-${theme}.png`),
         fullPage: true,
       });
-      await page
-        .getByRole("button", { name: messages.undoSwapMark, exact: true })
-        .tap();
+      await mark(1).tap();
+      await expect(progress(1)).toBeVisible();
+      await expect(selection(1, 1)).toHaveAttribute("aria-pressed", "true");
+      await expect(mark(1)).toBeDisabled();
+      await undo.tap();
+      await expect(selection(1, 2)).toHaveAttribute("aria-pressed", "true");
+      await expect(selection(1, 1)).toHaveAttribute("aria-pressed", "false");
+      await undo.tap();
       await expect(progress(0)).toBeVisible();
-      for (const step of [1, 2, 3]) {
+      await expect(undo).toBeDisabled();
+      await selection(1, 1).tap();
+      await selection(1, 2).tap();
+      await expect(progress(1)).toBeVisible();
+      for (const step of [2, 3]) {
         await mark(step).tap();
       }
       await expect(
@@ -73,7 +105,7 @@ for (const locale of ["en", "zh"] as const) {
       await expect(page.getByRole("alert")).toBeVisible();
       await choose(page, middle, messages.solids.pyramid);
       await expect(progress(0)).toBeVisible();
-      await mark(1).tap();
+      await selection(1, 1).tap();
       await choose(page, left, messages.solids.cube);
       await expect(
         page.getByRole("button", { name: messages.undoSwapMark, exact: true }),
@@ -83,18 +115,28 @@ for (const locale of ["en", "zh"] as const) {
         .tap();
       await expect(page.locator(".sequence")).toHaveCount(0);
       await populate();
-      await mark(1).tap();
+      await selection(1, 2).tap();
+      await page
+        .getByRole("button", { name: messages.reset, exact: true })
+        .tap();
+      await expect(page.locator(".sequence")).toHaveCount(0);
+      await populate();
+      await expect(undo).toBeDisabled();
+      await selection(1, 1).tap();
       await page.reload();
       await expect(page.locator(".readiness")).toHaveText(
         messages.controlsReady,
       );
       await populate();
       await expect(progress(0)).toBeVisible();
-      await mark(1).tap();
+      await expect(undo).toBeDisabled();
+      await selection(1, 2).tap();
       await openTool(page, (locale === "zh" ? "zh/" : "") + "verity/exercise/");
       await openTool(page, route);
       await populate();
       await expect(progress(0)).toBeVisible();
+      await expect(undo).toBeDisabled();
+      await expect(page.getByRole("button", { pressed: true })).toHaveCount(0);
       await expect(page.locator("html")).toHaveJSProperty(
         "scrollWidth",
         await page.locator("html").evaluate((element) => element.clientWidth),

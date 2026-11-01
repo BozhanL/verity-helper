@@ -144,7 +144,12 @@ const en = {
   afterSwap: "After this swap",
   swapProgress: "Marked {done} of {total} swaps",
   swapProgressHint:
-    "Mark each swap after both cuts and checking the shown result. Marks reset when inputs change or you leave this page.",
+    "Mark each selection after making it in game, or mark the whole swap after both cuts and checking the result. Undo restores the state before your last mark. Marks are manual and reset when inputs change or you leave this page.",
+  markSelectionDone:
+    "Mark selection done: swap {step}, selection {selection} — {cut}",
+  markSelection: "Mark selection done",
+  selectionMarked: "Marked ✓",
+  selectionProgress: "{done} of 2 selections marked",
   markSwapDone: "Mark swap {step} done",
   swapMarked: "Marked done",
   undoSwapMark: "Undo last mark",
@@ -312,7 +317,11 @@ const zh: typeof en = {
   afterSwap: "交换后",
   swapProgress: "已标记 {done} / {total} 次交换",
   swapProgressHint:
-    "完成两次剖切并核对所示结果后，再标记该次交换。修改输入或离开页面会清除标记。",
+    "在游戏内完成一次选择后即可标记；完成两次剖切并核对结果后，也可直接标记整次交换。撤销会恢复到上次标记前的状态。标记仅为手动记录，修改输入或离开页面会清除。",
+  markSelectionDone: "标记选择完成：第 {step} 次交换，选择 {selection} — {cut}",
+  markSelection: "标记选择完成",
+  selectionMarked: "已标记 ✓",
+  selectionProgress: "已标记 {done} / 2 次选择",
   markSwapDone: "标记第 {step} 次交换完成",
   swapMarked: "已标记完成",
   undoSwapMark: "撤销上次标记",

@@ -92,9 +92,13 @@ Each swap diagram shows three boxes in left–middle–right statue order. Excis
 shape marked **1**, then **2**, from the indicated statues. The solids below each
 swap show the resulting room; the last step shows the completed room.
 
-After both cuts and checking the result, use **Mark swap done** to keep your place
-through interruptions such as a Ghost rescue. Only the next swap can be marked;
-**Undo last mark** corrects a mistaken mark without changing the instructions.
+Use **Mark selection done** for either shape/statue selection in the current swap
+to keep your place through interruptions such as a Ghost rescue. Each selection
+shows its own mark, and the swap advances after both are marked. After both cuts
+and checking the result, **Mark swap done** remains a shortcut to mark the entire
+swap, including when one selection is already marked. Only the current swap can
+be marked. **Undo last mark** reverses one action: undoing the shortcut restores
+any partial mark that existed before it. The instructions do not change.
 Marks are a manual checklist, not a check of the live encounter. Recheck the
 outside solids and coordinate with the solo team before escaping.
 Changing any input, resetting, reloading, or leaving the page clears the marks.

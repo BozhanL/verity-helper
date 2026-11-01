@@ -7,7 +7,7 @@ import {
   within,
 } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import { getMessages } from "../i18n/messages";
+import { getMessages, type Locale } from "../i18n/messages";
 import Calculator from "./Calculator";
 
 afterEach(cleanup);
@@ -25,7 +25,99 @@ function chooseInside(): void {
   choose("Middle · Inside statues", "Triangle");
 }
 
+function selectionMark(
+  locale: Locale,
+  step: number,
+  selection: number,
+): HTMLElement {
+  const prefix = getMessages(locale)
+    .markSelectionDone.replace("{step}", String(step))
+    .replace("{selection}", String(selection))
+    .replace("{cut}", "");
+  return screen.getByRole("button", {
+    name: (name) => name.startsWith(prefix),
+  });
+}
+
 describe("calculator controls", () => {
+  it.each(["en", "zh"] as const)(
+    "%s: records either selection, ignores repeated marks, and restores partial progress when undoing a shortcut",
+    (locale) => {
+      const messages = getMessages(locale);
+      const { container } = render(<Calculator locale={locale} />);
+      choose(
+        messages.positions[0] + " · " + messages.inside,
+        messages.shapes.circle,
+      );
+      choose(
+        messages.positions[1] + " · " + messages.inside,
+        messages.shapes.triangle,
+      );
+      choose(
+        messages.positions[0] + " · " + messages.outside,
+        messages.solids.sphere,
+      );
+      choose(
+        messages.positions[1] + " · " + messages.outside,
+        messages.solids.pyramid,
+      );
+      const undo = screen.getByRole("button", { name: messages.undoSwapMark });
+      const first = selectionMark(locale, 1, 1);
+      const second = selectionMark(locale, 1, 2);
+      const shortcut = screen.getByRole("button", {
+        name: messages.markSwapDone.replace("{step}", "1"),
+      });
+      function expectMarks(one: boolean, two: boolean): void {
+        expect(first.getAttribute("aria-pressed")).toBe(String(one));
+        expect(second.getAttribute("aria-pressed")).toBe(String(two));
+      }
+      expect(first.textContent).toContain(messages.shapes.circle);
+      expect(first.textContent).toContain(messages.positions[0]);
+      expect(undo).toHaveProperty("disabled", true);
+      fireEvent.click(selectionMark(locale, 2, 1));
+      expectMarks(false, false);
+      fireEvent.click(second);
+      fireEvent.click(second);
+      expectMarks(false, true);
+      expect(
+        screen.getByText(messages.selectionProgress.replace("{done}", "1")),
+      ).toBeDefined();
+      expect(shortcut).toHaveProperty("disabled", false);
+      expect(selectionMark(locale, 2, 1)).toHaveProperty("disabled", true);
+      fireEvent.click(undo);
+      expectMarks(false, false);
+      expect(undo).toHaveProperty("disabled", true);
+      fireEvent.click(first);
+      fireEvent.click(shortcut);
+      fireEvent.click(shortcut);
+      expectMarks(true, true);
+      expect(selectionMark(locale, 2, 1)).toHaveProperty("disabled", false);
+      fireEvent.click(undo);
+      expectMarks(true, false);
+      expect(shortcut).toHaveProperty("disabled", false);
+      expect(selectionMark(locale, 2, 1)).toHaveProperty("disabled", true);
+      fireEvent.click(undo);
+      expectMarks(false, false);
+      fireEvent.click(second);
+      fireEvent.click(first);
+      expectMarks(true, true);
+      expect(
+        container.querySelector('[aria-current="step"] h3')?.textContent,
+      ).toBe(messages.swap + " 2");
+      fireEvent.click(selectionMark(locale, 2, 1));
+      fireEvent.click(undo);
+      expectMarks(true, true);
+      expect(selectionMark(locale, 2, 1).getAttribute("aria-pressed")).toBe(
+        "false",
+      );
+      fireEvent.click(undo);
+      expectMarks(false, true);
+      fireEvent.click(undo);
+      expectMarks(false, false);
+      expect(undo).toHaveProperty("disabled", true);
+    },
+  );
+
   it.each(["en", "zh"] as const)(
     "%s: marks complete swaps in order, ignores repeated marks, and undoes without changing the plan",
     (locale) => {
@@ -104,6 +196,7 @@ describe("calculator controls", () => {
     choose("Middle · Outside solids", "Pyramid");
     function mark(): void {
       fireEvent.click(screen.getByRole("button", { name: "Mark swap 1 done" }));
+      fireEvent.click(selectionMark("en", 2, 1));
     }
     function expectFresh(): void {
       expect(
@@ -112,6 +205,9 @@ describe("calculator controls", () => {
       expect(
         screen.getByRole("button", { name: messages.undoSwapMark }),
       ).toHaveProperty("disabled", true);
+      expect(screen.queryAllByRole("button", { pressed: true })).toHaveLength(
+        0,
+      );
     }
     mark();
     choose("Left · Outside solids", "Sphere");
