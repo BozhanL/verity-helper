@@ -168,6 +168,7 @@ Noto Sans SC 可变字体，并随网站一同提供。中文字体仅包含翻�
 | `npm run check-all:par`         | 并行检查，顺序运行两组浏览器测试      |
 | `npm run check-all`             | 顺序运行全部检查和浏览器测试          |
 | `npm test`                      | 运行单元测试与 React 交互测试         |
+| `npm run test:coverage`         | 生成单元与组件测试覆盖率报告          |
 | `npm run test:e2e`              | 测试桌面和移动浏览器配置              |
 | `npm run test:e2e:subdirectory` | 在 `/review-preview` 下运行浏览器测试 |
 | `npm run test:e2e:all`          | 顺序运行两组浏览器测试                |
@@ -189,6 +190,16 @@ CI 仅在首次重试时记录追踪，即使重试通过也会保留；首次�
 CI 会通过矩阵在独立的运行器上并行测试这两种配置，每个任务的超时时间为 30 分钟。
 在同一个本地工作目录中，根路径和子目录测试必须顺序运行。
 类型、代码、格式检查和单元测试在 `test` 任务中运行。
+
+`test` 任务会在 Actions 运行摘要中显示 **Unit and component test coverage**。
+下载该次运行的 **unit-component-coverage** 工件，解压后打开 `index.html` 查看各文件明细。
+报告保留 7 天，并包含 JSON 摘要与 LCOV 文件。本地运行 `npm run test:coverage`
+可在 `coverage/` 中生成相同报告。
+
+V8 统计所有源代码中的 TypeScript 与 React 文件，包括尚未测试的文件，排除测试文件和类型声明。
+Astro 模板、CSS 和 Playwright 端到端测试执行不在本报告的统计范围内。
+覆盖率仅用于展示，没有百分比门槛；测试失败仍会使 CI 失败。
+测试失败后也会尝试生成报告，并注明测试结果。包括 fork 拉取请求在内，均无需外部账号或令牌。
 
 浏览器测试覆盖 Chromium、Firefox 和 WebKit 的桌面及移动配置。Firefox 的手机测试使用小尺寸视口和触控；Firefox 不支持完整的移动设备模拟。
 

@@ -76,6 +76,14 @@ In a shared workspace, run root and subdirectory suites sequentially.
 Production deployment must wait for `test`, `e2e`, and `build`. The final CI
 result must include all jobs and fail if any dependency fails or is cancelled.
 
+The `test` job runs `npm run test:coverage` with Vitest V8 instrumentation.
+Keep `@vitest/coverage-v8` aligned with Vitest. Report all source TypeScript and
+React files, including untested files; exclude tests and type declarations.
+The Actions job summary and `unit-component-coverage` artifact cover unit/component
+execution, not Astro templates, CSS, or Playwright E2E. Keep report artifacts
+ignored and coverage reporting read-only; it must work on fork pull requests
+without secrets or PR comment permissions. Do not add arbitrary thresholds.
+
 After completing a task that changes files and passing the required checks,
 ask the user whether to create a Git commit unless they have already requested
 or declined a commit for that task.
