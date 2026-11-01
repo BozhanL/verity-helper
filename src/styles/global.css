@@ -849,8 +849,14 @@
     font-weight: 500;
     font-variant-numeric: tabular-nums;
   }
-  .round-toolbar > button {
+  .round-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     margin-left: auto;
+  }
+  .round-toolbar + .round-status {
+    margin-top: 12px;
   }
   .button {
     border-radius: 8px;
@@ -1671,7 +1677,7 @@
       gap: 12px;
       flex-wrap: wrap;
     }
-    .round-toolbar > button {
+    .round-actions > button {
       font-size: 14px;
     }
     .rule-note {
@@ -1743,8 +1749,7 @@
     .round-toolbar {
       gap: 12px;
     }
-    .round-toolbar > button {
-      margin-left: auto;
+    .round-actions > button {
       padding-inline: 10px;
       font-size: 12px;
     }

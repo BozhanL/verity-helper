@@ -36,6 +36,129 @@ function choose(shape: verity.Shape): void {
 
 describe("exercise controls", () => {
   it.each(["en", "zh"] as const)(
+    "%s: retries the original layout with the selected mode without generating another puzzle",
+    (locale) => {
+      const messages = getMessages(locale);
+      const other: verity.Puzzle = {
+        inside: ["square", "circle", "triangle"],
+        outside: [
+          ["square", "square"],
+          ["circle", "circle"],
+          ["triangle", "triangle"],
+        ],
+      };
+      vi.mocked(verity.generatePuzzle)
+        .mockReturnValueOnce(PREVIEW_PUZZLE)
+        .mockReturnValueOnce(other);
+      render(<Exercise locale={locale} />);
+      expect(
+        screen.queryByRole("button", { name: messages.retryExercise }),
+      ).toBeNull();
+      fireEvent.click(screen.getByRole("button", { name: messages.start }));
+      const original = screen
+        .getAllByRole("img")
+        .map((image) => image.getAttribute("aria-label"));
+      function excise(selection: verity.Excise): void {
+        fireEvent.click(
+          within(
+            screen.getByRole("group", { name: messages.currentShape }),
+          ).getByRole("radio", { name: messages.shapes[selection.shape] }),
+        );
+        fireEvent.click(
+          screen.getByRole("button", {
+            name: describeExcise(locale, selection),
+          }),
+        );
+      }
+      excise({ statue: 0, shape: "circle" });
+      excise({ statue: 1, shape: "triangle" });
+      excise({ statue: 2, shape: "square" });
+      fireEvent.click(
+        screen.getByRole("radio", { name: messages.practiceModes.untimed }),
+      );
+      expect(screen.getByRole("timer")).toBeDefined();
+      expect(
+        screen.getByRole("button", { name: messages.cancel }),
+      ).toBeDefined();
+      fireEvent.click(
+        screen.getByRole("button", { name: messages.retryExercise }),
+      );
+      expect(
+        screen
+          .getAllByRole("img")
+          .map((image) => image.getAttribute("aria-label")),
+      ).toEqual(original);
+      expect(screen.queryByRole("timer")).toBeNull();
+      expect(
+        screen.queryByRole("button", { name: messages.cancel }),
+      ).toBeNull();
+      expect(
+        screen.getByText(messages.completedSwaps).nextElementSibling
+          ?.textContent,
+      ).toBe("00");
+      expect(
+        within(
+          screen.getByRole("group", { name: messages.currentShape }),
+        ).getByRole("radio", { name: messages.shapes.circle, checked: true }),
+      ).toBeDefined();
+      act(() => {
+        vi.advanceTimersByTime(600000);
+      });
+      expect(
+        screen.getByRole("heading", { name: messages.running }),
+      ).toBeDefined();
+      fireEvent.click(
+        screen.getByRole("button", { name: messages.retryExercise }),
+      );
+      expect(verity.generatePuzzle).toHaveBeenCalledTimes(1);
+      for (const swap of verity.solve(PREVIEW_PUZZLE) ?? []) {
+        for (const selection of swap) {
+          excise(selection);
+        }
+      }
+      expect(screen.getByRole("heading", { name: messages.won })).toBeDefined();
+      fireEvent.click(
+        screen.getByRole("radio", { name: messages.practiceModes.timed }),
+      );
+      fireEvent.click(
+        screen.getByRole("button", { name: messages.retryExercise }),
+      );
+      expect(screen.getByRole("timer").textContent).toBe("3:30");
+      expect(
+        screen
+          .getAllByRole("img")
+          .map((image) => image.getAttribute("aria-label")),
+      ).toEqual(original);
+      fireEvent.click(
+        screen.getByRole("button", { name: messages.newExercise }),
+      );
+      const next = screen
+        .getAllByRole("img")
+        .map((image) => image.getAttribute("aria-label"));
+      expect(next).not.toEqual(original);
+      act(() => {
+        vi.advanceTimersByTime(210000);
+      });
+      expect(
+        screen.getByRole("heading", { name: messages.expired }),
+      ).toBeDefined();
+      fireEvent.click(
+        screen.getByRole("radio", { name: messages.practiceModes.untimed }),
+      );
+      fireEvent.click(
+        screen.getByRole("button", { name: messages.retryExercise }),
+      );
+      expect(
+        screen
+          .getAllByRole("img")
+          .map((image) => image.getAttribute("aria-label")),
+      ).toEqual(next);
+      expect(screen.queryByRole("timer")).toBeNull();
+      expect(verity.generatePuzzle).toHaveBeenCalledTimes(2);
+    },
+  );
+
+  it.each(["en", "zh"] as const)(
     "%s: untimed practice survives elapsed time and applies mode changes only on restart",
     (locale) => {
       const messages = getMessages(locale);

@@ -147,8 +147,11 @@ rule specification or a challenge-mode solver.
 3. Choose a different shape and click **Excise** under another statue to
    complete the swap.
 
-Use **Cancel selection** to clear a pending cut, or **New exercise** to start
-over. Your goal is to give each outside statue the two shapes that differ from
+Use **Cancel selection** to clear a pending cut. **Retry same puzzle** restores
+the starting symbols and solids, clears your swaps and pending cut, and starts
+a fresh timer (or no timer in Untimed mode). Retry is available during a round,
+after a timeout, and after completion. **New exercise** generates another puzzle.
+Your goal is to give each outside statue the two shapes that differ from
 its matching inside symbol. The exercise shows only the given inside symbols
 and outside solids, so you can practice without solution hints.
 
@@ -156,7 +159,9 @@ Timed rounds stop the clock when you finish and block further moves when time
 runs out. The clock keeps counting down in background tabs. Untimed rounds have
 no countdown or expiry and use the same puzzles, controls, and completion rules.
 Changing **Next exercise** affects only the next **Start exercise** or
-**New exercise**; it preserves the active board, pending cut, and timer.
+**New exercise** or **Retry same puzzle**; it preserves the active board, pending
+cut, and timer until you start or retry. For example, choose Untimed after a
+timeout and retry the same layout without a deadline.
 Untimed practice gives learners more time.
 It is a practice option, not a change to the raid’s timer. Switching tools or
 languages resets the round.
