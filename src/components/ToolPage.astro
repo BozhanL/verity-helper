@@ -11,6 +11,8 @@ import SiteHeader from "./SiteHeader";
 import SoloCalculator from "./SoloCalculator";
 import RepositoryHelper from "./RepositoryHelper";
 import ShapeIcon from "./ShapeIcon";
+import SubstratumGuide from "./SubstratumGuide.astro";
+import SubstratumChecklist from "./SubstratumChecklist";
 
 interface Props {
   locale: Locale;
@@ -20,6 +22,16 @@ interface Props {
 const { locale, page } = Astro.props;
 const messages = getMessages(locale);
 const content = {
+  substratum: {
+    title: messages.substratumTool.title,
+    heading: messages.substratumTool.title,
+    description: messages.substratumTool.description,
+  },
+  substratumChecklist: {
+    title: messages.substratumChecklist,
+    heading: messages.substratumChecklist,
+    description: messages.substratumTool.checklistDescription,
+  },
   home: {
     title: messages.homeTitle,
     heading: messages.homeTitle,
@@ -49,12 +61,18 @@ const content = {
 const path = PAGE_PATHS[page];
 const encounter = getEncounter(page);
 const encounterEyebrows = {
+  substratum: messages.substratumTool.encounter,
   repository: messages.repositoryTool.encounter,
   verity: messages.encounter,
 };
 const eyebrow =
   encounter === null ? messages.siteEyebrow : encounterEyebrows[encounter];
 const links = {
+  substratum: getRelativeLocaleUrl(locale, PAGE_PATHS.substratum),
+  substratumChecklist: getRelativeLocaleUrl(
+    locale,
+    PAGE_PATHS.substratumChecklist,
+  ),
   home: getRelativeLocaleUrl(locale, PAGE_PATHS.home),
   repository: getRelativeLocaleUrl(locale, PAGE_PATHS.repository),
   calculator: getRelativeLocaleUrl(locale, PAGE_PATHS.calculator),
@@ -79,6 +97,16 @@ const links = {
     </header>
     {page === "home" && (
       <div class="encounter-grid">
+        <a class="panel encounter-card" href={links.substratum}>
+          <span class="encounter-icon">
+            <ShapeIcon shape="pyramid" />
+          </span>
+          <h2>{messages.substratumEncounter}</h2>
+          <p>{messages.substratumTool.description}</p>
+          <span class="encounter-tools">
+            {messages.substratum} · {messages.substratumChecklist}
+          </span>
+        </a>
         <a class="panel encounter-card" href={links.repository}>
           <span class="encounter-icon">
             <ShapeIcon shape="square" />
@@ -97,6 +125,15 @@ const links = {
           </span>
         </a>
       </div>
+    )}
+    {page === "substratum" && (
+      <SubstratumGuide
+        locale={locale}
+        checklistUrl={links.substratumChecklist}
+      />
+    )}
+    {page === "substratumChecklist" && (
+      <SubstratumChecklist locale={locale} client:load />
     )}
     {page === "repository" && <RepositoryHelper locale={locale} client:load />}
     {page === "calculator" && <Calculator locale={locale} client:load />}
@@ -117,12 +154,16 @@ const links = {
           {messages.repositoryTool.reference}
         </a>
       )}
-      <a href="https://yugnar.com/verityCalculator/">
-        {messages.referenceCalculator}
-      </a>
-      <a href="https://static.19970301.xyz/the_final_shape/dist/index.html#/">
-        {messages.referenceExercise}
-      </a>
+      {encounter !== "substratum" && (
+        <>
+          <a href="https://yugnar.com/verityCalculator/">
+            {messages.referenceCalculator}
+          </a>
+          <a href="https://static.19970301.xyz/the_final_shape/dist/index.html#/">
+            {messages.referenceExercise}
+          </a>
+        </>
+      )}
       <a href="https://github.com/BozhanL/verity-helper">
         {messages.repository}
       </a>

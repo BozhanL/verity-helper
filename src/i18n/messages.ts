@@ -3,6 +3,8 @@ import type { Excise } from "../lib/verity";
 export type Locale = "en" | "zh";
 export const PAGES = [
   "home",
+  "substratum",
+  "substratumChecklist",
   "repository",
   "calculator",
   "solo",
@@ -11,13 +13,132 @@ export const PAGES = [
 export type Page = (typeof PAGES)[number];
 
 const en = {
+  substratum: "Quick guide",
+  substratumChecklist: "Cycle checklist",
+  substratumEncounter: "1 · Substratum",
+  substratumTool: {
+    title: "Substratum",
+    description: "Route twice. Close two conductors. Bank. Repeat three times.",
+    encounter: "DESTINY 2 / ENCOUNTER 01",
+    navigation: "Substratum tools",
+    checklistTitle: "Substratum cycle checklist",
+    checklistDescription:
+      "Keep your place through three cycles of routes, conductors, and banking.",
+    cycles: "3 cycles",
+    conductors: "2 conductors per cycle",
+    stacks: "3 stacks maximum",
+    start:
+      "Gather at center. Pick up the opening triangle and deposit it to begin.",
+    flow: "One cycle",
+    mechanicsTitle: "Mechanics, step by step",
+    steps: [
+      {
+        title: "Open the routes",
+        cue: "Hydra → Overload → Tormentor. Twice.",
+        detail:
+          "Take the two open doors. Hydras unlock the other team’s route. Defeat an Overload, remember its room, then regroup for the center Tormentor. Do this twice.",
+      },
+      {
+        title: "Bounce & collect",
+        cue: "Send ⇄ catch. Collect between pulses.",
+        detail:
+          "Find the powered plates and follow their wires. Step on the receiving plate after the pulse arrives; the shrinking ring is your cue. Collect Pyramidal Resonance between returns.",
+      },
+      {
+        title: "Close both",
+        cue: "Collect → shoot conductor → catch.",
+        detail:
+          "Confirm pickups first: closing removes uncollected Resonance on that circuit. With Resonance, shoot the conductor’s center, then catch the next pulse on its plate. Closing consumes one stack.",
+      },
+      {
+        title: "Return & bank",
+        cue: "Center Subjugator → chest. Repeat ×3.",
+        detail:
+          "Defeat the center Subjugator and gather at the chest. Everyone deposits remaining Resonance to extend Final Shape Looming. Repeat for three cycles total.",
+      },
+    ],
+    rolesTitle: "Suggested split · two teams of three",
+    roles: [
+      {
+        title: "Sender",
+        detail:
+          "Stay by the powered start plate. Send, step off, and catch the return.",
+      },
+      {
+        title: "Closer",
+        detail:
+          "Take the conductor plate. Bounce first; arm and close after pickups.",
+      },
+      {
+        title: "Floater",
+        detail:
+          "Clear enemies and collect center Resonance. Call when ready to close.",
+      },
+    ],
+    pulseDiagram:
+      "Sender plate exchanges a pulse with the closer’s plate beside the conductor. The floater collects Resonance in the center.",
+    sender: "Sender",
+    closer: "Closer",
+    center: "Center · floater",
+    pyramid: "Pyramidal Resonance",
+    safety:
+      "Stop at 3. A fourth pickup or an expired personal Resonance timer kills you. Watch the encounter timer too.",
+    recoveryTitle: "If something goes wrong",
+    recovery: [
+      "Door shut? Ask the opposite team to clear its Hydra. Return promptly when the Overload falls; doors close around the Tormentor phase.",
+      "Pulse lost? Regroup at the plates. If a Subjugator locks the circuit, defeat it before restarting. Use the arriving pulse, not a fixed countdown.",
+      "Chest unavailable? Clear center and gather the team. Confirm the Resonance buff disappears after depositing.",
+    ],
+    optionalTitle: "Optional challenge & Triumph",
+    scenic: "Scenic Route · weekly challenge",
+    scenicDetail:
+      "Leave the early Overload alive. Continue opening the longer route and defeat the Overload in the fourth peripheral room (count the first room outside center as 1). Agree on the route before pulling.",
+    touch: "Touch and Go · encounter Triumph",
+    touchDetail:
+      "All six players collect one stack before anyone takes a second; all reach two before anyone takes a third. Coordinate across both teams.",
+    optionalNote:
+      "These are extra restrictions, not normal-clear requirements. The checklist does not validate either objective; check challenge availability in-game.",
+    sources: "Sources & scope",
+    sourceNote:
+      "Community guides, checked November 2026. Normal encounter mechanics; roles are a suggested strategy. No fixed room map, live timer, or game-state detection.",
+    walkthrough: "Shacknews · encounter loop",
+    plateGuide: "Professionalism · plates & roles",
+    rulesGuide: "Destinypedia · closing & recovery",
+    challengeGuide: "Kyber’s Corner · Scenic Route",
+    triumphGuide: "Bungie manifest via light.gg · Touch and Go",
+    manual:
+      "Manual team checklist. A / B are your team labels, not fixed rooms.",
+    cycle: "Cycle {cycle} / 3",
+    complete: "All 3 cycles marked",
+    progress: "Cycle progress",
+    route: "Routes · center Tormentors",
+    circuit: "Conductors · pickups confirmed",
+    bank: "Team banked",
+    bankHint:
+      "Clear the center Subjugator, gather at the chest, and confirm everyone deposited.",
+    marks: {
+      tormentor1: "Tormentor 1",
+      tormentor2: "Tormentor 2",
+      conductorA: "Conductor A",
+      conductorB: "Conductor B",
+    },
+    nextRoute: "Clear both routes and center Tormentors.",
+    nextCircuit: "Collect Resonance, then close both conductors.",
+    nextBank: "Return to center and bank together.",
+    done: "Check the in-game exit. Reset for another attempt.",
+    undo: "Undo last mark",
+    reset: "Reset attempt",
+    resetNote:
+      "Undo restores the previous mark, even across cycles. Reset, reload, or leaving this page clears the attempt.",
+  },
+
   brand: "Salvation’s Edge",
   subtitle: "Encounter helpers",
   navigation: "Main navigation",
   toolNavigation: "Verity tools",
   homeTitle: "Choose your encounter",
   homeDescription:
-    "Plate and resonance guidance for Repository. Calculators and practice for Verity.",
+    "Quick guidance for Substratum, plate routing for Repository, and Verity calculators and practice.",
   verityDescription:
     "Plan outside dissection, distribute solo-room shapes, or practice the fourth encounter.",
   siteEyebrow: "DESTINY 2 / SALVATION’S EDGE",
@@ -191,12 +312,125 @@ const en = {
 };
 
 const zh: typeof en = {
+  substratum: "速查指南",
+  substratumChecklist: "轮次清单",
+  substratumEncounter: "1 · 基底",
+  substratumTool: {
+    title: "基底 · Substratum",
+    description: "两次开路，关闭两座导体，存入共振。共完成三轮。",
+    encounter: "命运 2 / 第一关",
+    navigation: "基底工具",
+    checklistTitle: "基底轮次清单",
+    checklistDescription: "记录三轮开路、关闭导体与存入共振的进度。",
+    cycles: "共 3 轮",
+    conductors: "每轮 2 座导体",
+    stacks: "最多 3 层共振",
+    start: "全员到中间集合，拾取开局的三角形共振并存入箱子，开始遭遇战。",
+    flow: "每轮流程",
+    mechanicsTitle: "各步骤机制详解",
+    steps: [
+      {
+        title: "开辟路线",
+        cue: "九头蛇 → 过载勇士 → 折磨者。重复两次。",
+        detail:
+          "分别进入两扇开启的门。击杀九头蛇可为另一队开路。击杀过载勇士，记住房间，再回中间击杀折磨者。重复两次。",
+      },
+      {
+        title: "传递并拾取",
+        cue: "发送 ⇄ 接收。在往返间隙拾取。",
+        detail:
+          "找到亮起的板，沿线路确认接收板。光脉冲到达后再踩板，收缩光圈是提示。利用往返间隙拾取棱锥共振。",
+      },
+      {
+        title: "关闭两座导体",
+        cue: "完成拾取 → 射击导体 → 接住脉冲。",
+        detail:
+          "先确认队友已拾取：关闭后，该线路未拾取的共振会消失。携带共振射击导体中心，再踩板接住下一次脉冲。关闭会消耗一层共振。",
+      },
+      {
+        title: "回中间存入",
+        cue: "中间征服者 → 箱子。共三轮。",
+        detail:
+          "击杀中间的征服者，在箱子旁集合。全员存入剩余共振，延长终焉倒计时。总共完成三轮。",
+      },
+    ],
+    rolesTitle: "建议分工 · 两队，每队三人",
+    roles: [
+      {
+        title: "发送者",
+        detail: "守住亮起的起点板。发送后离板，等待脉冲返回再接。",
+      },
+      {
+        title: "关导体者",
+        detail: "负责导体旁的板。先传递脉冲，拾取完成后再激活并关闭。",
+      },
+      {
+        title: "游走者",
+        detail: "清怪并拾取中间的共振。准备好后通知队友关闭导体。",
+      },
+    ],
+    pulseDiagram:
+      "发送者的起点板与导体旁的接收板互相传递脉冲，游走者在中间拾取共振。",
+    sender: "发送者",
+    closer: "关导体者",
+    center: "中间 · 游走者",
+    pyramid: "棱锥共振",
+    safety:
+      "三层即停。拾取第四层或个人共振计时耗尽都会死亡，也要留意全队的终焉倒计时。",
+    recoveryTitle: "遇到问题时",
+    recovery: [
+      "门没开？提醒另一队清掉九头蛇。过载勇士倒下后及时回中间，折磨者阶段会关门。",
+      "脉冲断了？重新就位。如果征服者锁住线路，先击杀再重启。根据光脉冲操作，不要机械倒数。",
+      "箱子不能存？清掉中间敌人并全员靠近。存入后检查共振增益是否消失。",
+    ],
+    optionalTitle: "可选挑战与成就",
+    scenic: "Scenic Route · 每周挑战",
+    scenicDetail:
+      "不要击杀早先出现的过载勇士。继续开启较长路线，击杀第四间外围房间中的过载勇士（离开中间后的第一间算第 1 间）。开局前先统一路线。",
+    touch: "Touch and Go · 关卡成就",
+    touchDetail:
+      "全队六人都拿到一层后，才能有人拿第二层；全员两层后，才能拿第三层。两队之间也要同步。",
+    optionalNote:
+      "这些是额外限制，普通通关不要求。清单不会核实挑战或成就；挑战是否开放请查看游戏。",
+    sources: "资料来源与适用范围",
+    sourceNote:
+      "社区指南，核对于 2026 年 11 月。介绍普通关卡机制，角色分工是建议策略。不提供固定房间地图、实时计时或游戏状态检测。",
+    walkthrough: "Shacknews · 关卡流程",
+    plateGuide: "Professionalism · 踩板与分工",
+    rulesGuide: "Destinypedia · 关闭导体与补救",
+    challengeGuide: "Kyber’s Corner · Scenic Route",
+    triumphGuide: "light.gg 收录的 Bungie 数据 · Touch and Go",
+    manual: "手动全队清单。A / B 是队伍代号，不代表固定房间。",
+    cycle: "第 {cycle} / 3 轮",
+    complete: "已标记全部 3 轮",
+    progress: "轮次进度",
+    route: "开路 · 中间折磨者",
+    circuit: "导体 · 已确认拾取",
+    bank: "全队已存入",
+    bankHint: "击杀中间征服者，在箱子旁集合，确认全员已存入共振。",
+    marks: {
+      tormentor1: "折磨者 1",
+      tormentor2: "折磨者 2",
+      conductorA: "导体 A",
+      conductorB: "导体 B",
+    },
+    nextRoute: "完成两次开路并击杀中间折磨者。",
+    nextCircuit: "拾取共振，然后关闭两座导体。",
+    nextBank: "回到中间，全队存入共振。",
+    done: "确认游戏内出口开启。再次尝试前请重置。",
+    undo: "撤销上次标记",
+    reset: "重置本次尝试",
+    resetNote:
+      "撤销可跨轮次恢复上一次标记。重置、刷新或离开此页会清除本次进度。",
+  },
+
   brand: "救赎边缘",
   subtitle: "关卡辅助工具",
   navigation: "主导航",
   toolNavigation: "真理工具",
   homeTitle: "选择关卡",
-  homeDescription: "第三关的终点板与共振指引，以及第四关的计算器和练习工具。",
+  homeDescription:
+    "第一关速查与清单、第三关终点板指引，以及第四关计算器和练习。",
   verityDescription: "规划外场剖切、分配单人房图形，或练习第四关的机制。",
   siteEyebrow: "命运 2 / 救赎边缘",
   repositoryEncounter: "第三关 · 贮藏库",

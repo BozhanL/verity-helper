@@ -80,6 +80,31 @@ async function assertNavigationLayout(page: Page): Promise<void> {
   }
 }
 
+async function exerciseSubstratum(
+  page: Page,
+  route: (typeof ROUTES)[number],
+): Promise<void> {
+  const messages = getMessages(route.locale);
+  await openPage(page, route.path);
+  if (route.tool === "substratumChecklist") {
+    const mark = page.getByRole("button", {
+      name: messages.substratumTool.marks.tormentor1,
+    });
+    await expect(mark).toBeEnabled();
+    await mark.tap();
+    await expect(mark).toHaveAttribute("aria-pressed", "true");
+  } else {
+    await page
+      .getByText(messages.substratumTool.recoveryTitle, { exact: true })
+      .tap();
+    await expect(
+      page.getByText(messages.substratumTool.recovery[0] ?? "", {
+        exact: true,
+      }),
+    ).toBeVisible();
+  }
+}
+
 async function exerciseRoute(
   page: Page,
   route: (typeof ROUTES)[number],
@@ -87,7 +112,9 @@ async function exerciseRoute(
   height: number,
 ): Promise<void> {
   const messages = getMessages(route.locale);
-  if (route.tool === "home") {
+  if (route.tool === "substratum" || route.tool === "substratumChecklist") {
+    await exerciseSubstratum(page, route);
+  } else if (route.tool === "home") {
     await openPage(page, route.path);
     await page
       .getByRole("combobox")
@@ -173,48 +200,54 @@ for (const viewport of VIEWPORTS) {
     for (const theme of ["light", "dark"] as const) {
       // Each localized journey gets its own deadline, including on slower WebKit runners.
       for (const locale of ["en", "zh"] as const) {
-        test(`${locale} ${String(viewport.width)}x${String(viewport.height)} ${theme}: all tools fit and remain usable`, async ({
-          page,
-        }, testInfo) => {
-          await page.addInitScript((value) => {
-            localStorage.setItem("verity-theme", value);
-          }, theme);
-          for (const route of ROUTES.filter(
-            (route) => route.locale === locale,
-          )) {
-            await exerciseRoute(page, route, theme, viewport.height);
-            const width = await page.evaluate(() => ({
-              scroll: document.documentElement.scrollWidth,
-              viewport: document.documentElement.clientWidth,
-              inner: window.innerWidth,
-            }));
-            expect(
-              width.inner,
-              route.path + " must use the requested viewport",
-            ).toBe(viewport.width);
-            expect(
-              width.scroll,
-              route.path + " must not overflow horizontally",
-            ).toBeLessThanOrEqual(width.viewport);
-            await assertTouchTargets(page);
-            await assertNavigationLayout(page);
-            if (
-              route.locale === "en" &&
-              [390, 820, 1440].includes(viewport.width)
-            ) {
-              await page.evaluate(() => {
-                window.scrollTo(0, 0);
-              });
-              await page.screenshot({
-                animations: "disabled",
-                path: testInfo.outputPath(
-                  `${route.tool}-${String(viewport.width)}-${theme}.png`,
-                ),
-                fullPage: true,
-              });
+        for (const group of ["existing", "substratum"] as const) {
+          test(`${locale} ${String(viewport.width)}x${String(viewport.height)} ${theme} ${group}: all tools fit and remain usable`, async ({
+            page,
+          }, testInfo) => {
+            await page.addInitScript((value) => {
+              localStorage.setItem("verity-theme", value);
+            }, theme);
+            for (const route of ROUTES.filter(
+              (route) =>
+                route.locale === locale &&
+                (group === "substratum"
+                  ? route.tool.startsWith("substratum")
+                  : !route.tool.startsWith("substratum")),
+            )) {
+              await exerciseRoute(page, route, theme, viewport.height);
+              const width = await page.evaluate(() => ({
+                scroll: document.documentElement.scrollWidth,
+                viewport: document.documentElement.clientWidth,
+                inner: window.innerWidth,
+              }));
+              expect(
+                width.inner,
+                route.path + " must use the requested viewport",
+              ).toBe(viewport.width);
+              expect(
+                width.scroll,
+                route.path + " must not overflow horizontally",
+              ).toBeLessThanOrEqual(width.viewport);
+              await assertTouchTargets(page);
+              await assertNavigationLayout(page);
+              if (
+                (route.locale === "en" || group === "substratum") &&
+                [390, 820, 1440].includes(viewport.width)
+              ) {
+                await page.evaluate(() => {
+                  window.scrollTo(0, 0);
+                });
+                await page.screenshot({
+                  animations: "disabled",
+                  path: testInfo.outputPath(
+                    `${route.tool}-${String(viewport.width)}-${theme}.png`,
+                  ),
+                  fullPage: true,
+                });
+              }
             }
-          }
-        });
+          });
+        }
       }
     }
   });

@@ -100,11 +100,21 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
 ## Project structure and UI
 
 - Use Astro for routes and layouts, and React islands for interactive tools.
-- The encounter chooser is `/`; Repository's end-plate helper is `/repository/`.
+- The encounter chooser is `/`; Substratum’s guide is `/substratum/` and its
+  manual cycle checklist is `/substratum/checklist/`, with matching `/zh/` routes.
+  Repository's end-plate helper is `/repository/`.
   Verity's calculator is `/verity/`, with solo-room distribution at
   `/verity/solo/` and exercise at `/verity/exercise/`, all with matching `/zh/`
   routes. Keep page paths and encounter membership in `src/lib/navigation.ts`;
   preserve the selected page in metadata and language links.
+- Keep Substratum progress rules in `src/lib/substratum.ts`. The checklist records
+  two center Tormentors, two conductors, and a team bank for each of three cycles.
+  Banking advances the cycle; undo restores the previous snapshot across cycles.
+  Reset/reload/navigation clears the attempt. A/B are team labels, not room names.
+  Keep the static guide usable without JavaScript, with optional details collapsed.
+  Distinguish normal mechanics, suggested roles, weekly Scenic Route, and the
+  separate Touch and Go Triumph. Cite community sources; do not imply live game
+  detection, a fixed room map, exact pulse timings, or challenge validation.
 - Keep puzzle rules in `src/lib/verity.ts` and exercise state in
   `src/lib/practice.ts`. Share shape types and puzzle rules across tools.
 - Keep Repository rules in `src/lib/repository.ts`. Positions are viewed from

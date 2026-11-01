@@ -84,8 +84,10 @@ const favicon = import.meta.env.BASE_URL + "favicon.svg";
       {messages.skip}
     </a>
     <slot />
-    <noscript>
-      <p class="noscript-message">{messages.noScript}</p>
-    </noscript>
+    {page !== "substratum" && (
+      <noscript>
+        <p class="noscript-message">{messages.noScript}</p>
+      </noscript>
+    )}
   </body>
 </html>

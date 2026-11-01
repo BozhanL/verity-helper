@@ -2,22 +2,29 @@
 
 [English](README.md)
 
-《命运 2》救赎边缘突袭第三关与第四关的辅助工具。
+《命运 2》救赎边缘突袭第一关、第三关与第四关的辅助工具。
+第一关提供机制速查与手动轮次清单。
 第三关提供终点板与共振指引；第四关提供外场剖切计算器、单人房图形分配计算器和练习。
 支持英文和简体中文。
 
 ## 使用工具
 
-| 页面           | 英文                        | 简体中文              |
-| -------------- | --------------------------- | --------------------- |
-| 关卡选择       | [Home][home-en]             | [首页][home-zh]       |
-| 第三关：贮藏库 | [End-plate helper][repo-en] | [终点板助手][repo-zh] |
-| 真理：剖切     | [Dissection][calc-en]       | [剖切][calc-zh]       |
-| 真理：单人房   | [Solo room][solo-en]        | [单人房][solo-zh]     |
-| 真理：练习     | [Exercise][exercise-en]     | [练习][exercise-zh]   |
+| 页面             | 英文                        | 简体中文              |
+| ---------------- | --------------------------- | --------------------- |
+| 关卡选择         | [Home][home-en]             | [首页][home-zh]       |
+| 第一关：基底速查 | [Quick guide][sub-en]       | [速查指南][sub-zh]    |
+| 第一关：轮次清单 | [Checklist][check-en]       | [轮次清单][check-zh]  |
+| 第三关：贮藏库   | [End-plate helper][repo-en] | [终点板助手][repo-zh] |
+| 真理：剖切       | [Dissection][calc-en]       | [剖切][calc-zh]       |
+| 真理：单人房     | [Solo room][solo-en]        | [单人房][solo-zh]     |
+| 真理：练习       | [Exercise][exercise-en]     | [练习][exercise-zh]   |
 
 [home-en]: https://verity.903684.xyz/
 [home-zh]: https://verity.903684.xyz/zh/
+[sub-en]: https://verity.903684.xyz/substratum/
+[sub-zh]: https://verity.903684.xyz/zh/substratum/
+[check-en]: https://verity.903684.xyz/substratum/checklist/
+[check-zh]: https://verity.903684.xyz/zh/substratum/checklist/
 [repo-en]: https://verity.903684.xyz/repository/
 [repo-zh]: https://verity.903684.xyz/zh/repository/
 [calc-en]: https://verity.903684.xyz/verity/
@@ -38,6 +45,25 @@
 可以在电脑上使用**练习**学习剖切，并在开打前试用计算器。
 同一套界面也适用于战斗时使用手机：触控区域更大，图示更紧凑，并显示**控件已就绪**状态。
 无需另外设置学习模式或战斗模式。
+
+## 第一关：基底（Substratum）
+
+**速查指南**展示普通关卡流程、踩板示意图，以及两支三人小队的发送、关导体和游走建议分工。
+补救方法、可选挑战规则与来源可按需展开。指南不需要 JavaScript，轮次清单需要。
+
+**轮次清单**手动记录每轮两只中间折磨者、两座导体与全队存入共振，共三轮。
+A / B 是队伍代号，不代表固定房间。只记录你确认的操作，不检测游戏状态，不模拟计时，
+也不提供地图或核实挑战。关闭导体前先确认队友已完成拾取。
+
+误点时使用**撤销上次标记**，即使存入标记已推进轮次也可恢复。
+**重置本次尝试**会清除全部进度。刷新、切换语言或离开页面同样会重置；切换主题会保留进度。
+
+机制参考并交叉核对了 [Shacknews][resonance-guide]、
+[Professionalism](https://professionalism.gg/raid-guides/salvations-edge) 与
+[Destinypedia](https://www.destinypedia.com/Salvation%27s_Edge#Substratum)。
+[Scenic Route](https://kyberscorner.com/destiny2/raid-challenges/) 与
+[Touch and Go](https://www.light.gg/db/legend/triumphs/2062070439/touch-and-go/)
+是独立的可选目标，并非普通通关要求。
 
 ## 第三关：贮藏库
 

@@ -2,7 +2,8 @@
 
 [简体中文](README.zh-CN.md)
 
-Helpers for encounters 3 and 4 of Destiny 2’s Salvation’s Edge raid.
+Helpers for encounters 1, 3, and 4 of Destiny 2’s Salvation’s Edge raid.
+Learn Substratum’s encounter loop and keep a manual cycle checklist.
 Find Repository plates and resonance destinations, or use Verity’s dissection
 calculator, solo-room calculator, and practice tool.
 Available in English and Simplified Chinese.
@@ -12,6 +13,8 @@ Available in English and Simplified Chinese.
 | Page                    | English                 | Simplified Chinese    |
 | ----------------------- | ----------------------- | --------------------- |
 | Encounter chooser       | [Home][home-en]         | [首页][home-zh]       |
+| Substratum: Guide       | [Quick guide][sub-en]   | [速查指南][sub-zh]    |
+| Substratum: Checklist   | [Checklist][check-en]   | [轮次清单][check-zh]  |
 | Encounter 3: Repository | [Plate helper][repo-en] | [终点板助手][repo-zh] |
 | Verity: Dissection      | [Dissection][calc-en]   | [剖切][calc-zh]       |
 | Verity: Solo room       | [Solo room][solo-en]    | [单人房][solo-zh]     |
@@ -19,6 +22,10 @@ Available in English and Simplified Chinese.
 
 [home-en]: https://verity.903684.xyz/
 [home-zh]: https://verity.903684.xyz/zh/
+[sub-en]: https://verity.903684.xyz/substratum/
+[sub-zh]: https://verity.903684.xyz/zh/substratum/
+[check-en]: https://verity.903684.xyz/substratum/checklist/
+[check-zh]: https://verity.903684.xyz/zh/substratum/checklist/
 [repo-en]: https://verity.903684.xyz/repository/
 [repo-zh]: https://verity.903684.xyz/zh/repository/
 [calc-en]: https://verity.903684.xyz/verity/
@@ -43,6 +50,29 @@ Use **Exercise** on a PC to learn dissection, and try the calculators before the
 raid starts. The same interface works during the raid on your phone, with large
 touch targets, compact diagrams, and a visible **Controls ready** status.
 There is no separate learning or in-raid configuration.
+
+## Substratum (encounter 1)
+
+**Quick guide** shows the normal encounter loop, a plate diagram, and suggested
+sender / closer / floater roles for two teams of three. Expand recovery tips,
+optional challenge rules, or sources only when needed. The guide works without
+JavaScript; the checklist needs it.
+
+**Cycle checklist** records two center Tormentors, two closed conductors, and the
+team bank for each of three cycles. A / B are team labels, not fixed rooms.
+Marks only record what you confirm; this is not a live game-state detector,
+timer, map, or challenge validator. Finish collecting before closing conductors.
+
+Use **Undo last mark** after a mistaken tap, including a bank that advanced the
+cycle. **Reset attempt** clears all progress. Reloading, changing languages, or
+leaving the page also starts a fresh attempt. Changing the theme keeps progress.
+
+Mechanics were cross-checked against [Shacknews][resonance-guide],
+[Professionalism](https://professionalism.gg/raid-guides/salvations-edge), and
+[Destinypedia](https://www.destinypedia.com/Salvation%27s_Edge#Substratum).
+[Scenic Route](https://kyberscorner.com/destiny2/raid-challenges/) and
+[Touch and Go](https://www.light.gg/db/legend/triumphs/2062070439/touch-and-go/)
+are separate optional objectives, not requirements for a normal clear.
 
 ## Repository (encounter 3)
 

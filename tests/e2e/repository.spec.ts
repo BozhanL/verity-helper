@@ -148,47 +148,51 @@ for (const locale of ["en", "zh"] as const) {
   });
 }
 
-test("every page has the correct localized metadata and alternate links", async ({
-  page,
-  baseURL,
-}) => {
-  for (const route of ROUTES) {
-    await openPage(page, route.path);
-    const messages = getMessages(route.locale);
-    const heading = {
-      home: messages.homeTitle,
-      repository: messages.repositoryTool.title,
-      calculator: messages.calculatorTitle,
-      solo: messages.soloTitle,
-      exercise: messages.exerciseTitle,
-    }[route.tool];
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(heading);
-    await expect(page.locator("html")).toHaveAttribute(
-      "lang",
-      route.locale === "en" ? "en" : "zh-Hans",
-    );
-    const enPath = route.path.replace(/^zh\//u, "");
-    const zhPath = "zh/" + enPath;
-    for (const [language, path] of [
-      ["en", enPath],
-      ["zh-Hans", zhPath],
-    ] as const) {
-      const href = await page
-        .locator(`link[rel="alternate"][hreflang="${language}"]`)
-        .getAttribute("href");
-      expect(new URL(href ?? "", baseURL).pathname).toBe(
-        new URL(path, baseURL).pathname,
+for (const locale of ["en", "zh"] as const) {
+  test(`${locale}: every page has the correct localized metadata and alternate links`, async ({
+    page,
+    baseURL,
+  }) => {
+    for (const route of ROUTES.filter((route) => route.locale === locale)) {
+      await openPage(page, route.path);
+      const messages = getMessages(route.locale);
+      const heading = {
+        substratum: messages.substratumTool.title,
+        substratumChecklist: messages.substratumChecklist,
+        home: messages.homeTitle,
+        repository: messages.repositoryTool.title,
+        calculator: messages.calculatorTitle,
+        solo: messages.soloTitle,
+        exercise: messages.exerciseTitle,
+      }[route.tool];
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(heading);
+      await expect(page.locator("html")).toHaveAttribute(
+        "lang",
+        route.locale === "en" ? "en" : "zh-Hans",
       );
+      const enPath = route.path.replace(/^zh\//u, "");
+      const zhPath = "zh/" + enPath;
+      for (const [language, path] of [
+        ["en", enPath],
+        ["zh-Hans", zhPath],
+      ] as const) {
+        const href = await page
+          .locator(`link[rel="alternate"][hreflang="${language}"]`)
+          .getAttribute("href");
+        expect(new URL(href ?? "", baseURL).pathname).toBe(
+          new URL(path, baseURL).pathname,
+        );
+      }
+      const canonical = page.locator('link[rel="canonical"]');
+      if (await canonical.count()) {
+        const href = await canonical.getAttribute("href");
+        expect(new URL(href ?? "", baseURL).pathname).toBe(
+          new URL(route.path, baseURL).pathname,
+        );
+      }
     }
-    const canonical = page.locator('link[rel="canonical"]');
-    if (await canonical.count()) {
-      const href = await canonical.getAttribute("href");
-      expect(new URL(href ?? "", baseURL).pathname).toBe(
-        new URL(route.path, baseURL).pathname,
-      );
-    }
-  }
-});
+  });
+}
 
 test("Repository plate and resonance controls support keyboard selection", async ({
   page,
