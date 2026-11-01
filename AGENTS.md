@@ -60,6 +60,8 @@ Configure browser workers as `75%` locally and `100%` in CI.
 Record CI traces on the first retry to avoid tracing every passing test. Local
 runs have no retries, so retain their first-failure traces. Keep failure
 screenshots and all assertions, browser/device projects, and responsive cases.
+Keep responsive journeys separate by locale so visiting all tools in both
+languages does not share one test deadline on slower WebKit runners.
 Set fixed responsive viewports with `test.use({ viewport })`
 before page creation.
 Firefox phone coverage uses a phone-sized viewport and touch; Firefox does not
