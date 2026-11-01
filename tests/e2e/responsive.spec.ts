@@ -171,46 +171,51 @@ for (const viewport of VIEWPORTS) {
   test.describe(() => {
     test.use({ viewport });
     for (const theme of ["light", "dark"] as const) {
-      test(`${String(viewport.width)}x${String(viewport.height)} ${theme}: all localized tools fit and remain usable`, async ({
-        page,
-      }, testInfo) => {
-        await page.addInitScript((value) => {
-          localStorage.setItem("verity-theme", value);
-        }, theme);
-        for (const route of ROUTES) {
-          await exerciseRoute(page, route, theme, viewport.height);
-          const width = await page.evaluate(() => ({
-            scroll: document.documentElement.scrollWidth,
-            viewport: document.documentElement.clientWidth,
-            inner: window.innerWidth,
-          }));
-          expect(
-            width.inner,
-            route.path + " must use the requested viewport",
-          ).toBe(viewport.width);
-          expect(
-            width.scroll,
-            route.path + " must not overflow horizontally",
-          ).toBeLessThanOrEqual(width.viewport);
-          await assertTouchTargets(page);
-          await assertNavigationLayout(page);
-          if (
-            route.locale === "en" &&
-            [390, 820, 1440].includes(viewport.width)
-          ) {
-            await page.evaluate(() => {
-              window.scrollTo(0, 0);
-            });
-            await page.screenshot({
-              animations: "disabled",
-              path: testInfo.outputPath(
-                `${route.tool}-${String(viewport.width)}-${theme}.png`,
-              ),
-              fullPage: true,
-            });
+      // Each localized journey gets its own deadline, including on slower WebKit runners.
+      for (const locale of ["en", "zh"] as const) {
+        test(`${locale} ${String(viewport.width)}x${String(viewport.height)} ${theme}: all tools fit and remain usable`, async ({
+          page,
+        }, testInfo) => {
+          await page.addInitScript((value) => {
+            localStorage.setItem("verity-theme", value);
+          }, theme);
+          for (const route of ROUTES.filter(
+            (route) => route.locale === locale,
+          )) {
+            await exerciseRoute(page, route, theme, viewport.height);
+            const width = await page.evaluate(() => ({
+              scroll: document.documentElement.scrollWidth,
+              viewport: document.documentElement.clientWidth,
+              inner: window.innerWidth,
+            }));
+            expect(
+              width.inner,
+              route.path + " must use the requested viewport",
+            ).toBe(viewport.width);
+            expect(
+              width.scroll,
+              route.path + " must not overflow horizontally",
+            ).toBeLessThanOrEqual(width.viewport);
+            await assertTouchTargets(page);
+            await assertNavigationLayout(page);
+            if (
+              route.locale === "en" &&
+              [390, 820, 1440].includes(viewport.width)
+            ) {
+              await page.evaluate(() => {
+                window.scrollTo(0, 0);
+              });
+              await page.screenshot({
+                animations: "disabled",
+                path: testInfo.outputPath(
+                  `${route.tool}-${String(viewport.width)}-${theme}.png`,
+                ),
+                fullPage: true,
+              });
+            }
           }
-        }
-      });
+        });
+      }
     }
   });
 }

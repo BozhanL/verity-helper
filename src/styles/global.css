@@ -585,18 +585,42 @@
     align-items: center;
     margin-bottom: 10px;
   }
-  .step-number {
-    width: 22px;
-    height: 22px;
-    display: inline-flex;
+  .sequence-progress {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
-    border-radius: 50%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .sequence > li[aria-current="step"] {
+    border-color: var(--accent);
+  }
+  .sequence > .sequence-completed {
     background: var(--accent-light);
-    color: var(--accent);
-    font-size: 11px;
-    font-weight: 700;
+  }
+  .sequence-mark {
+    margin-left: auto;
+    padding: 8px 10px;
+    min-height: 44px;
+    border: 1px solid var(--accent-border);
+    border-radius: 8px;
+    font-size: 12px;
     flex-shrink: 0;
+  }
+  .swap-shape.selection-mark {
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0;
+  }
+  .selection-mark:disabled {
+    opacity: 1;
+  }
+  .selection-mark:enabled,
+  .selection-mark[aria-pressed="true"] {
+    border-color: var(--accent);
+  }
+  .selection-mark[aria-pressed="true"] {
+    border-width: 2px;
   }
   .swap-instruction {
     --swap-gap: 8px;

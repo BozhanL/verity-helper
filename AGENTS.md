@@ -60,6 +60,8 @@ Configure browser workers as `75%` locally and `100%` in CI.
 Record CI traces on the first retry to avoid tracing every passing test. Local
 runs have no retries, so retain their first-failure traces. Keep failure
 screenshots and all assertions, browser/device projects, and responsive cases.
+Keep responsive journeys separate by locale so visiting all tools in both
+languages does not share one test deadline on slower WebKit runners.
 Set fixed responsive viewports with `test.use({ viewport })`
 before page creation.
 Firefox phone coverage uses a phone-sized viewport and touch; Firefox does not
@@ -117,6 +119,17 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   Generate navigation with Astro's i18n helpers so `BASE_PATH` is respected.
 - Prefer shape diagrams and short labels. Give diagrams localized accessible
   descriptions, and retain accessible names on controls.
+- Dissection progress is a manual checklist. Allow either shape/statue selection
+  in the current swap to be marked independently; advance after both are marked.
+  Keep the whole-swap shortcut, including after a partial mark. Undo restores
+  the state before the last action, so undoing the shortcut preserves an earlier
+  partial mark. Ignore repeated marks and clear all history when any puzzle
+  input changes. Keep the full sequence visible; marks do not verify the live
+  encounter or solo-team progress and are not persisted across page loads.
+  Keep the checklist compact: mark the existing shape tiles directly, replace
+  marked selection numbers with checkmarks, and use one whole-swap shortcut in
+  each card header. Keep full localized accessible names and a live partial count
+  for assistive technology without repeating selection labels or counts visually.
 - Keep one adaptive interface: Exercise and pre-raid experimentation are the
   learning path. Keep mobile conductor positions in left-middle-right columns,
   with resonance selection and closing guidance visible together after scrolling
