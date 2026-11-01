@@ -191,15 +191,22 @@ CI 会通过矩阵在独立的运行器上并行测试这两种配置，每个�
 在同一个本地工作目录中，根路径和子目录测试必须顺序运行。
 类型、代码、格式检查和单元测试在 `test` 任务中运行。
 
-`test` 任务会在 Actions 运行摘要中显示 **Unit and component test coverage**。
-下载该次运行的 **unit-component-coverage** 工件，解压后打开 `index.html` 查看各文件明细。
-报告保留 7 天，并包含 JSON 摘要与 LCOV 文件。本地运行 `npm run test:coverage`
-可在 `coverage/` 中生成相同报告。
+拉取请求会收到由
+[Vitest Coverage Report Action](https://github.com/davelosert/vitest-coverage-report-action)
+创建并持续更新的一条覆盖率评论，包含总体统计和可展开的文件明细，同时写入 Actions 任务摘要。
+下载该次 CI 运行的 **unit-component-coverage-&lt;attempt&gt;** 工件，
+解压后打开 `index.html` 查看完整 HTML 报告。报告保留 7 天，并包含 JSON 与 LCOV 文件。
+本地运行 `npm run test:coverage` 可在 `coverage/` 中生成相同报告。
 
 V8 统计所有源代码中的 TypeScript 与 React 文件，包括尚未测试的文件，排除测试文件和类型声明。
 Astro 模板、CSS 和 Playwright 端到端测试执行不在本报告的统计范围内。
 覆盖率仅用于展示，没有百分比门槛；测试失败仍会使 CI 失败。
-测试失败后也会尝试生成报告，并注明测试结果。包括 fork 拉取请求在内，均无需外部账号或令牌。
+测试失败后也会尝试生成报告；测试是否通过请查看 CI 检查结果。
+
+测试任务仅有读取权限。独立的报告任务只下载对应运行的工件，确认 PR 的最新提交仍然匹配，
+再使用内置 GitHub 令牌更新评论，不检出或执行 PR 代码。
+Fork 和 Dependabot PR 使用 `workflow_run`；GitHub 要求报告工作流先存在于默认分支中。
+同仓库 PR 直接调用相同的报告任务。无需外部账号或额外密钥。
 
 浏览器测试覆盖 Chromium、Firefox 和 WebKit 的桌面及移动配置。Firefox 的手机测试使用小尺寸视口和触控；Firefox 不支持完整的移动设备模拟。
 

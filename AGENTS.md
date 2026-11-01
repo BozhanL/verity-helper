@@ -79,10 +79,16 @@ result must include all jobs and fail if any dependency fails or is cancelled.
 The `test` job runs `npm run test:coverage` with Vitest V8 instrumentation.
 Keep `@vitest/coverage-v8` aligned with Vitest. Report all source TypeScript and
 React files, including untested files; exclude tests and type declarations.
-The Actions job summary and `unit-component-coverage` artifact cover unit/component
-execution, not Astro templates, CSS, or Playwright E2E. Keep report artifacts
-ignored and coverage reporting read-only; it must work on fork pull requests
-without secrets or PR comment permissions. Do not add arbitrary thresholds.
+Use the pinned Vitest Coverage Report Action to update one PR comment, with a
+stable report name and unit/component scope excluding Astro templates, CSS, and
+Playwright E2E. Keep report artifacts ignored; retain HTML, JSON, and LCOV for
+seven days under `unit-component-coverage-<run_attempt>`. Do not add thresholds.
+Tests remain read-only. `coverage-report.yml` is called from CI for same-repository
+PRs and uses `workflow_run` for forks/Dependabot after reaching the default branch.
+Only that isolated reporter has `pull-requests: write` and `actions: read`.
+Never check out PR code, install dependencies, or execute artifacts in the reporter.
+Validate the source workflow, run attempt, artifact, repository, and current PR
+head using GitHub's API; do not trust a PR number supplied by artifact contents.
 
 After completing a task that changes files and passing the required checks,
 ask the user whether to create a Git commit unless they have already requested
