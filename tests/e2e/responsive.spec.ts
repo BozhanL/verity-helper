@@ -102,6 +102,16 @@ async function exerciseSubstratum(
         exact: true,
       }),
     ).toBeVisible();
+    // Measure reference targets in their open state. Closed <details> children
+    // have no rendered bounds; tracing on a retry can mask that difference.
+    await page
+      .getByText(messages.substratumTool.sources, { exact: true })
+      .tap();
+    const sources = page.locator(".substratum-details .reference-links a");
+    await expect(sources).toHaveCount(5);
+    for (const source of await sources.all()) {
+      await expect(source).toBeVisible();
+    }
   }
 }
 
