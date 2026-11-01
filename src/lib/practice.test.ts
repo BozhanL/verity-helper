@@ -8,7 +8,7 @@ import {
   ROUND_SECONDS,
   type PracticeState,
 } from "./practice";
-import { solve, type Excise } from "./verity";
+import { solve, type Excise, type Puzzle } from "./verity";
 
 const FIRST: Excise = { statue: 0, shape: "circle" };
 const SECOND: Excise = { statue: 1, shape: "triangle" };
@@ -22,6 +22,133 @@ function start(): PracticeState {
 }
 
 describe("practice round", () => {
+  it("ignores retry before starting and restores the initial puzzle after swaps and a pending cut", () => {
+    const ready = createPracticeState();
+    expect(practiceReducer(ready, { type: "retry", now: 1000 })).toBe(ready);
+    const started = start();
+    const selected = practiceReducer(started, {
+      type: "excise",
+      selection: FIRST,
+      now: 1100,
+    });
+    const swapped = practiceReducer(selected, {
+      type: "excise",
+      selection: SECOND,
+      now: 1200,
+    });
+    const pending = practiceReducer(swapped, {
+      type: "excise",
+      selection: FIRST,
+      now: 1500,
+    });
+    expect(pending.swaps).toHaveLength(1);
+    expect(pending.pending).toEqual(FIRST);
+    expect(pending.puzzle).not.toEqual(started.puzzle);
+    const retried = practiceReducer(pending, { type: "retry", now: 2000 });
+    expect(retried).toMatchObject({
+      initialPuzzle: PREVIEW_PUZZLE,
+      puzzle: PREVIEW_PUZZLE,
+      phase: "running",
+      remaining: ROUND_SECONDS,
+      deadline: 212000,
+      pending: null,
+      swaps: [],
+    });
+    expect(started.puzzle).toEqual(PREVIEW_PUZZLE);
+    expect(practiceReducer(retried, { type: "retry", now: 2000 })).toEqual(
+      retried,
+    );
+    expect(
+      practiceReducer(retried, {
+        type: "excise",
+        selection: { statue: 0, shape: "square" },
+        now: 2000,
+      }),
+    ).toBe(retried);
+  });
+
+  it.each(["won", "expired"] as const)(
+    "retries a %s round with a fresh clock or without a deadline",
+    (phase) => {
+      let state = start();
+      if (phase === "expired") {
+        state = practiceReducer(state, { type: "tick", now: 211000 });
+      } else {
+        for (const swap of solve(PREVIEW_PUZZLE) ?? []) {
+          for (const selection of swap) {
+            state = practiceReducer(state, {
+              type: "excise",
+              selection,
+              now: 2000,
+            });
+          }
+        }
+      }
+      expect(state.phase).toBe(phase);
+      const untimed = practiceReducer(state, {
+        type: "retry",
+        now: 500000,
+        mode: "untimed",
+      });
+      expect(untimed).toMatchObject({
+        puzzle: PREVIEW_PUZZLE,
+        phase: "running",
+        mode: "untimed",
+        deadline: null,
+        pending: null,
+        swaps: [],
+      });
+      expect(practiceReducer(untimed, { type: "tick", now: 999999 })).toBe(
+        untimed,
+      );
+      const timed = practiceReducer(untimed, {
+        type: "retry",
+        now: 1000000,
+        mode: "timed",
+      });
+      expect(timed).toMatchObject({
+        puzzle: PREVIEW_PUZZLE,
+        mode: "timed",
+        deadline: 1210000,
+        remaining: ROUND_SECONDS,
+      });
+      expect(practiceReducer(timed, { type: "tick", now: 1210000 }).phase).toBe(
+        "expired",
+      );
+    },
+  );
+
+  it("replaces the retained puzzle when a new exercise starts", () => {
+    const other: Puzzle = {
+      inside: ["square", "circle", "triangle"],
+      outside: [
+        ["square", "square"],
+        ["circle", "circle"],
+        ["triangle", "triangle"],
+      ],
+    };
+    const next = practiceReducer(start(), {
+      type: "start",
+      puzzle: other,
+      now: 2000,
+      mode: "untimed",
+    });
+    const selected = practiceReducer(next, {
+      type: "excise",
+      selection: { statue: 0, shape: "square" },
+      now: 3000,
+    });
+    const retried = practiceReducer(selected, { type: "retry", now: 4000 });
+    expect(retried).toMatchObject({
+      initialPuzzle: other,
+      puzzle: other,
+      mode: "untimed",
+      deadline: null,
+      pending: null,
+      swaps: [],
+    });
+  });
+
   it("keeps untimed rounds playable past the timed deadline and still detects completion", () => {
     let state = practiceReducer(createPracticeState(), {
       type: "start",

@@ -82,6 +82,11 @@ export default function Exercise({
     });
   }
 
+  function retryRound(): void {
+    setSelectedShape("circle");
+    dispatch({ type: "retry", now: Date.now(), mode: nextMode });
+  }
+
   return (
     <div className="tool">
       <ToolReadiness locale={locale} />
@@ -142,17 +147,30 @@ export default function Exercise({
             <span>{messages.completedSwaps}</span>
             <strong>{state.swaps.length.toString().padStart(2, "0")}</strong>
           </div>
-          <button
-            {...CONTROL_PROPS}
-            type="button"
-            className={
-              "button " + (running ? "button--secondary" : "button--primary")
-            }
-            disabled={!hydrated}
-            onClick={startRound}
-          >
-            {state.phase === "ready" ? messages.start : messages.newExercise}
-          </button>
+          <div className="round-actions">
+            {state.initialPuzzle !== null && (
+              <button
+                {...CONTROL_PROPS}
+                type="button"
+                className="button button--secondary"
+                disabled={!hydrated}
+                onClick={retryRound}
+              >
+                {messages.retryExercise}
+              </button>
+            )}
+            <button
+              {...CONTROL_PROPS}
+              type="button"
+              className={
+                "button " + (running ? "button--secondary" : "button--primary")
+              }
+              disabled={!hydrated}
+              onClick={startRound}
+            >
+              {state.phase === "ready" ? messages.start : messages.newExercise}
+            </button>
+          </div>
         </div>
         {timed && (
           <progress

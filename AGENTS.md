@@ -142,6 +142,10 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   countdown, or progress bar and uses the same puzzle rules. Mode selection is
   for the next round only; changing it must preserve the active puzzle, pending
   cut, and timer until the player explicitly starts a new exercise.
+  Retain the starting puzzle for **Retry same puzzle**: restore that exact layout,
+  clear swaps and pending cuts, reset the selected shape and clock, and apply the
+  selected next-round mode only on explicit retry. New exercise replaces the
+  retained puzzle. Reloading or navigating away clears it; retries reveal no hints.
 - Configure Noto Sans and Noto Sans SC with Astro’s Fonts API in `astro.config.ts`.
   Use Google Fonts for both families. Preload Noto Sans on all pages and
   Noto Sans SC on Chinese pages. Derive the Chinese glyph subset from the
