@@ -1,6 +1,12 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { describeExcise, getMessages } from "../i18n/messages";
 import { STATUES, type Swap } from "../lib/verity";
 import { SwapInstruction } from "./Sequence";
@@ -8,6 +14,64 @@ import { SwapInstruction } from "./Sequence";
 afterEach(cleanup);
 
 describe("spatial swap diagrams", () => {
+  it.each([
+    [0, 1],
+    [1, 0],
+    [0, 2],
+    [2, 0],
+    [1, 2],
+    [2, 1],
+  ] as const)(
+    "keeps statues %i and %i directly markable with accessible names and checkmarks",
+    (first, second) => {
+      const swap: Swap = [
+        { statue: first, shape: "circle" },
+        { statue: second, shape: "triangle" },
+      ];
+      const onMark = vi.fn();
+      const messages = getMessages("en");
+      const { rerender } = render(
+        <SwapInstruction
+          swap={swap}
+          locale="en"
+          controls={{ step: 2, disabled: false, marks: [false, false], onMark }}
+        />,
+      );
+      const diagram = screen.getByRole("group", { name: "Swap 2" });
+      expect(within(diagram).getAllByRole("button")).toHaveLength(2);
+      function button(index: 0 | 1): HTMLElement {
+        return within(diagram).getByRole("button", {
+          name: messages.markSelectionDone
+            .replace("{step}", "2")
+            .replace("{selection}", String(index + 1))
+            .replace("{cut}", describeExcise("en", swap[index])),
+        });
+      }
+      for (const index of [0, 1] as const) {
+        const tile = button(index);
+        expect(tile.previousElementSibling?.textContent).toBe(
+          messages.positions[swap[index].statue],
+        );
+        fireEvent.click(tile);
+        expect(onMark).toHaveBeenLastCalledWith(index);
+      }
+      rerender(
+        <SwapInstruction
+          swap={swap}
+          locale="en"
+          controls={{ step: 2, disabled: true, marks: [true, false], onMark }}
+        />,
+      );
+      expect(button(0).querySelector(".cut-number")?.textContent).toBe("✓");
+      expect(button(1).querySelector(".cut-number")?.textContent).toBe("2");
+      expect(button(0).getAttribute("aria-pressed")).toBe("true");
+      for (const index of [0, 1] as const) {
+        expect(button(index)).toHaveProperty("disabled", true);
+        expect(button(index).querySelector("svg")).not.toBeNull();
+      }
+    },
+  );
+
   it.each([
     [0, 1],
     [1, 0],

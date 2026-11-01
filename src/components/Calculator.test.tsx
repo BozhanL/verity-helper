@@ -71,16 +71,27 @@ describe("calculator controls", () => {
         expect(first.getAttribute("aria-pressed")).toBe(String(one));
         expect(second.getAttribute("aria-pressed")).toBe(String(two));
       }
-      expect(first.textContent).toContain(messages.shapes.circle);
-      expect(first.textContent).toContain(messages.positions[0]);
+      expect(first.getAttribute("aria-label")).toContain(
+        messages.shapes.circle,
+      );
+      expect(first.getAttribute("aria-label")).toContain(messages.positions[0]);
+      expect(first.classList.contains("swap-shape")).toBe(true);
+      expect(first.closest(".swap-instruction")).not.toBeNull();
+      expect(container.querySelector(".selection-marks")).toBeNull();
       expect(undo).toHaveProperty("disabled", true);
       fireEvent.click(selectionMark(locale, 2, 1));
       expectMarks(false, false);
       fireEvent.click(second);
       fireEvent.click(second);
       expectMarks(false, true);
+      expect(second.querySelector(".cut-number")?.textContent).toBe("✓");
+      expect(first.querySelector(".cut-number")?.textContent).toBe("1");
       expect(
-        screen.getByText(messages.selectionProgress.replace("{done}", "1")),
+        screen.getByText(
+          messages.selectionProgress
+            .replace("{step}", "1")
+            .replace("{done}", "1"),
+        ),
       ).toBeDefined();
       expect(shortcut).toHaveProperty("disabled", false);
       expect(selectionMark(locale, 2, 1)).toHaveProperty("disabled", true);
@@ -149,10 +160,15 @@ describe("calculator controls", () => {
           .replace("{done}", String(done))
           .replace("{total}", "3");
       }
-      const instructions = Array.from(
-        container.querySelectorAll(".swap-instruction, .after-swap"),
-        (element) => element.outerHTML,
-      );
+      function diagrams(): string[] {
+        return Array.from(
+          container.querySelectorAll(
+            ".swap-instruction .position-label, .swap-instruction .shape-icon, .swap-arrows, .after-swap",
+          ),
+          (element) => element.outerHTML,
+        );
+      }
+      const instructions = diagrams();
       expect(mark(2)).toHaveProperty("disabled", true);
       fireEvent.click(mark(2));
       expect(screen.getByText(progress(0))).toBeDefined();
@@ -174,12 +190,7 @@ describe("calculator controls", () => {
       }
       expect(screen.getByText(messages.allSwapsMarked)).toBeDefined();
       expect(container.querySelector('[aria-current="step"]')).toBeNull();
-      expect(
-        Array.from(
-          container.querySelectorAll(".swap-instruction, .after-swap"),
-          (element) => element.outerHTML,
-        ),
-      ).toEqual(instructions);
+      expect(diagrams()).toEqual(instructions);
       fireEvent.click(
         screen.getByRole("button", { name: messages.undoSwapMark }),
       );
@@ -211,7 +222,7 @@ describe("calculator controls", () => {
     }
     mark();
     choose("Left · Outside solids", "Sphere");
-    expect(screen.getByText("Marked 1 of 3 swaps")).toBeDefined();
+    expect(screen.getByText("1/3 swaps marked")).toBeDefined();
     choose("Left · Outside solids", "Cube");
     expectFresh();
     mark();
@@ -331,7 +342,7 @@ describe("calculator controls", () => {
     choose("中间 · 外场立体图形", "三角锥");
     expect(screen.getByText("3 次交换")).toBeDefined();
     expect(
-      screen.getAllByRole("img", { name: /从左侧雕像剖切圆形/ }),
+      screen.getAllByRole("button", { name: /从左侧雕像剖切圆形/ }),
     ).toHaveLength(2);
   });
 });

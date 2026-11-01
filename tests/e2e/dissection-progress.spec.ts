@@ -51,12 +51,18 @@ for (const locale of ["en", "zh"] as const) {
         exact: true,
       });
       await populate();
+      await expect(page.locator(".selection-marks")).toHaveCount(0);
+      await expect(
+        page.locator(".swap-instruction .selection-mark"),
+      ).toHaveCount(6);
       await expect(mark(2)).toBeDisabled();
       await expect(selection(2, 1)).toBeDisabled();
       await selection(1, 2).focus();
       await page.keyboard.press("Space");
       await page.keyboard.press("Space");
       await expect(selection(1, 2)).toHaveAttribute("aria-pressed", "true");
+      await expect(selection(1, 2).locator(".cut-number")).toHaveText("✓");
+      await expect(selection(1, 1).locator(".cut-number")).toHaveText("1");
       await expect(selection(1, 1)).toHaveAttribute("aria-pressed", "false");
       await expect(progress(0)).toBeVisible();
       await expect(mark(1)).toBeEnabled();
@@ -67,11 +73,12 @@ for (const locale of ["en", "zh"] as const) {
         .getByRole("link", { name: messages.viewResult + " ↓", exact: true })
         .tap();
       await expect(selection(1, 2)).toHaveAttribute("aria-pressed", "true");
+      const partial = messages.selectionProgress
+        .replace("{step}", "1")
+        .replace("{done}", "1");
       await expect(
-        page.getByText(messages.selectionProgress.replace("{done}", "1"), {
-          exact: true,
-        }),
-      ).toBeVisible();
+        page.getByRole("status").filter({ hasText: partial }),
+      ).toHaveText(partial);
       await expect(
         page.locator('.sequence > li[aria-current="step"]'),
       ).toContainText(messages.swap + " 1");
@@ -79,7 +86,8 @@ for (const locale of ["en", "zh"] as const) {
         path: testInfo.outputPath(`progress-${locale}-${theme}.png`),
         fullPage: true,
       });
-      await mark(1).tap();
+      await mark(1).focus();
+      await page.keyboard.press("Enter");
       await expect(progress(1)).toBeVisible();
       await expect(selection(1, 1)).toHaveAttribute("aria-pressed", "true");
       await expect(mark(1)).toBeDisabled();

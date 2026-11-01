@@ -124,6 +124,10 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   partial mark. Ignore repeated marks and clear all history when any puzzle
   input changes. Keep the full sequence visible; marks do not verify the live
   encounter or solo-team progress and are not persisted across page loads.
+  Keep the checklist compact: mark the existing shape tiles directly, replace
+  marked selection numbers with checkmarks, and use one whole-swap shortcut in
+  each card header. Keep full localized accessible names and a live partial count
+  for assistive technology without repeating selection labels or counts visually.
 - Keep one adaptive interface: Exercise and pre-raid experimentation are the
   learning path. Keep mobile conductor positions in left-middle-right columns,
   with resonance selection and closing guidance visible together after scrolling

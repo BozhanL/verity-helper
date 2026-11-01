@@ -20,34 +20,70 @@ interface Progress {
 
 const EMPTY_PROGRESS: Progress = { completed: 0, selections: [false, false] };
 
+interface SelectionControls {
+  readonly step: number;
+  readonly disabled: boolean;
+  readonly marks: Progress["selections"];
+  readonly onMark: (selection: 0 | 1) => void;
+}
+
 function SwapPosition({
   statue,
   cuts,
   locale,
+  controls,
 }: Readonly<{
   statue: Statue;
   cuts: readonly Excise[];
   locale: Locale;
+  controls: SelectionControls | undefined;
 }>): ReactElement {
   const messages = getMessages(locale);
   const cutIndex = cuts.findIndex((cut) => cut.statue === statue);
   const selection = cuts[cutIndex] ?? null;
-  return (
-    <div className="swap-node" aria-hidden="true">
-      <span className="position-label">{messages.positions[statue]}</span>
-      <span
-        className="swap-shape"
-        title={
-          selection === null ? undefined : describeExcise(locale, selection)
-        }
-      >
-        {selection !== null && (
-          <>
-            <ShapeIcon shape={selection.shape} />
-            <span className="cut-number">{cutIndex + 1}</span>
-          </>
-        )}
+  const selectionIndex = cutIndex === 0 || cutIndex === 1 ? cutIndex : null;
+  const marked = controls?.marks[cutIndex] ?? false;
+  const content = selection !== null && (
+    <>
+      <ShapeIcon shape={selection.shape} />
+      <span className="cut-number" aria-hidden="true">
+        {marked ? "✓" : cutIndex + 1}
       </span>
+    </>
+  );
+  return (
+    <div className="swap-node" aria-hidden={controls === undefined}>
+      <span className="position-label">{messages.positions[statue]}</span>
+      {controls !== undefined &&
+      selection !== null &&
+      selectionIndex !== null ? (
+        <button
+          {...CONTROL_PROPS}
+          type="button"
+          className="swap-shape selection-mark"
+          aria-label={messages.markSelectionDone
+            .replace("{step}", String(controls.step))
+            .replace("{selection}", String(selectionIndex + 1))
+            .replace("{cut}", describeExcise(locale, selection))}
+          aria-pressed={marked}
+          aria-describedby="swap-progress-hint"
+          disabled={controls.disabled || marked}
+          onClick={() => {
+            controls.onMark(selectionIndex);
+          }}
+        >
+          {content}
+        </button>
+      ) : (
+        <span
+          className="swap-shape"
+          title={
+            selection === null ? undefined : describeExcise(locale, selection)
+          }
+        >
+          {content}
+        </span>
+      )}
     </div>
   );
 }
@@ -83,13 +119,23 @@ function SwapConnector({
 export function SwapInstruction({
   swap,
   locale,
-}: Readonly<{ swap: Swap; locale: Locale }>): ReactElement {
+  controls,
+}: Readonly<{
+  swap: Swap;
+  locale: Locale;
+  controls?: SelectionControls;
+}>): ReactElement {
+  const messages = getMessages(locale);
   return (
     <figure
       className="swap-instruction"
-      role="img"
+      role={controls === undefined ? "img" : "group"}
       aria-label={
-        describeExcise(locale, swap[0]) + "; " + describeExcise(locale, swap[1])
+        controls === undefined
+          ? describeExcise(locale, swap[0]) +
+            "; " +
+            describeExcise(locale, swap[1])
+          : messages.swap + " " + String(controls.step)
       }
     >
       {STATUES.map((statue) => (
@@ -98,6 +144,7 @@ export function SwapInstruction({
           statue={statue}
           cuts={swap}
           locale={locale}
+          controls={controls}
         />
       ))}
       <SwapConnector first={swap[0].statue} second={swap[1].statue} />
@@ -154,6 +201,7 @@ export default function Sequence({
           {...CONTROL_PROPS}
           type="button"
           className="text-button"
+          aria-label={messages.undoSwapMark}
           disabled={!hydrated || history.length === 1}
           onClick={() => {
             setHistory((previous) =>
@@ -161,7 +209,8 @@ export default function Sequence({
             );
           }}
         >
-          {messages.undoSwapMark}
+          <span aria-hidden="true">↶ </span>
+          {messages.undoShort}
         </button>
       </div>
       <p className="input-hint" id="swap-progress-hint">
@@ -187,75 +236,52 @@ export default function Sequence({
               className={index < completed ? "sequence-completed" : undefined}
             >
               <div className="sequence-heading">
-                <span className="step-number">{index + 1}</span>
                 <h3>
                   {messages.swap} {index + 1}
                 </h3>
+                <button
+                  {...CONTROL_PROPS}
+                  type="button"
+                  className="text-button sequence-mark"
+                  aria-label={messages.markSwapDone.replace(
+                    "{step}",
+                    String(index + 1),
+                  )}
+                  aria-describedby="swap-progress-hint"
+                  disabled={!hydrated || index !== completed}
+                  onClick={() => {
+                    mark(index, "both");
+                  }}
+                >
+                  {index < completed && <span aria-hidden="true">✓ </span>}
+                  {index < completed
+                    ? messages.swapMarked
+                    : messages.markWholeSwap}
+                </button>
               </div>
-              <SwapInstruction swap={swap} locale={locale} />
-              <div className="selection-marks">
-                {([0, 1] as const).map((selection) => {
-                  const cut = swap[selection];
-                  return (
-                    <button
-                      {...CONTROL_PROPS}
-                      key={selection}
-                      type="button"
-                      className="button button--secondary selection-mark"
-                      aria-label={messages.markSelectionDone
-                        .replace("{step}", String(index + 1))
-                        .replace("{selection}", String(selection + 1))
-                        .replace("{cut}", describeExcise(locale, cut))}
-                      aria-pressed={marks[selection]}
-                      aria-describedby="swap-progress-hint"
-                      disabled={
-                        !hydrated || index !== completed || marks[selection]
-                      }
-                      onClick={() => {
-                        mark(index, selection);
-                      }}
-                    >
-                      <span>
-                        {selection + 1}. {messages.shapes[cut.shape]} ·{" "}
-                        {messages.positions[cut.statue]}
-                      </span>
-                      <span>
-                        {marks[selection]
-                          ? messages.selectionMarked
-                          : messages.markSelection}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-              <p className="selection-progress" role="status">
-                {messages.selectionProgress.replace(
-                  "{done}",
-                  String(marks.filter(Boolean).length),
-                )}
+              <SwapInstruction
+                swap={swap}
+                locale={locale}
+                controls={{
+                  step: index + 1,
+                  disabled: !hydrated || index !== completed,
+                  marks,
+                  onMark: (selection) => {
+                    mark(index, selection);
+                  },
+                }}
+              />
+              <p className="sr-only" role="status">
+                {messages.selectionProgress
+                  .replace("{step}", String(index + 1))
+                  .replace("{done}", String(marks.filter(Boolean).length))}
               </p>
               <div className="after-swap">
-                <span>{messages.afterSwap}</span>
+                <span aria-label={messages.afterSwap}>
+                  {messages.swapResult}
+                </span>
                 <MiniBoard board={current} locale={locale} />
               </div>
-              <button
-                {...CONTROL_PROPS}
-                type="button"
-                className="button button--secondary sequence-mark"
-                aria-label={messages.markSwapDone.replace(
-                  "{step}",
-                  String(index + 1),
-                )}
-                aria-describedby="swap-progress-hint"
-                disabled={!hydrated || index !== completed}
-                onClick={() => {
-                  mark(index, "both");
-                }}
-              >
-                {index < completed
-                  ? messages.swapMarked
-                  : messages.markSwapDone.replace("{step}", String(index + 1))}
-              </button>
             </li>
           );
         })}
