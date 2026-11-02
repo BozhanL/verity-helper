@@ -1,1 +1,0 @@
-import{r as e,t}from"./react.DvXU6kJ2.js";import{i as n,n as r}from"./controlProps.CC09qmgx.js";var i=e(t(),1);function a(){let[e,t]=(0,i.useState)(!1);return(0,i.useEffect)(()=>{t(!0)},[]),e}var o=r();function s({locale:e}){let t=n(e),r=a();return(0,o.jsx)(`p`,{className:`readiness`,role:`status`,children:r?t.controlsReady:t.controlsLoading})}export{a as n,s as t};
