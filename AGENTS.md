@@ -126,12 +126,16 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   connects to both neighbors and Main. Use the cited aequorde and Sumanji maps
   when changing topology. The original schematic is not to scale and omits door
   heights and obstacles; its lines show door connectivity, not plate wires.
-  You/Sender/Closer are manual room markers for one pair, not live tracking or
-  inferred active plate connections. You can share either role's room; endpoints
-  must occupy distinct outer rooms. Clear affects only the selected marker;
+  You/Sender A/Closer A/Sender B/Closer B are manual markers for both circuits
+  active in one round, not live tracking or inferred connections. A/B are user
+  labels, not fixed sides. Distinguish pairs with letters and badge shapes as
+  well as color. You can share any role's room; all four endpoints must occupy
+  distinct outer rooms. Clear affects only the selected marker;
   reset, reload or navigation clears all. Keep the map visible without scripts,
   with controls disabled until hydration. Do not reintroduce the removed guide
-  or cycle checklist. Verify room targets never overlap on narrow screens.
+  or cycle checklist. Test both pairs simultaneously and independent movement,
+  including cross-pair collision guards and You sharing each role. Verify room
+  targets and badges never overlap or overflow on narrow screens.
 - Keep puzzle rules in `src/lib/verity.ts` and exercise state in
   `src/lib/practice.ts`. Share shape types and puzzle rules across tools.
 - Keep Repository rules in `src/lib/repository.ts`. Positions are viewed from

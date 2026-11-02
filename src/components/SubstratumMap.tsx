@@ -73,6 +73,7 @@ export default function SubstratumMap({
             className="map-marker-choice"
             key={marker}
             value={marker}
+            data-marker={marker}
             aria-label={text.markers[marker]}
             aria-describedby={`marker-${marker}`}
           >
@@ -229,6 +230,9 @@ export default function SubstratumMap({
           </a>
           <a href="https://www.reddit.com/r/raidsecrets/comments/1dbehjs/substratum_map_cleaned_up_for_salvations_edge/">
             {text.topologySource}
+          </a>
+          <a href="https://professionalism.gg/raid-guides/salvations-edge">
+            {text.circuitsSource}
           </a>
         </nav>
       </details>

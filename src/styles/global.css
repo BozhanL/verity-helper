@@ -1281,7 +1281,7 @@
   }
   .map-marker-picker {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
   }
   .map-marker-choice {
@@ -1294,7 +1294,15 @@
     display: grid;
     justify-items: center;
     gap: 6px;
-    font-size: 14px;
+    font-size: 13px;
+  }
+  .map-marker-choice[data-marker="you"] {
+    grid-column: 1 / -1;
+    min-height: 48px;
+    padding-inline: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
   .map-marker-choice[data-state="checked"] {
     border-color: var(--accent);
@@ -1315,7 +1323,7 @@
   .map-badge {
     display: inline-grid;
     place-items: center;
-    width: 22px;
+    width: 28px;
     height: 22px;
     font-size: 12px;
     font-weight: 750;
@@ -1324,14 +1332,15 @@
     color: var(--on-accent);
   }
   .map-badge[data-marker="you"] {
+    width: 22px;
     border-radius: 50%;
   }
-  .map-badge[data-marker="sender"] {
+  .map-badge[data-marker$="A"] {
     border-radius: 6px 6px 0 0;
     color: light-dark(#ffffff, #102a23);
     background: light-dark(#26725d, #8fdbb8);
   }
-  .map-badge[data-marker="closer"] {
+  .map-badge[data-marker$="B"] {
     border-radius: 2px;
     color: light-dark(#ffffff, #332008);
     background: light-dark(#94601e, #efc581);
@@ -1477,7 +1486,7 @@
   @media (min-width: 1024px) {
     .substratum-map {
       max-width: 960px;
-      grid-template-columns: 230px minmax(0, 1fr);
+      grid-template-columns: 260px minmax(0, 1fr);
       gap: 12px 40px;
       align-items: start;
     }
@@ -1487,9 +1496,6 @@
     .substratum-map > .readiness,
     .map-reference {
       grid-column: 1;
-    }
-    .map-marker-picker {
-      grid-template-columns: 1fr;
     }
     .map-figure {
       grid-column: 2;

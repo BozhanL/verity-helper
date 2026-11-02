@@ -1,5 +1,5 @@
 import { getMessages } from "../../src/i18n/messages";
-import { MAP_ROOMS, MARKERS } from "../../src/lib/substratum";
+import { ENDPOINTS, MAP_ROOMS, MARKERS } from "../../src/lib/substratum";
 import { expect, test } from "./fixtures";
 import { choose, openPage, openTool } from "./helpers";
 
@@ -44,7 +44,7 @@ for (const locale of ["en", "zh"] as const) {
       new URL((locale === "en" ? "zh/" : "") + "substratum/", baseURL).href,
     );
     await expect(page.locator(".map-assignment")).toHaveText(
-      Array<string>(3).fill(opposite.substratumTool.unset),
+      MARKERS.map(() => opposite.substratumTool.unset),
     );
     await page
       .getByRole("navigation", { name: opposite.navigation })
@@ -61,7 +61,7 @@ for (const locale of ["en", "zh"] as const) {
       .getByRole("link", { name: opposite.substratumEncounter })
       .tap();
     await expect(page.locator(".map-assignment")).toHaveText(
-      Array<string>(3).fill(opposite.substratumTool.unset),
+      MARKERS.map(() => opposite.substratumTool.unset),
     );
     await expect(page.locator('a[href*="/checklist"]')).toHaveCount(0);
   });
@@ -77,25 +77,50 @@ for (const locale of ["en", "zh"] as const) {
         text.rooms[room],
       );
     }
-    await choose(page, text.markerPicker, text.markers.sender);
-    await expect(
-      page.getByRole("radio", { name: text.rooms.main, exact: true }),
-    ).toBeDisabled();
-    await choose(
-      page,
-      text.roomPicker.replace("{marker}", text.markers.sender),
-      text.rooms.vase,
-    );
-    await choose(page, text.markerPicker, text.markers.closer);
-    await expect(
-      page.getByRole("radio", { name: text.rooms.vase, exact: true }),
-    ).toBeDisabled();
-    await choose(
-      page,
-      text.roomPicker.replace("{marker}", text.markers.closer),
-      text.rooms.glyph,
-    );
+    const positions = {
+      senderA: "vase",
+      closerA: "glyph",
+      senderB: "bones",
+      closerB: "halo",
+    } as const;
+    for (const marker of ENDPOINTS) {
+      await choose(page, text.markerPicker, text.markers[marker]);
+      await expect(
+        page.getByRole("radio", { name: text.rooms.main, exact: true }),
+      ).toBeDisabled();
+      await choose(
+        page,
+        text.roomPicker.replace("{marker}", text.markers[marker]),
+        text.rooms[positions[marker]],
+      );
+    }
+    for (const marker of ENDPOINTS) {
+      await choose(page, text.markerPicker, text.markers[marker]);
+      for (const other of ENDPOINTS.filter((endpoint) => endpoint !== marker)) {
+        await expect(
+          page.getByRole("radio", {
+            name: text.rooms[positions[other]],
+            exact: true,
+          }),
+        ).toBeDisabled();
+      }
+    }
     await choose(page, text.markerPicker, text.markers.you);
+    for (const marker of ENDPOINTS) {
+      await choose(
+        page,
+        text.roomPicker.replace("{marker}", text.markers.you),
+        text.rooms[positions[marker]],
+      );
+      await expect(
+        page
+          .getByRole("radio", {
+            name: text.rooms[positions[marker]],
+            exact: true,
+          })
+          .locator(".map-badge"),
+      ).toHaveText([text.symbols.you, text.symbols[marker]]);
+    }
     for (let repeat = 0; repeat < 2; repeat++) {
       await choose(
         page,
@@ -114,27 +139,44 @@ for (const locale of ["en", "zh"] as const) {
       text.rooms.vase,
       text.rooms.vase,
       text.rooms.glyph,
+      text.rooms.bones,
+      text.rooms.halo,
     ]);
     await page.getByRole("button", { name: text.clear, exact: true }).tap();
     await expect(page.locator(".map-assignment")).toHaveText([
       text.unset,
       text.rooms.vase,
       text.rooms.glyph,
+      text.rooms.bones,
+      text.rooms.halo,
     ]);
     await expect(
       page.getByRole("button", { name: text.clear, exact: true }),
     ).toBeDisabled();
-    await choose(page, text.markerPicker, text.markers.closer);
+    await choose(page, text.markerPicker, text.markers.closerA);
     await page.getByRole("button", { name: text.clear, exact: true }).tap();
-    await choose(page, text.markerPicker, text.markers.sender);
+    await choose(page, text.markerPicker, text.markers.senderB);
     await choose(
       page,
-      text.roomPicker.replace("{marker}", text.markers.sender),
+      text.roomPicker.replace("{marker}", text.markers.senderB),
       text.rooms.glyph,
     );
+    await choose(page, text.markerPicker, text.markers.closerB);
+    await choose(
+      page,
+      text.roomPicker.replace("{marker}", text.markers.closerB),
+      text.rooms.basement,
+    );
+    await expect(page.locator(".map-assignment")).toHaveText([
+      text.unset,
+      text.rooms.vase,
+      text.unset,
+      text.rooms.glyph,
+      text.rooms.basement,
+    ]);
     await page.getByRole("button", { name: text.reset }).tap();
     await expect(page.locator(".map-assignment")).toHaveText(
-      Array<string>(3).fill(text.unset),
+      MARKERS.map(() => text.unset),
     );
     await expect(
       page.getByRole("radio", { name: text.markers.you, exact: true }),
@@ -148,7 +190,7 @@ for (const locale of ["en", "zh"] as const) {
     await page.reload();
     await expect(page.locator(".readiness")).toHaveText(messages.controlsReady);
     await expect(page.locator(".map-assignment")).toHaveText(
-      Array<string>(3).fill(text.unset),
+      MARKERS.map(() => text.unset),
     );
   });
 
@@ -161,7 +203,7 @@ for (const locale of ["en", "zh"] as const) {
       .focus();
     await page.keyboard.down("ArrowRight");
     await expect(
-      page.getByRole("radio", { name: text.markers.sender, exact: true }),
+      page.getByRole("radio", { name: text.markers.senderA, exact: true }),
     ).toBeChecked();
     await page.keyboard.up("ArrowRight");
     const vase = page.getByRole("radio", {
@@ -181,12 +223,38 @@ for (const locale of ["en", "zh"] as const) {
     await page.keyboard.up("ArrowRight");
     await expect(glyph).toHaveCSS("outline-style", "solid");
     await expect(page.locator('.sr-only[role="status"]')).toContainText(
-      `${text.markers.sender}: ${text.rooms.glyph}`,
+      `${text.markers.senderA}: ${text.rooms.glyph}`,
+    );
+    await page
+      .getByRole("radio", { name: text.markers.senderA, exact: true })
+      .focus();
+    for (const marker of ["closerA", "senderB", "closerB"] as const) {
+      await page.keyboard.down("ArrowRight");
+      await expect(
+        page.getByRole("radio", { name: text.markers[marker], exact: true }),
+      ).toBeChecked();
+      await page.keyboard.up("ArrowRight");
+    }
+    await vase.focus();
+    await page.keyboard.press("Space");
+    await page.keyboard.down("ArrowRight");
+    const shell = page.getByRole("radio", {
+      name: text.rooms.shell,
+      exact: true,
+    });
+    await expect(shell).toBeFocused();
+    await expect(shell).toBeChecked();
+    await page.keyboard.up("ArrowRight");
+    await expect(page.locator('.sr-only[role="status"]')).toContainText(
+      `${text.markers.closerB}: ${text.rooms.shell}`,
+    );
+    await expect(page.locator('.sr-only[role="status"]')).toContainText(
+      `${text.markers.senderA}: ${text.rooms.glyph}`,
     );
     await page.getByRole("button", { name: text.reset }).focus();
     await page.keyboard.press("Enter");
     await expect(page.locator(".map-assignment")).toHaveText(
-      Array<string>(3).fill(text.unset),
+      MARKERS.map(() => text.unset),
     );
   });
 

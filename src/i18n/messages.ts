@@ -16,13 +16,25 @@ const en = {
   substratumEncounter: "1 · Substratum",
   substratumTool: {
     title: "Substratum map",
-    description: "Find your room. Mark yourself, your sender, and your closer.",
+    description: "Find your room. Mark yourself and both sender/closer pairs.",
     encounter: "DESTINY 2 / ENCOUNTER 01",
     instruction: "Choose a marker, then a room.",
     markerPicker: "Marker to place",
     roomPicker: "Room for {marker}",
-    markers: { you: "You", sender: "Sender", closer: "Closer" },
-    symbols: { you: "Y", sender: "S", closer: "C" },
+    markers: {
+      you: "You",
+      senderA: "Sender A",
+      closerA: "Closer A",
+      senderB: "Sender B",
+      closerB: "Closer B",
+    },
+    symbols: {
+      you: "Y",
+      senderA: "SA",
+      closerA: "CA",
+      senderB: "SB",
+      closerB: "CB",
+    },
     rooms: {
       vase: "Vase",
       glyph: "Glyph",
@@ -41,7 +53,7 @@ const en = {
     clear: "Clear marker",
     reset: "Reset map",
     manual:
-      "Manual markers for your pair. Follow the in-game wire to confirm the closer.",
+      "Two pairs per round. Mark observed rooms; follow each in-game wire to confirm its closer.",
     mapDescription:
       "Room schematic, rally at the bottom. From the top clockwise: Vase, Glyph, Shell, Pillar, Banner, Bones, Halo, Basement. Main and its deposit chest are in the center. Each outer room links to its two neighbors and Main. Lines show door connections, not plate wires.",
     reference: "Map reference",
@@ -49,6 +61,7 @@ const en = {
       "Original schematic using aequorde’s community room names and Sumanji’s room topology. Not to scale; door heights and obstacles omitted. Mark observed rooms, not live tracking. Reloading or leaving clears markers.",
     mapSource: "aequorde · detailed map",
     topologySource: "Sumanji · room connections",
+    circuitsSource: "Professionalism · two pairs per round",
   },
 
   brand: "Salvation’s Edge",
@@ -235,13 +248,25 @@ const zh: typeof en = {
   substratumEncounter: "1 · 基底",
   substratumTool: {
     title: "基底地图 · Substratum",
-    description: "找到房间，标出自己、发送者与关导体者的位置。",
+    description: "找到房间，标出自己和两组发送者、关导体者的位置。",
     encounter: "命运 2 / 第一关",
     instruction: "先选标记，再点房间。",
     markerPicker: "要放置的标记",
     roomPicker: "{marker}所在的房间",
-    markers: { you: "自己", sender: "发送者", closer: "关导体者" },
-    symbols: { you: "我", sender: "发", closer: "关" },
+    markers: {
+      you: "自己",
+      senderA: "发送者 A",
+      closerA: "关导体者 A",
+      senderB: "发送者 B",
+      closerB: "关导体者 B",
+    },
+    symbols: {
+      you: "我",
+      senderA: "A发",
+      closerA: "A关",
+      senderB: "B发",
+      closerB: "B关",
+    },
     rooms: {
       vase: "花瓶",
       glyph: "符文",
@@ -259,7 +284,7 @@ const zh: typeof en = {
     doors: "房门连接 · 可能关闭",
     clear: "清除标记",
     reset: "重置地图",
-    manual: "手动标记你所在的一组。沿游戏内线路确认关导体者的位置。",
+    manual: "每轮两组。手动标记观察到的房间，沿各自线路确认关导体者。",
     mapDescription:
       "房间示意图，集结点在下方。从上方顺时针依次为：花瓶、符文、贝壳、立柱、旗帜、骨骸、圆环、地下室。主厅及存入共振的箱子在中间。各外围房间与相邻两间及主厅相通。连线表示房门连接，不是踩板线路。",
     reference: "地图参考",
@@ -267,6 +292,7 @@ const zh: typeof en = {
       "原创示意图，采用 aequorde 的社区房间名称与 Sumanji 的房间连接信息。非等比例，省略门的高度和障碍物。手动标记观察到的房间，不实时追踪。刷新或离开页面会清除标记。",
     mapSource: "aequorde · 详细地图",
     topologySource: "Sumanji · 房间连接",
+    circuitsSource: "Professionalism · 每轮两组",
   },
 
   brand: "救赎边缘",

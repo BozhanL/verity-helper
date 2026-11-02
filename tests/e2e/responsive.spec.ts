@@ -143,26 +143,81 @@ async function exerciseSubstratum(
   await choose(
     page,
     text.roomPicker.replace("{marker}", text.markers.you),
-    text.rooms.banner,
+    text.rooms.halo,
   );
-  await choose(page, text.markerPicker, text.markers.sender);
+  await choose(page, text.markerPicker, text.markers.senderA);
   await choose(
     page,
-    text.roomPicker.replace("{marker}", text.markers.sender),
+    text.roomPicker.replace("{marker}", text.markers.senderA),
     text.rooms.vase,
   );
-  await choose(page, text.markerPicker, text.markers.closer);
+  await choose(page, text.markerPicker, text.markers.closerA);
   await choose(
     page,
-    text.roomPicker.replace("{marker}", text.markers.closer),
+    text.roomPicker.replace("{marker}", text.markers.closerA),
     text.rooms.glyph,
   );
+  await choose(page, text.markerPicker, text.markers.senderB);
+  await choose(
+    page,
+    text.roomPicker.replace("{marker}", text.markers.senderB),
+    text.rooms.bones,
+  );
+  await choose(page, text.markerPicker, text.markers.closerB);
+  await choose(
+    page,
+    text.roomPicker.replace("{marker}", text.markers.closerB),
+    text.rooms.halo,
+  );
+  await expect(page.locator(".map-room .map-badge")).toHaveCount(5);
+  await expect(
+    page
+      .getByRole("radio", { name: text.rooms.halo, exact: true })
+      .locator(".map-badge"),
+  ).toHaveText([text.symbols.you, text.symbols.closerB]);
   await assertMapContrast(page);
   await page.getByText(text.reference, { exact: true }).tap();
   const sources = page.locator(".map-reference .reference-links a");
-  await expect(sources).toHaveCount(2);
+  await expect(sources).toHaveCount(3);
   for (const source of await sources.all()) {
     await expect(source).toBeVisible();
+  }
+  const markers = await page
+    .locator(".map-marker-choice")
+    .evaluateAll((elements) =>
+      elements.map((element) => ({
+        width: element.clientWidth,
+        content: element.scrollWidth,
+        name: element.getAttribute("aria-label"),
+      })),
+    );
+  for (const marker of markers) {
+    expect(marker.content, marker.name ?? "Marker label").toBeLessThanOrEqual(
+      marker.width + 1,
+    );
+  }
+  const badges = await page
+    .locator(".map-room .map-badge")
+    .evaluateAll((elements) =>
+      elements.map((element) => {
+        const badge = element.getBoundingClientRect();
+        const parent = element.closest(".map-room");
+        if (parent === null) {
+          throw new Error("Marker badge must be inside a room");
+        }
+        const room = parent.getBoundingClientRect();
+        return {
+          left: badge.left - room.left,
+          right: room.right - badge.right,
+          top: badge.top - room.top,
+          bottom: room.bottom - badge.bottom,
+        };
+      }),
+    );
+  for (const badge of badges) {
+    for (const inset of Object.values(badge)) {
+      expect(inset).toBeGreaterThanOrEqual(0);
+    }
   }
   const rooms = await page.locator(".map-room").evaluateAll((elements) =>
     elements.map((element) => {

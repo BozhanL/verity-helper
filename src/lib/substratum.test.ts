@@ -3,6 +3,7 @@ import {
   canPlaceMarker,
   DOOR_LINKS,
   emptyMarkers,
+  ENDPOINTS,
   isMapRoom,
   isMarker,
   MAP_ROOMS,
@@ -10,38 +11,67 @@ import {
 } from "./substratum";
 
 describe("Substratum room markers", () => {
-  it("moves only the chosen marker and lets the player share either role's room", () => {
+  it("keeps both pairs independent and lets You share any role's room", () => {
     const start = emptyMarkers();
-    const sender = placeMarker(start, "sender", "vase");
-    const pair = placeMarker(sender, "closer", "glyph");
-    const self = placeMarker(pair, "you", "vase");
-    expect(self).toEqual({ you: "vase", sender: "vase", closer: "glyph" });
-    const moved = placeMarker(self, "you", "glyph");
-    expect(moved).toEqual({ you: "glyph", sender: "vase", closer: "glyph" });
+    const senderA = placeMarker(start, "senderA", "vase");
+    const pairA = placeMarker(senderA, "closerA", "glyph");
+    const senderB = placeMarker(pairA, "senderB", "bones");
+    const pairs = placeMarker(senderB, "closerB", "halo");
+    expect(pairs).toEqual({
+      you: null,
+      senderA: "vase",
+      closerA: "glyph",
+      senderB: "bones",
+      closerB: "halo",
+    });
+    for (const role of ENDPOINTS) {
+      const shared = placeMarker(pairs, "you", pairs[role]);
+      expect(shared).toEqual({ ...pairs, you: pairs[role] });
+      expect(placeMarker(shared, "you", pairs[role])).toBe(shared);
+    }
+    const moved = placeMarker(pairs, "senderB", "banner");
+    expect(moved).toEqual({ ...pairs, senderB: "banner" });
+    expect(placeMarker(moved, "closerA", "shell")).toEqual({
+      ...moved,
+      closerA: "shell",
+    });
     expect(start).toEqual(emptyMarkers());
-    expect(placeMarker(moved, "you", "glyph")).toBe(moved);
-    expect(placeMarker(moved, "closer", null)).toEqual({
-      you: "glyph",
-      sender: "vase",
-      closer: null,
+    const cleared = placeMarker(moved, "closerB", null);
+    expect(cleared).toEqual({
+      ...moved,
+      closerB: null,
+    });
+    expect(placeMarker(cleared, "closerB", null)).toBe(cleared);
+    expect(placeMarker(cleared, "senderA", "halo")).toEqual({
+      ...cleared,
+      senderA: "halo",
     });
   });
 
   it("rejects invalid rooms, hub endpoints, and overlapping endpoints without deleting prior markers", () => {
-    const pair = { you: "main", sender: "vase", closer: "glyph" } as const;
-    for (const role of ["sender", "closer"] as const) {
-      expect(canPlaceMarker(pair, role, "main")).toBe(false);
-      expect(placeMarker(pair, role, "main")).toBe(pair);
-      expect(placeMarker(pair, role, "unknown")).toBe(pair);
+    const pairs = {
+      you: "main",
+      senderA: "vase",
+      closerA: "glyph",
+      senderB: "bones",
+      closerB: "halo",
+    } as const;
+    for (const role of ENDPOINTS) {
+      expect(canPlaceMarker(pairs, role, "main")).toBe(false);
+      expect(placeMarker(pairs, role, "main")).toBe(pairs);
+      expect(placeMarker(pairs, role, "unknown")).toBe(pairs);
+      expect(placeMarker(pairs, role, pairs[role])).toBe(pairs);
+      for (const other of ENDPOINTS.filter((endpoint) => endpoint !== role)) {
+        expect(canPlaceMarker(pairs, role, pairs[other])).toBe(false);
+        expect(placeMarker(pairs, role, pairs[other])).toBe(pairs);
+      }
     }
-    expect(placeMarker(pair, "closer", "vase")).toBe(pair);
-    expect(placeMarker(pair, "sender", "glyph")).toBe(pair);
-    expect(placeMarker(pair, "you", "__proto__")).toBe(pair);
-    expect(isMarker("sender")).toBe(true);
+    expect(placeMarker(pairs, "you", "__proto__")).toBe(pairs);
+    expect(isMarker("senderB")).toBe(true);
     expect(isMarker("unknown")).toBe(false);
     expect(isMapRoom("toString")).toBe(false);
     for (const room of MAP_ROOMS) {
-      expect(canPlaceMarker(pair, "you", room)).toBe(true);
+      expect(canPlaceMarker(pairs, "you", room)).toBe(true);
     }
     expect(placeMarker(emptyMarkers(), "you", null)).toEqual(emptyMarkers());
   });

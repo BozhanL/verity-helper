@@ -14,12 +14,19 @@ export const OUTER_ROOMS = [
 ] as const;
 export const MAP_ROOMS = [...OUTER_ROOMS, "main"] as const;
 export type MapRoom = (typeof MAP_ROOMS)[number];
-export const MARKERS = ["you", "sender", "closer"] as const;
+export const ENDPOINTS = ["senderA", "closerA", "senderB", "closerB"] as const;
+export const MARKERS = ["you", ...ENDPOINTS] as const;
 export type Marker = (typeof MARKERS)[number];
 export type MapMarkers = Readonly<Record<Marker, MapRoom | null>>;
 
 export function emptyMarkers(): MapMarkers {
-  return { you: null, sender: null, closer: null };
+  return {
+    you: null,
+    senderA: null,
+    closerA: null,
+    senderB: null,
+    closerB: null,
+  };
 }
 
 export function isMapRoom(value: string): value is MapRoom {
@@ -38,10 +45,11 @@ export function canPlaceMarker(
   if (marker === "you") {
     return true;
   }
-  // The hub has no paired plate; the two ends of one pair occupy different rooms.
+  // Two circuits per round, one plate per outer room; Main has no plate.
+  // A/B are player-assigned pairs, not fixed sides or inferred wire connections.
   return (
     room !== "main" &&
-    room !== markers[marker === "sender" ? "closer" : "sender"]
+    ENDPOINTS.every((other) => other === marker || markers[other] !== room)
   );
 }
 

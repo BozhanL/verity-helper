@@ -3,7 +3,7 @@
 [简体中文](README.zh-CN.md)
 
 Helpers for encounters 1, 3, and 4 of Destiny 2’s Salvation’s Edge raid.
-Locate yourself, your sender, and your closer on Substratum’s room map.
+Locate yourself and both sender/closer pairs on Substratum’s room map.
 Find Repository plates and resonance destinations, or use Verity’s dissection
 calculator, solo-room calculator, and practice tool.
 Available in English and Simplified Chinese.
@@ -51,12 +51,13 @@ There is no separate learning or in-raid configuration.
 ## Substratum (encounter 1)
 
 The room map faces Main from the rally entrance below Banner. Choose **You**,
-**Sender**, or **Closer**, then tap a room. All three markers remain visible;
-your marker can share a room with either role. Sender and closer mark one pair,
-so they use distinct outer rooms. Follow the actual wire in-game to confirm the
-closer; the helper does not infer an active circuit.
+**Sender A**, **Closer A**, **Sender B**, or **Closer B**, then tap a room.
+Both pairs remain visible together, distinguished by letters, badge shapes and
+colors. Your marker can share a room with any role. The four plate roles use
+distinct outer rooms. A/B are your own labels, not fixed sides; follow each
+actual wire in-game to confirm its closer. The helper does not infer circuits.
 
-**Clear marker** removes the selected marker. **Reset map** clears all three.
+**Clear marker** removes the selected marker. **Reset map** clears all five.
 Changing the theme or opening references keeps your marks; reload, navigation,
 and language changes clear them. Use Tab, arrow keys, and Space with a keyboard.
 The room diagram and references remain visible without JavaScript.
@@ -67,9 +68,13 @@ rooms form a loop around Main, with a Main connection from each room. Dashed
 lines show door links, which may be closed in-game, not plate wiring or a live
 route. Room names are community callouts. Distances, door heights and interior
 obstacles are omitted; markers record your observations rather than game data.
+The two pairs per round are documented by [Professionalism][substratum-pairs]
+and [Shacknews][substratum-rounds].
 
 [substratum-map]: https://www.reddit.com/r/raidsecrets/comments/1dnz91q/salvations_edge_map/
 [substratum-rooms]: https://www.reddit.com/r/raidsecrets/comments/1dbehjs/substratum_map_cleaned_up_for_salvations_edge/
+[substratum-pairs]: https://professionalism.gg/raid-guides/salvations-edge
+[substratum-rounds]: https://www.shacknews.com/article/140025/salvations-edge-raid-guide-destiny-2
 
 ## Repository (encounter 3)
 
