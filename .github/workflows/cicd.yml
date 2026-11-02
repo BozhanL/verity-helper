@@ -40,8 +40,29 @@ jobs:
       - name: 🎨 Run Prettier check
         run: npm run format
 
-      - name: 🧪 Run unit tests
-        run: npm run test
+      - name: 🧪 Run unit and component tests with coverage
+        id: coverage
+        run: npm run test:coverage
+
+      - name: 📦 Upload unit and component coverage
+        if: ${{ !cancelled() && steps.coverage.outcome != 'skipped' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: unit-component-coverage-${{ github.run_attempt }}
+          path: coverage
+          if-no-files-found: error
+          retention-days: 7
+
+  coverage-comment:
+    needs: test
+    if: >-
+      ${{ !cancelled() && github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.actor != 'dependabot[bot]' }}
+    permissions:
+      actions: read
+      pull-requests: write
+    uses: ./.github/workflows/coverage-report.yml
 
   e2e:
     name: e2e (${{ matrix.target }})
@@ -165,6 +186,7 @@ jobs:
     timeout-minutes: 2
     needs:
       - test
+      - coverage-comment
       - e2e
       - build
       - page

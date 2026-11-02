@@ -1,0 +1,94 @@
+name: Coverage comment
+
+on:
+  # Same-repository PRs can report immediately, including while adding this file.
+  workflow_call:
+  # Forks and Dependabot use the trusted default-branch workflow after CI finishes.
+  workflow_run:
+    workflows: [Astro CI/CD]
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  report:
+    if: >-
+      ${{ github.event_name == 'pull_request' ||
+          (github.event.workflow_run.event == 'pull_request' &&
+           (github.event.workflow_run.head_repository.id != github.event.repository.id ||
+            github.event.workflow_run.actor.login == 'dependabot[bot]')) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      pull-requests: write
+    concurrency:
+      group: coverage-comment-${{ github.event.pull_request.number || format('{0}-{1}', github.event.workflow_run.head_repository.id, github.event.workflow_run.head_branch) }}
+      cancel-in-progress: true
+    steps:
+      # Resolve the PR and artifact from GitHub's API, never from artifact contents.
+      - name: Validate coverage source and current PR head
+        id: source
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const runId = context.payload.workflow_run?.id ?? context.runId;
+            const { data: run } = await github.rest.actions.getWorkflowRun({
+              ...context.repo, run_id: runId,
+            });
+            if (run.event !== 'pull_request' ||
+                run.path !== '.github/workflows/cicd.yml' ||
+                run.repository.full_name !== `${context.repo.owner}/${context.repo.repo}`) {
+              throw new Error('Coverage must come from this repository’s PR CI workflow.');
+            }
+            const pulls = await github.paginate(github.rest.pulls.list, {
+              ...context.repo, state: 'open', per_page: 100,
+              head: `${run.head_repository.owner.login}:${run.head_branch}`,
+            });
+            const matching = pulls.filter(pr =>
+              pr.base.repo.id === run.repository.id &&
+              pr.head.repo?.id === run.head_repository.id &&
+              pr.head.sha === run.head_sha);
+            if (matching.length !== 1) {
+              core.info('Skipping stale coverage or an ambiguous/closed PR.');
+              return;
+            }
+            const artifacts = await github.paginate(github.rest.actions.listWorkflowRunArtifacts, {
+              ...context.repo, run_id: runId, per_page: 100,
+            });
+            const matchingArtifacts = artifacts.filter(artifact =>
+              artifact.name === `unit-component-coverage-${run.run_attempt}` && !artifact.expired);
+            if (matchingArtifacts.length !== 1) {
+              core.info('No unique coverage artifact for this run attempt; tests may not have started.');
+              return;
+            }
+            const artifact = matchingArtifacts[0];
+            if (artifact.workflow_run &&
+                (artifact.workflow_run.id !== runId || artifact.workflow_run.head_sha !== run.head_sha)) {
+              throw new Error('Coverage artifact does not match the triggering run and head.');
+            }
+            core.setOutput('run-id', runId);
+            core.setOutput('artifact-id', artifact.id);
+            core.setOutput('pr-number', matching[0].number);
+
+      - name: Download this run's coverage data
+        if: steps.source.outputs.artifact-id != ''
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          artifact-ids: ${{ steps.source.outputs.artifact-id }}
+          run-id: ${{ steps.source.outputs.run-id }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/coverage-data
+          merge-multiple: true
+
+      # No checkout, dependency install, caches, or execution of PR/artifact code.
+      - name: Create or update the PR coverage comment
+        if: steps.source.outputs.artifact-id != ''
+        uses: davelosert/vitest-coverage-report-action@8f86cfb56ed6d5613ea8cdc5259f207fbfd51ece # v2.13.1
+        with:
+          name: Unit and component — TS/TSX (excludes Astro, CSS, E2E)
+          pr-number: ${{ steps.source.outputs.pr-number }}
+          comment-on: pr
+          file-coverage-mode: all
+          json-summary-path: ${{ runner.temp }}/coverage-data/coverage-summary.json
+          json-final-path: ${{ runner.temp }}/coverage-data/coverage-final.json

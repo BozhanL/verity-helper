@@ -237,6 +237,7 @@ For documentation-only changes, run `npm run format`.
 | `npm run check-all:par`         | Parallel checks; sequential E2E suites    |
 | `npm run check-all`             | Run all checks sequentially               |
 | `npm test`                      | Run unit and React interaction tests      |
+| `npm run test:coverage`         | Generate unit/component coverage reports  |
 | `npm run test:e2e`              | Test desktop and mobile browsers          |
 | `npm run test:e2e:subdirectory` | Run browser tests under `/review-preview` |
 | `npm run test:e2e:all`          | Run both browser suites sequentially      |
@@ -260,6 +261,27 @@ to test a subdirectory build. This script uses `cross-env` to set
 configurations in parallel matrix jobs on separate runners, with a 30-minute
 timeout per job. In a local workspace, run the root and subdirectory suites
 sequentially. Type, lint, formatting, and unit checks run in the `test` job.
+
+Pull requests receive one updated coverage comment from
+[Vitest Coverage Report Action](https://github.com/davelosert/vitest-coverage-report-action),
+with totals and expandable per-file details. The action also writes an Actions
+job summary. Download **unit-component-coverage-&lt;attempt&gt;** from the CI run
+and open `index.html` for the full HTML report. Reports are retained for 7 days
+and include JSON and LCOV. Run `npm run test:coverage` locally to generate the
+same files in `coverage/`.
+
+V8 measures all source TypeScript and React files, including untested files,
+but excludes tests and type declarations. Astro templates, CSS, and Playwright
+E2E execution are outside this report’s scope. Coverage is informational with
+no percentage threshold; test failures still fail CI. Reports are also attempted
+after test failures; use the CI checks for the test outcome.
+
+Tests run with read-only permissions. A separate reporting job downloads only
+the current run's artifact, checks that its PR head is still current, and uses
+the built-in GitHub token to update the comment. It never checks out or executes
+PR code. Fork and Dependabot PRs use `workflow_run`; GitHub requires the reporting
+workflow to be on the default branch before that path can run. Same-repository
+PRs call the same reporter directly. No external account or secret is needed.
 
 The browser matrix covers Chromium, Firefox, and WebKit with desktop and mobile
 presets. Firefox phone coverage uses a small viewport and touch; full mobile
