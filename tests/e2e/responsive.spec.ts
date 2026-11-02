@@ -80,6 +80,60 @@ async function assertNavigationLayout(page: Page): Promise<void> {
   }
 }
 
+async function assertMapContrast(page: Page): Promise<void> {
+  const contrasts = await page
+    .locator(".map-floor polygon")
+    .evaluateAll((elements) => {
+      const canvas = document.createElement("canvas");
+      canvas.width = canvas.height = 1;
+      const context = canvas.getContext("2d", { willReadFrequently: true });
+      if (context === null) {
+        throw new Error("Canvas unavailable for color measurement");
+      }
+      function luminance(color: string): number {
+        if (context === null) {
+          return 0;
+        }
+        context.fillStyle = color;
+        context.fillRect(0, 0, 1, 1);
+        const channels = Array.from(context.getImageData(0, 0, 1, 1).data)
+          .slice(0, 3)
+          .map((byte) => {
+            const value = byte / 255;
+            return value <= 0.04045
+              ? value / 12.92
+              : ((value + 0.055) / 1.055) ** 2.4;
+          });
+        return (
+          (channels[0] ?? 0) * 0.2126 +
+          (channels[1] ?? 0) * 0.7152 +
+          (channels[2] ?? 0) * 0.0722
+        );
+      }
+      const background = luminance(
+        getComputedStyle(document.documentElement).backgroundColor,
+      );
+      return elements.map((element) => {
+        const style = getComputedStyle(element);
+        const stroke = luminance(style.stroke);
+        return {
+          room: element.getAttribute("data-room") ?? "Room",
+          ratios: [luminance(style.fill), background].map(
+            (adjacent) =>
+              (Math.max(stroke, adjacent) + 0.05) /
+              (Math.min(stroke, adjacent) + 0.05),
+          ),
+        };
+      });
+    });
+  // WCAG 2.2 SC 1.4.11: meaningful graphical boundaries need 3:1 contrast.
+  for (const room of contrasts) {
+    for (const ratio of room.ratios) {
+      expect(ratio, room.room + " outline contrast").toBeGreaterThanOrEqual(3);
+    }
+  }
+}
+
 async function exerciseSubstratum(
   page: Page,
   route: (typeof ROUTES)[number],
@@ -103,6 +157,7 @@ async function exerciseSubstratum(
     text.roomPicker.replace("{marker}", text.markers.closer),
     text.rooms.glyph,
   );
+  await assertMapContrast(page);
   await page.getByText(text.reference, { exact: true }).tap();
   const sources = page.locator(".map-reference .reference-links a");
   await expect(sources).toHaveCount(2);

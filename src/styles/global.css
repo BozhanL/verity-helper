@@ -1354,7 +1354,7 @@
   }
   .map-floor polygon {
     fill: var(--surface);
-    stroke: var(--placeholder-border);
+    stroke: var(--muted);
     stroke-width: 2;
     stroke-linejoin: round;
     vector-effect: non-scaling-stroke;
