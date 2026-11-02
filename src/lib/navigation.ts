@@ -3,7 +3,6 @@ import type { Page } from "../i18n/messages";
 export const PAGE_PATHS: Record<Page, string> = {
   home: "",
   substratum: "substratum",
-  substratumChecklist: "substratum/checklist",
   repository: "repository",
   calculator: "verity",
   solo: "verity/solo",
@@ -12,12 +11,10 @@ export const PAGE_PATHS: Record<Page, string> = {
 
 export const VERITY_PAGES = ["calculator", "solo", "exercise"] as const;
 
-export const SUBSTRATUM_PAGES = ["substratum", "substratumChecklist"] as const;
-
 export function getEncounter(
   page: Page,
 ): "substratum" | "repository" | "verity" | null {
-  if (page === "substratum" || page === "substratumChecklist") {
+  if (page === "substratum") {
     return "substratum";
   }
   if (page === "home") {

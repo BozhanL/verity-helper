@@ -21,7 +21,6 @@ it("keeps page and language navigation on the matching localized routes", () => 
       links={{
         home: "/preview/zh/",
         substratum: "/preview/zh/substratum/",
-        substratumChecklist: "/preview/zh/substratum/checklist/",
         repository: "/preview/zh/repository/",
         calculator: "/preview/zh/verity/",
         solo: "/preview/zh/verity/solo/",
@@ -72,7 +71,6 @@ it.each([
         links={{
           home: "/preview/" + prefix,
           substratum: "/preview/" + prefix + "substratum/",
-          substratumChecklist: "/preview/" + prefix + "substratum/checklist/",
           repository: "/preview/" + prefix + "repository/",
           calculator: "/preview/" + prefix + "verity/",
           solo: "/preview/" + prefix + "verity/solo/",

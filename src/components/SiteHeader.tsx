@@ -1,10 +1,6 @@
 import type { ReactElement } from "react";
 import { getMessages, type Locale, type Page } from "../i18n/messages";
-import {
-  getEncounter,
-  SUBSTRATUM_PAGES,
-  VERITY_PAGES,
-} from "../lib/navigation";
+import { getEncounter, VERITY_PAGES } from "../lib/navigation";
 import ShapeIcon from "./ShapeIcon";
 import ThemeSelect from "./ThemeSelect";
 
@@ -36,7 +32,7 @@ export default function SiteHeader({
         <nav className="page-navigation" aria-label={messages.navigation}>
           <a
             href={links.substratum}
-            aria-current={encounter === "substratum" ? "location" : undefined}
+            aria-current={encounter === "substratum" ? "page" : undefined}
           >
             {messages.substratumEncounter}
           </a>
@@ -53,22 +49,6 @@ export default function SiteHeader({
             {messages.verityEncounter}
           </a>
         </nav>
-        {encounter === "substratum" && (
-          <nav
-            className="page-navigation tool-navigation"
-            aria-label={messages.substratumTool.navigation}
-          >
-            {SUBSTRATUM_PAGES.map((tool) => (
-              <a
-                key={tool}
-                href={links[tool]}
-                aria-current={page === tool ? "page" : undefined}
-              >
-                {messages[tool]}
-              </a>
-            ))}
-          </nav>
-        )}
         {encounter === "verity" && (
           <nav
             className="page-navigation tool-navigation"

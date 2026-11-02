@@ -158,7 +158,6 @@ for (const locale of ["en", "zh"] as const) {
       const messages = getMessages(route.locale);
       const heading = {
         substratum: messages.substratumTool.title,
-        substratumChecklist: messages.substratumChecklist,
         home: messages.homeTitle,
         repository: messages.repositoryTool.title,
         calculator: messages.calculatorTitle,

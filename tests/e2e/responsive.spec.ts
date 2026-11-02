@@ -84,33 +84,57 @@ async function exerciseSubstratum(
   page: Page,
   route: (typeof ROUTES)[number],
 ): Promise<void> {
-  const messages = getMessages(route.locale);
-  await openPage(page, route.path);
-  if (route.tool === "substratumChecklist") {
-    const mark = page.getByRole("button", {
-      name: messages.substratumTool.marks.tormentor1,
-    });
-    await expect(mark).toBeEnabled();
-    await mark.tap();
-    await expect(mark).toHaveAttribute("aria-pressed", "true");
-  } else {
-    await page
-      .getByText(messages.substratumTool.recoveryTitle, { exact: true })
-      .tap();
-    await expect(
-      page.getByText(messages.substratumTool.recovery[0] ?? "", {
-        exact: true,
-      }),
-    ).toBeVisible();
-    // Measure reference targets in their open state. Closed <details> children
-    // have no rendered bounds; tracing on a retry can mask that difference.
-    await page
-      .getByText(messages.substratumTool.sources, { exact: true })
-      .tap();
-    const sources = page.locator(".substratum-details .reference-links a");
-    await expect(sources).toHaveCount(5);
-    for (const source of await sources.all()) {
-      await expect(source).toBeVisible();
+  const text = getMessages(route.locale).substratumTool;
+  await openTool(page, route.path);
+  await choose(
+    page,
+    text.roomPicker.replace("{marker}", text.markers.you),
+    text.rooms.banner,
+  );
+  await choose(page, text.markerPicker, text.markers.sender);
+  await choose(
+    page,
+    text.roomPicker.replace("{marker}", text.markers.sender),
+    text.rooms.vase,
+  );
+  await choose(page, text.markerPicker, text.markers.closer);
+  await choose(
+    page,
+    text.roomPicker.replace("{marker}", text.markers.closer),
+    text.rooms.glyph,
+  );
+  await page.getByText(text.reference, { exact: true }).tap();
+  const sources = page.locator(".map-reference .reference-links a");
+  await expect(sources).toHaveCount(2);
+  for (const source of await sources.all()) {
+    await expect(source).toBeVisible();
+  }
+  const rooms = await page.locator(".map-room").evaluateAll((elements) =>
+    elements.map((element) => {
+      const box = element.getBoundingClientRect();
+      return {
+        left: box.left,
+        right: box.right,
+        top: box.top,
+        bottom: box.bottom,
+        width: element.clientWidth,
+        content: element.scrollWidth,
+        name: element.getAttribute("aria-label"),
+      };
+    }),
+  );
+  for (const [index, room] of rooms.entries()) {
+    expect(room.content, room.name ?? "Room label").toBeLessThanOrEqual(
+      room.width + 1,
+    );
+    for (const other of rooms.slice(index + 1)) {
+      expect(
+        room.right <= other.left ||
+          other.right <= room.left ||
+          room.bottom <= other.top ||
+          other.bottom <= room.top,
+        `${room.name ?? "Room"} and ${other.name ?? "Room"} targets must not overlap`,
+      ).toBe(true);
     }
   }
 }
@@ -122,7 +146,7 @@ async function exerciseRoute(
   height: number,
 ): Promise<void> {
   const messages = getMessages(route.locale);
-  if (route.tool === "substratum" || route.tool === "substratumChecklist") {
+  if (route.tool === "substratum") {
     await exerciseSubstratum(page, route);
   } else if (route.tool === "home") {
     await openPage(page, route.path);

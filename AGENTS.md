@@ -114,21 +114,24 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
 ## Project structure and UI
 
 - Use Astro for routes and layouts, and React islands for interactive tools.
-- The encounter chooser is `/`; Substratum’s guide is `/substratum/` and its
-  manual cycle checklist is `/substratum/checklist/`, with matching `/zh/` routes.
-  Repository's end-plate helper is `/repository/`.
+- The encounter chooser is `/`; Substratum’s room map is `/substratum/`,
+  with a matching `/zh/` route. Repository's end-plate helper is `/repository/`.
   Verity's calculator is `/verity/`, with solo-room distribution at
   `/verity/solo/` and exercise at `/verity/exercise/`, all with matching `/zh/`
   routes. Keep page paths and encounter membership in `src/lib/navigation.ts`;
   preserve the selected page in metadata and language links.
-- Keep Substratum progress rules in `src/lib/substratum.ts`. The checklist records
-  two center Tormentors, two conductors, and a team bank for each of three cycles.
-  Banking advances the cycle; undo restores the previous snapshot across cycles.
-  Reset/reload/navigation clears the attempt. A/B are team labels, not room names.
-  Keep the static guide usable without JavaScript, with optional details collapsed.
-  Distinguish normal mechanics, suggested roles, weekly Scenic Route, and the
-  separate Touch and Go Triumph. Cite community sources; do not imply live game
-  detection, a fixed room map, exact pulse timings, or challenge validation.
+- Keep Substratum map topology and marker rules in `src/lib/substratum.ts`.
+  Rally is below Banner; clockwise from the top: Vase, Glyph, Shell, Pillar,
+  Banner, Bones, Halo, Basement, with Main in the center. Each outer room
+  connects to both neighbors and Main. Use the cited aequorde and Sumanji maps
+  when changing topology. The original schematic is not to scale and omits door
+  heights and obstacles; its lines show door connectivity, not plate wires.
+  You/Sender/Closer are manual room markers for one pair, not live tracking or
+  inferred active plate connections. You can share either role's room; endpoints
+  must occupy distinct outer rooms. Clear affects only the selected marker;
+  reset, reload or navigation clears all. Keep the map visible without scripts,
+  with controls disabled until hydration. Do not reintroduce the removed guide
+  or cycle checklist. Verify room targets never overlap on narrow screens.
 - Keep puzzle rules in `src/lib/verity.ts` and exercise state in
   `src/lib/practice.ts`. Share shape types and puzzle rules across tools.
 - Keep Repository rules in `src/lib/repository.ts`. Positions are viewed from

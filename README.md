@@ -3,7 +3,7 @@
 [简体中文](README.zh-CN.md)
 
 Helpers for encounters 1, 3, and 4 of Destiny 2’s Salvation’s Edge raid.
-Learn Substratum’s encounter loop and keep a manual cycle checklist.
+Locate yourself, your sender, and your closer on Substratum’s room map.
 Find Repository plates and resonance destinations, or use Verity’s dissection
 calculator, solo-room calculator, and practice tool.
 Available in English and Simplified Chinese.
@@ -13,8 +13,7 @@ Available in English and Simplified Chinese.
 | Page                    | English                 | Simplified Chinese    |
 | ----------------------- | ----------------------- | --------------------- |
 | Encounter chooser       | [Home][home-en]         | [首页][home-zh]       |
-| Substratum: Guide       | [Quick guide][sub-en]   | [速查指南][sub-zh]    |
-| Substratum: Checklist   | [Checklist][check-en]   | [轮次清单][check-zh]  |
+| Substratum: Map         | [Room map][sub-en]      | [房间地图][sub-zh]    |
 | Encounter 3: Repository | [Plate helper][repo-en] | [终点板助手][repo-zh] |
 | Verity: Dissection      | [Dissection][calc-en]   | [剖切][calc-zh]       |
 | Verity: Solo room       | [Solo room][solo-en]    | [单人房][solo-zh]     |
@@ -24,8 +23,6 @@ Available in English and Simplified Chinese.
 [home-zh]: https://verity.903684.xyz/zh/
 [sub-en]: https://verity.903684.xyz/substratum/
 [sub-zh]: https://verity.903684.xyz/zh/substratum/
-[check-en]: https://verity.903684.xyz/substratum/checklist/
-[check-zh]: https://verity.903684.xyz/zh/substratum/checklist/
 [repo-en]: https://verity.903684.xyz/repository/
 [repo-zh]: https://verity.903684.xyz/zh/repository/
 [calc-en]: https://verity.903684.xyz/verity/
@@ -53,26 +50,26 @@ There is no separate learning or in-raid configuration.
 
 ## Substratum (encounter 1)
 
-**Quick guide** shows the normal encounter loop, a plate diagram, and suggested
-sender / closer / floater roles for two teams of three. Expand recovery tips,
-optional challenge rules, or sources only when needed. The guide works without
-JavaScript; the checklist needs it.
+The room map faces Main from the rally entrance below Banner. Choose **You**,
+**Sender**, or **Closer**, then tap a room. All three markers remain visible;
+your marker can share a room with either role. Sender and closer mark one pair,
+so they use distinct outer rooms. Follow the actual wire in-game to confirm the
+closer; the helper does not infer an active circuit.
 
-**Cycle checklist** records two center Tormentors, two closed conductors, and the
-team bank for each of three cycles. A / B are team labels, not fixed rooms.
-Marks only record what you confirm; this is not a live game-state detector,
-timer, map, or challenge validator. Finish collecting before closing conductors.
+**Clear marker** removes the selected marker. **Reset map** clears all three.
+Changing the theme or opening references keeps your marks; reload, navigation,
+and language changes clear them. Use Tab, arrow keys, and Space with a keyboard.
+The room diagram and references remain visible without JavaScript.
 
-Use **Undo last mark** after a mistaken tap, including a bank that advanced the
-cycle. **Reset attempt** clears all progress. Reloading, changing languages, or
-leaving the page also starts a fresh attempt. Changing the theme keeps progress.
+This is an original schematic using [aequorde’s map][substratum-map] for room
+landmarks and [Sumanji’s map][substratum-rooms] for connectivity. The eight outer
+rooms form a loop around Main, with a Main connection from each room. Dashed
+lines show door links, which may be closed in-game, not plate wiring or a live
+route. Room names are community callouts. Distances, door heights and interior
+obstacles are omitted; markers record your observations rather than game data.
 
-Mechanics were cross-checked against [Shacknews][resonance-guide],
-[Professionalism](https://professionalism.gg/raid-guides/salvations-edge), and
-[Destinypedia](https://www.destinypedia.com/Salvation%27s_Edge#Substratum).
-[Scenic Route](https://kyberscorner.com/destiny2/raid-challenges/) and
-[Touch and Go](https://www.light.gg/db/legend/triumphs/2062070439/touch-and-go/)
-are separate optional objectives, not requirements for a normal clear.
+[substratum-map]: https://www.reddit.com/r/raidsecrets/comments/1dnz91q/salvations_edge_map/
+[substratum-rooms]: https://www.reddit.com/r/raidsecrets/comments/1dbehjs/substratum_map_cleaned_up_for_salvations_edge/
 
 ## Repository (encounter 3)
 
