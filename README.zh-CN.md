@@ -2,22 +2,26 @@
 
 [English](README.md)
 
-《命运 2》救赎边缘突袭第三关与第四关的辅助工具。
+《命运 2》救赎边缘突袭第一关、第三关与第四关的辅助工具。
+第一关提供房间地图，用于标记自己和两组发送者、关导体者的位置。
 第三关提供终点板与共振指引；第四关提供外场剖切计算器、单人房图形分配计算器和练习。
 支持英文和简体中文。
 
 ## 使用工具
 
-| 页面           | 英文                        | 简体中文              |
-| -------------- | --------------------------- | --------------------- |
-| 关卡选择       | [Home][home-en]             | [首页][home-zh]       |
-| 第三关：贮藏库 | [End-plate helper][repo-en] | [终点板助手][repo-zh] |
-| 真理：剖切     | [Dissection][calc-en]       | [剖切][calc-zh]       |
-| 真理：单人房   | [Solo room][solo-en]        | [单人房][solo-zh]     |
-| 真理：练习     | [Exercise][exercise-en]     | [练习][exercise-zh]   |
+| 页面             | 英文                        | 简体中文              |
+| ---------------- | --------------------------- | --------------------- |
+| 关卡选择         | [Home][home-en]             | [首页][home-zh]       |
+| 第一关：基底地图 | [Room map][sub-en]          | [房间地图][sub-zh]    |
+| 第三关：贮藏库   | [End-plate helper][repo-en] | [终点板助手][repo-zh] |
+| 真理：剖切       | [Dissection][calc-en]       | [剖切][calc-zh]       |
+| 真理：单人房     | [Solo room][solo-en]        | [单人房][solo-zh]     |
+| 真理：练习       | [Exercise][exercise-en]     | [练习][exercise-zh]   |
 
 [home-en]: https://verity.903684.xyz/
 [home-zh]: https://verity.903684.xyz/zh/
+[sub-en]: https://verity.903684.xyz/substratum/
+[sub-zh]: https://verity.903684.xyz/zh/substratum/
 [repo-en]: https://verity.903684.xyz/repository/
 [repo-zh]: https://verity.903684.xyz/zh/repository/
 [calc-en]: https://verity.903684.xyz/verity/
@@ -38,6 +42,29 @@
 可以在电脑上使用**练习**学习剖切，并在开打前试用计算器。
 同一套界面也适用于战斗时使用手机：触控区域更大，图示更紧凑，并显示**控件已就绪**状态。
 无需另外设置学习模式或战斗模式。
+
+## 第一关：基底（Substratum）
+
+地图以旗帜房间下方的集结入口为底部，朝向主厅。先选**自己**、**发送者 A**、
+**关导体者 A**、**发送者 B**或**关导体者 B**，再点房间。
+两组标记同时可见，用字母、徽标形状和颜色区分；自己可以与任意角色同处一间。
+四个踩板角色必须在不同的外围房间。A/B 是你自定的分组，不代表固定方向。
+请沿游戏内各自的实际线路确认关导体者，工具不会推算当前激活的线路。
+
+**清除标记**移除当前所选标记；**重置地图**清除全部。
+切换主题或打开参考资料会保留标记；刷新、切换语言或离开页面会清除。
+键盘支持 Tab、方向键和空格键。不启用 JavaScript 时仍可查看地图与参考资料。
+
+此原创示意图以 [aequorde 的地图][substratum-map]为房间地标参考，
+以 [Sumanji 的地图][substratum-rooms]为连接参考。八间外围房间围绕主厅构成环，
+各房间都有通往主厅的连接。虚线表示房门连接，不是踩板线路或实时路线；游戏内房门可能关闭。
+房间名称采用社区报点，省略实际距离、门的高度和内部障碍物；标记记录你的观察，不读取游戏数据。
+每轮两组的机制参考 [Professionalism][substratum-pairs] 与 [Shacknews][substratum-rounds]。
+
+[substratum-map]: https://www.reddit.com/r/raidsecrets/comments/1dnz91q/salvations_edge_map/
+[substratum-rooms]: https://www.reddit.com/r/raidsecrets/comments/1dbehjs/substratum_map_cleaned_up_for_salvations_edge/
+[substratum-pairs]: https://professionalism.gg/raid-guides/salvations-edge
+[substratum-rounds]: https://www.shacknews.com/article/140025/salvations-edge-raid-guide-destiny-2
 
 ## 第三关：贮藏库
 

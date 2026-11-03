@@ -80,6 +80,175 @@ async function assertNavigationLayout(page: Page): Promise<void> {
   }
 }
 
+async function assertMapContrast(page: Page): Promise<void> {
+  const contrasts = await page
+    .locator(".map-floor polygon")
+    .evaluateAll((elements) => {
+      const canvas = document.createElement("canvas");
+      canvas.width = canvas.height = 1;
+      const context = canvas.getContext("2d", { willReadFrequently: true });
+      if (context === null) {
+        throw new Error("Canvas unavailable for color measurement");
+      }
+      function luminance(color: string): number {
+        if (context === null) {
+          return 0;
+        }
+        context.fillStyle = color;
+        context.fillRect(0, 0, 1, 1);
+        const channels = Array.from(context.getImageData(0, 0, 1, 1).data)
+          .slice(0, 3)
+          .map((byte) => {
+            const value = byte / 255;
+            return value <= 0.04045
+              ? value / 12.92
+              : ((value + 0.055) / 1.055) ** 2.4;
+          });
+        return (
+          (channels[0] ?? 0) * 0.2126 +
+          (channels[1] ?? 0) * 0.7152 +
+          (channels[2] ?? 0) * 0.0722
+        );
+      }
+      const background = luminance(
+        getComputedStyle(document.documentElement).backgroundColor,
+      );
+      return elements.map((element) => {
+        const style = getComputedStyle(element);
+        const stroke = luminance(style.stroke);
+        return {
+          room: element.getAttribute("data-room") ?? "Room",
+          ratios: [luminance(style.fill), background].map(
+            (adjacent) =>
+              (Math.max(stroke, adjacent) + 0.05) /
+              (Math.min(stroke, adjacent) + 0.05),
+          ),
+        };
+      });
+    });
+  // WCAG 2.2 SC 1.4.11: meaningful graphical boundaries need 3:1 contrast.
+  for (const room of contrasts) {
+    for (const ratio of room.ratios) {
+      expect(ratio, room.room + " outline contrast").toBeGreaterThanOrEqual(3);
+    }
+  }
+}
+
+async function exerciseSubstratum(
+  page: Page,
+  route: (typeof ROUTES)[number],
+): Promise<void> {
+  const text = getMessages(route.locale).substratumTool;
+  await openTool(page, route.path);
+  await choose(
+    page,
+    text.roomPicker.replace("{marker}", text.markers.you),
+    text.rooms.halo,
+  );
+  await choose(page, text.markerPicker, text.markers.senderA);
+  await choose(
+    page,
+    text.roomPicker.replace("{marker}", text.markers.senderA),
+    text.rooms.vase,
+  );
+  await choose(page, text.markerPicker, text.markers.closerA);
+  await choose(
+    page,
+    text.roomPicker.replace("{marker}", text.markers.closerA),
+    text.rooms.glyph,
+  );
+  await choose(page, text.markerPicker, text.markers.senderB);
+  await choose(
+    page,
+    text.roomPicker.replace("{marker}", text.markers.senderB),
+    text.rooms.bones,
+  );
+  await choose(page, text.markerPicker, text.markers.closerB);
+  await choose(
+    page,
+    text.roomPicker.replace("{marker}", text.markers.closerB),
+    text.rooms.halo,
+  );
+  await expect(page.locator(".map-room .map-badge")).toHaveCount(5);
+  await expect(
+    page
+      .getByRole("radio", { name: text.rooms.halo, exact: true })
+      .locator(".map-badge"),
+  ).toHaveText([text.symbols.you, text.symbols.closerB]);
+  await assertMapContrast(page);
+  await page.getByText(text.reference, { exact: true }).tap();
+  const sources = page.locator(".map-reference .reference-links a");
+  await expect(sources).toHaveCount(3);
+  for (const source of await sources.all()) {
+    await expect(source).toBeVisible();
+  }
+  const markers = await page
+    .locator(".map-marker-choice")
+    .evaluateAll((elements) =>
+      elements.map((element) => ({
+        width: element.clientWidth,
+        content: element.scrollWidth,
+        name: element.getAttribute("aria-label"),
+      })),
+    );
+  for (const marker of markers) {
+    expect(marker.content, marker.name ?? "Marker label").toBeLessThanOrEqual(
+      marker.width + 1,
+    );
+  }
+  const badges = await page
+    .locator(".map-room .map-badge")
+    .evaluateAll((elements) =>
+      elements.map((element) => {
+        const badge = element.getBoundingClientRect();
+        const parent = element.closest(".map-room");
+        if (parent === null) {
+          throw new Error("Marker badge must be inside a room");
+        }
+        const room = parent.getBoundingClientRect();
+        return {
+          left: badge.left - room.left,
+          right: room.right - badge.right,
+          top: badge.top - room.top,
+          bottom: room.bottom - badge.bottom,
+        };
+      }),
+    );
+  for (const badge of badges) {
+    for (const inset of Object.values(badge)) {
+      expect(inset).toBeGreaterThanOrEqual(0);
+    }
+  }
+  const rooms = await page.locator(".map-room").evaluateAll((elements) =>
+    elements.map((element) => {
+      const box = element.getBoundingClientRect();
+      return {
+        left: box.left,
+        right: box.right,
+        top: box.top,
+        bottom: box.bottom,
+        width: element.clientWidth,
+        content: element.scrollWidth,
+        name: element.getAttribute("aria-label"),
+      };
+    }),
+  );
+  for (const [index, room] of rooms.entries()) {
+    expect(room.content, room.name ?? "Room label").toBeLessThanOrEqual(
+      room.width + 1,
+    );
+    for (const other of rooms.slice(index + 1)) {
+      expect(
+        room.right <= other.left ||
+          other.right <= room.left ||
+          room.bottom <= other.top ||
+          other.bottom <= room.top,
+        `${room.name ?? "Room"} and ${other.name ?? "Room"} targets must not overlap`,
+      ).toBe(true);
+    }
+  }
+}
+
 async function exerciseRoute(
   page: Page,
   route: (typeof ROUTES)[number],
@@ -87,7 +256,9 @@ async function exerciseRoute(
   height: number,
 ): Promise<void> {
   const messages = getMessages(route.locale);
-  if (route.tool === "home") {
+  if (route.tool === "substratum") {
+    await exerciseSubstratum(page, route);
+  } else if (route.tool === "home") {
     await openPage(page, route.path);
     await page
       .getByRole("combobox")
@@ -173,48 +344,54 @@ for (const viewport of VIEWPORTS) {
     for (const theme of ["light", "dark"] as const) {
       // Each localized journey gets its own deadline, including on slower WebKit runners.
       for (const locale of ["en", "zh"] as const) {
-        test(`${locale} ${String(viewport.width)}x${String(viewport.height)} ${theme}: all tools fit and remain usable`, async ({
-          page,
-        }, testInfo) => {
-          await page.addInitScript((value) => {
-            localStorage.setItem("verity-theme", value);
-          }, theme);
-          for (const route of ROUTES.filter(
-            (route) => route.locale === locale,
-          )) {
-            await exerciseRoute(page, route, theme, viewport.height);
-            const width = await page.evaluate(() => ({
-              scroll: document.documentElement.scrollWidth,
-              viewport: document.documentElement.clientWidth,
-              inner: window.innerWidth,
-            }));
-            expect(
-              width.inner,
-              route.path + " must use the requested viewport",
-            ).toBe(viewport.width);
-            expect(
-              width.scroll,
-              route.path + " must not overflow horizontally",
-            ).toBeLessThanOrEqual(width.viewport);
-            await assertTouchTargets(page);
-            await assertNavigationLayout(page);
-            if (
-              route.locale === "en" &&
-              [390, 820, 1440].includes(viewport.width)
-            ) {
-              await page.evaluate(() => {
-                window.scrollTo(0, 0);
-              });
-              await page.screenshot({
-                animations: "disabled",
-                path: testInfo.outputPath(
-                  `${route.tool}-${String(viewport.width)}-${theme}.png`,
-                ),
-                fullPage: true,
-              });
+        for (const group of ["existing", "substratum"] as const) {
+          test(`${locale} ${String(viewport.width)}x${String(viewport.height)} ${theme} ${group}: all tools fit and remain usable`, async ({
+            page,
+          }, testInfo) => {
+            await page.addInitScript((value) => {
+              localStorage.setItem("verity-theme", value);
+            }, theme);
+            for (const route of ROUTES.filter(
+              (route) =>
+                route.locale === locale &&
+                (group === "substratum"
+                  ? route.tool.startsWith("substratum")
+                  : !route.tool.startsWith("substratum")),
+            )) {
+              await exerciseRoute(page, route, theme, viewport.height);
+              const width = await page.evaluate(() => ({
+                scroll: document.documentElement.scrollWidth,
+                viewport: document.documentElement.clientWidth,
+                inner: window.innerWidth,
+              }));
+              expect(
+                width.inner,
+                route.path + " must use the requested viewport",
+              ).toBe(viewport.width);
+              expect(
+                width.scroll,
+                route.path + " must not overflow horizontally",
+              ).toBeLessThanOrEqual(width.viewport);
+              await assertTouchTargets(page);
+              await assertNavigationLayout(page);
+              if (
+                (route.locale === "en" || group === "substratum") &&
+                [390, 820, 1440].includes(viewport.width)
+              ) {
+                await page.evaluate(() => {
+                  window.scrollTo(0, 0);
+                });
+                await page.screenshot({
+                  animations: "disabled",
+                  path: testInfo.outputPath(
+                    `${route.tool}-${String(viewport.width)}-${theme}.png`,
+                  ),
+                  fullPage: true,
+                });
+              }
             }
-          }
-        });
+          });
+        }
       }
     }
   });

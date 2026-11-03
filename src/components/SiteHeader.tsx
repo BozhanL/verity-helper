@@ -31,6 +31,12 @@ export default function SiteHeader({
       <div className="site-navigation">
         <nav className="page-navigation" aria-label={messages.navigation}>
           <a
+            href={links.substratum}
+            aria-current={encounter === "substratum" ? "page" : undefined}
+          >
+            {messages.substratumEncounter}
+          </a>
+          <a
             href={links.repository}
             aria-current={encounter === "repository" ? "page" : undefined}
           >

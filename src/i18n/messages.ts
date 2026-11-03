@@ -3,6 +3,7 @@ import type { Excise } from "../lib/verity";
 export type Locale = "en" | "zh";
 export const PAGES = [
   "home",
+  "substratum",
   "repository",
   "calculator",
   "solo",
@@ -11,13 +12,65 @@ export const PAGES = [
 export type Page = (typeof PAGES)[number];
 
 const en = {
+  substratum: "Room map",
+  substratumEncounter: "1 · Substratum",
+  substratumTool: {
+    title: "Substratum map",
+    description: "Find your room. Mark yourself and both sender/closer pairs.",
+    encounter: "DESTINY 2 / ENCOUNTER 01",
+    instruction: "Choose a marker, then a room.",
+    markerPicker: "Marker to place",
+    roomPicker: "Room for {marker}",
+    markers: {
+      you: "You",
+      senderA: "Sender A",
+      closerA: "Closer A",
+      senderB: "Sender B",
+      closerB: "Closer B",
+    },
+    symbols: {
+      you: "Y",
+      senderA: "SA",
+      closerA: "CA",
+      senderB: "SB",
+      closerB: "CB",
+    },
+    rooms: {
+      vase: "Vase",
+      glyph: "Glyph",
+      shell: "Shell",
+      pillar: "Pillar",
+      banner: "Banner",
+      bones: "Bones",
+      halo: "Halo",
+      basement: "Basement",
+      main: "Main",
+    },
+    unset: "Not placed",
+    empty: "No markers",
+    orientation: "↑ Rally / entrance · face Main",
+    doors: "Door links · may close",
+    clear: "Clear marker",
+    reset: "Reset map",
+    manual:
+      "Two pairs per round. Mark observed rooms; follow each in-game wire to confirm its closer.",
+    mapDescription:
+      "Room schematic, rally at the bottom. From the top clockwise: Vase, Glyph, Shell, Pillar, Banner, Bones, Halo, Basement. Main and its deposit chest are in the center. Each outer room links to its two neighbors and Main. Lines show door connections, not plate wires.",
+    reference: "Map reference",
+    sourceNote:
+      "Original schematic using aequorde’s community room names and Sumanji’s room topology. Not to scale; door heights and obstacles omitted. Mark observed rooms, not live tracking. Reloading or leaving clears markers.",
+    mapSource: "aequorde · detailed map",
+    topologySource: "Sumanji · room connections",
+    circuitsSource: "Professionalism · two pairs per round",
+  },
+
   brand: "Salvation’s Edge",
   subtitle: "Encounter helpers",
   navigation: "Main navigation",
   toolNavigation: "Verity tools",
   homeTitle: "Choose your encounter",
   homeDescription:
-    "Plate and resonance guidance for Repository. Calculators and practice for Verity.",
+    "A room map for Substratum, plate routing for Repository, and Verity calculators and practice.",
   verityDescription:
     "Plan outside dissection, distribute solo-room shapes, or practice the fourth encounter.",
   siteEyebrow: "DESTINY 2 / SALVATION’S EDGE",
@@ -191,12 +244,63 @@ const en = {
 };
 
 const zh: typeof en = {
+  substratum: "房间地图",
+  substratumEncounter: "1 · 基底",
+  substratumTool: {
+    title: "基底地图 · Substratum",
+    description: "找到房间，标出自己和两组发送者、关导体者的位置。",
+    encounter: "命运 2 / 第一关",
+    instruction: "先选标记，再点房间。",
+    markerPicker: "要放置的标记",
+    roomPicker: "{marker}所在的房间",
+    markers: {
+      you: "自己",
+      senderA: "发送者 A",
+      closerA: "关导体者 A",
+      senderB: "发送者 B",
+      closerB: "关导体者 B",
+    },
+    symbols: {
+      you: "我",
+      senderA: "A发",
+      closerA: "A关",
+      senderB: "B发",
+      closerB: "B关",
+    },
+    rooms: {
+      vase: "花瓶",
+      glyph: "符文",
+      shell: "贝壳",
+      pillar: "立柱",
+      banner: "旗帜",
+      bones: "骨骸",
+      halo: "圆环",
+      basement: "地下室",
+      main: "主厅",
+    },
+    unset: "未标记",
+    empty: "没有标记",
+    orientation: "↑ 集结旗 / 入口 · 面向主厅",
+    doors: "房门连接 · 可能关闭",
+    clear: "清除标记",
+    reset: "重置地图",
+    manual: "每轮两组。手动标记观察到的房间，沿各自线路确认关导体者。",
+    mapDescription:
+      "房间示意图，集结点在下方。从上方顺时针依次为：花瓶、符文、贝壳、立柱、旗帜、骨骸、圆环、地下室。主厅及存入共振的箱子在中间。各外围房间与相邻两间及主厅相通。连线表示房门连接，不是踩板线路。",
+    reference: "地图参考",
+    sourceNote:
+      "原创示意图，采用 aequorde 的社区房间名称与 Sumanji 的房间连接信息。非等比例，省略门的高度和障碍物。手动标记观察到的房间，不实时追踪。刷新或离开页面会清除标记。",
+    mapSource: "aequorde · 详细地图",
+    topologySource: "Sumanji · 房间连接",
+    circuitsSource: "Professionalism · 每轮两组",
+  },
+
   brand: "救赎边缘",
   subtitle: "关卡辅助工具",
   navigation: "主导航",
   toolNavigation: "真理工具",
   homeTitle: "选择关卡",
-  homeDescription: "第三关的终点板与共振指引，以及第四关的计算器和练习工具。",
+  homeDescription: "第一关房间地图、第三关终点板指引，以及第四关计算器和练习。",
   verityDescription: "规划外场剖切、分配单人房图形，或练习第四关的机制。",
   siteEyebrow: "命运 2 / 救赎边缘",
   repositoryEncounter: "第三关 · 贮藏库",

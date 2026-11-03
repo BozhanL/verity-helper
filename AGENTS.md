@@ -114,11 +114,28 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
 ## Project structure and UI
 
 - Use Astro for routes and layouts, and React islands for interactive tools.
-- The encounter chooser is `/`; Repository's end-plate helper is `/repository/`.
+- The encounter chooser is `/`; Substratum’s room map is `/substratum/`,
+  with a matching `/zh/` route. Repository's end-plate helper is `/repository/`.
   Verity's calculator is `/verity/`, with solo-room distribution at
   `/verity/solo/` and exercise at `/verity/exercise/`, all with matching `/zh/`
   routes. Keep page paths and encounter membership in `src/lib/navigation.ts`;
   preserve the selected page in metadata and language links.
+- Keep Substratum map topology and marker rules in `src/lib/substratum.ts`.
+  Rally is below Banner; clockwise from the top: Vase, Glyph, Shell, Pillar,
+  Banner, Bones, Halo, Basement, with Main in the center. Each outer room
+  connects to both neighbors and Main. Use the cited aequorde and Sumanji maps
+  when changing topology. The original schematic is not to scale and omits door
+  heights and obstacles; its lines show door connectivity, not plate wires.
+  You/Sender A/Closer A/Sender B/Closer B are manual markers for both circuits
+  active in one round, not live tracking or inferred connections. A/B are user
+  labels, not fixed sides. Distinguish pairs with letters and badge shapes as
+  well as color. You can share any role's room; all four endpoints must occupy
+  distinct outer rooms. Clear affects only the selected marker;
+  reset, reload or navigation clears all. Keep the map visible without scripts,
+  with controls disabled until hydration. Do not reintroduce the removed guide
+  or cycle checklist. Test both pairs simultaneously and independent movement,
+  including cross-pair collision guards and You sharing each role. Verify room
+  targets and badges never overlap or overflow on narrow screens.
 - Keep puzzle rules in `src/lib/verity.ts` and exercise state in
   `src/lib/practice.ts`. Share shape types and puzzle rules across tools.
 - Keep Repository rules in `src/lib/repository.ts`. Positions are viewed from
