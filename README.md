@@ -208,8 +208,8 @@ landscape. Restart remains available as a secondary action during a round.
 
 ## Local development
 
-The project uses Astro, React, TypeScript, and Tailwind CSS, with Remeda for
-array helpers and Radix for accessible selection controls. Install Node.js 26
+The project uses Astro, React, TypeScript, and Tailwind CSS, with Radix for
+accessible selection controls. Install Node.js 26
 and npm 11 (version 11.20.0 or later), then run these commands from your local clone:
 
 ```sh
@@ -247,6 +247,9 @@ For documentation-only changes, run `npm run format`.
 | `npm run format:fix`            | Format the project                        |
 | `npm run build`                 | Generate the static site in `dist/`       |
 | `npm run preview`               | Preview the production build locally      |
+
+Tailwind class ordering and validation use ESLint. `npm run format:fix` runs
+ESLint fixes before Prettier to format both Astro and React components.
 
 Run `npm run build` before `npm run preview`.
 
