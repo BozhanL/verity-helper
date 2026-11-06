@@ -1,5 +1,5 @@
 import { expect, test } from "./fixtures";
-import { openTool } from "./helpers";
+import { openTool, setStoredTheme } from "./helpers";
 
 test("System follows device changes and manual choices take precedence", async ({
   page,
@@ -78,9 +78,7 @@ test("theme choices synchronize between tabs", async ({ page, context }) => {
 });
 
 test("invalid stored preferences fall back to System", async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem("verity-theme", "unknown");
-  });
+  await setStoredTheme(page, "unknown");
   await page.emulateMedia({ colorScheme: "dark" });
   await openTool(page, "verity/");
   await expect(page.getByRole("combobox", { name: "Theme" })).toHaveValue(

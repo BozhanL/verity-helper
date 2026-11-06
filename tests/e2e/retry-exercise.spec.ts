@@ -1,5 +1,9 @@
 import { describeExcise, getMessages } from "../../src/i18n/messages";
-import type { Excise, Swap } from "../../src/lib/verity";
+import {
+  completeExercise,
+  excise,
+  prepareFixedExercise,
+} from "./exercise-helpers";
 import { expect, test } from "./fixtures";
 import { choose, openTool } from "./helpers";
 
@@ -12,11 +16,7 @@ for (const locale of ["en", "zh"] as const) {
     }, testInfo) => {
       const messages = getMessages(locale);
       const prefix = locale === "zh" ? "zh/" : "";
-      await page.addInitScript((value) => {
-        localStorage.setItem("verity-theme", value);
-        Math.random = (): number => 0;
-      }, theme);
-      await page.clock.install({ time: new Date("2026-01-01T00:00:00Z") });
+      await prepareFixedExercise(page, theme);
       await openTool(page, prefix + "verity/exercise/");
       const retry = page.getByRole("button", {
         name: messages.retryExercise,
@@ -29,19 +29,7 @@ for (const locale of ["en", "zh"] as const) {
             images.map((image) => image.getAttribute("aria-label")),
           );
       }
-      async function excise(selection: Excise): Promise<void> {
-        await choose(
-          page,
-          messages.currentShape,
-          messages.shapes[selection.shape],
-        );
-        await page
-          .getByRole("button", {
-            name: describeExcise(locale, selection),
-            exact: true,
-          })
-          .tap();
-      }
+
       await expect(retry).toHaveCount(0);
       await page
         .getByRole("button", { name: messages.start, exact: true })
@@ -54,9 +42,9 @@ for (const locale of ["en", "zh"] as const) {
           exact: true,
         }),
       ).toBeDisabled();
-      await excise({ statue: 0, shape: "circle" });
-      await excise({ statue: 1, shape: "triangle" });
-      await excise({ statue: 2, shape: "square" });
+      await excise(page, locale, { statue: 0, shape: "circle" });
+      await excise(page, locale, { statue: 1, shape: "triangle" });
+      await excise(page, locale, { statue: 2, shape: "square" });
       await choose(page, messages.practiceMode, messages.practiceModes.untimed);
       await expect(page.getByRole("timer")).toBeVisible();
       await expect(
@@ -93,25 +81,7 @@ for (const locale of ["en", "zh"] as const) {
         path: testInfo.outputPath(`retry-${locale}-${theme}.png`),
         fullPage: true,
       });
-      const swaps: readonly Swap[] = [
-        [
-          { statue: 0, shape: "circle" },
-          { statue: 1, shape: "triangle" },
-        ],
-        [
-          { statue: 0, shape: "circle" },
-          { statue: 2, shape: "square" },
-        ],
-        [
-          { statue: 1, shape: "triangle" },
-          { statue: 2, shape: "square" },
-        ],
-      ];
-      for (const swap of swaps) {
-        for (const selection of swap) {
-          await excise(selection);
-        }
-      }
+      await completeExercise(page, locale);
       await expect(
         page.getByRole("heading", { name: messages.won }),
       ).toBeVisible();

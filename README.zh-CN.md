@@ -316,16 +316,17 @@ GitHub CLI 与 Codex 分别认证；使用 GitHub 命令前，可运行 `gh auth
 Astro 生成静态页面，React 负责交互控件。
 交互控件会在 React 就绪后启用，包括在 Firefox 中重新加载页面时。
 
-| 位置                                   | 内容                      |
-| -------------------------------------- | ------------------------- |
-| [pages/](src/pages/)                   | Astro 页面路由            |
-| [components/](src/components/)         | 页面内容与 React 交互工具 |
-| [verity.ts](src/lib/verity.ts)         | 图形规则与求解器          |
-| [repository.ts](src/lib/repository.ts) | 第三关连线与共振规则      |
-| [navigation.ts](src/lib/navigation.ts) | 页面路径与关卡归属        |
-| [practice.ts](src/lib/practice.ts)     | 练习回合与计时            |
-| [messages.ts](src/i18n/messages.ts)    | 英文和简体中文文本        |
-| [global.css](src/styles/global.css)    | 共享样式                  |
+| 位置                                   | 内容                       |
+| -------------------------------------- | -------------------------- |
+| [pages/](src/pages/)                   | Astro 页面路由             |
+| [components/](src/components/)         | 页面内容与 React 交互工具  |
+| [tests/](tests/)                       | 共享测试辅助函数与固定数据 |
+| [verity.ts](src/lib/verity.ts)         | 图形规则与求解器           |
+| [repository.ts](src/lib/repository.ts) | 第三关连线与共振规则       |
+| [navigation.ts](src/lib/navigation.ts) | 页面路径与关卡归属         |
+| [practice.ts](src/lib/practice.ts)     | 练习回合与计时             |
+| [messages.ts](src/i18n/messages.ts)    | 英文和简体中文文本         |
+| [global.css](src/styles/global.css)    | 共享样式                   |
 
 Vitest 覆盖全部 126 种有效房间配置、非法输入，以及取消、完成、重置和超时等练习行为。
 单人房测试覆盖雕像顺序、玩家位置和房间图形顺序的全部 162 种组合，包括重复图形与保留规则。

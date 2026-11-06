@@ -118,6 +118,9 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
 ## Project structure and UI
 
 - Use Astro for routes and layouts, and React islands for interactive tools.
+- Reuse `PanelHeading.tsx` for numbered tool headings and `ResetButton.tsx`
+  for short reset controls. Callers retain reset logic and readiness state.
+  Keep shared test helpers and fixtures in `tests/`, outside source coverage.
 - The encounter chooser is `/`; Substratum’s room map is `/substratum/`,
   with a matching `/zh/` route. Repository's end-plate helper is `/repository/`.
   Verity's calculator is `/verity/`, with solo-room distribution at

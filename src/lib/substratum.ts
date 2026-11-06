@@ -2,7 +2,7 @@
 // Original schematic of the room topology, not a floor plan or plate wiring.
 // References: aequorde (https://www.kity.cc/images/substratum-map.jpg),
 // Sumanji (https://www.reddit.com/r/raidsecrets/comments/1dbehjs/).
-export const OUTER_ROOMS = [
+const OUTER_ROOMS = [
   "vase",
   "glyph",
   "shell",
@@ -17,7 +17,7 @@ export type MapRoom = (typeof MAP_ROOMS)[number];
 export const ENDPOINTS = ["senderA", "closerA", "senderB", "closerB"] as const;
 export const MARKERS = ["you", ...ENDPOINTS] as const;
 export type Marker = (typeof MARKERS)[number];
-export type MapMarkers = Readonly<Record<Marker, MapRoom | null>>;
+type MapMarkers = Readonly<Record<Marker, MapRoom | null>>;
 
 export function emptyMarkers(): MapMarkers {
   return {

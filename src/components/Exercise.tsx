@@ -14,6 +14,7 @@ import {
 import { generatePuzzle, SHAPES, STATUES, type Shape } from "../lib/verity";
 import { InsideBoard, SolidDisplay } from "./Board";
 import { CONTROL_PROPS } from "./controlProps";
+import PanelHeading from "./PanelHeading";
 import ShapePicker from "./ShapePicker";
 import ToolReadiness from "./ToolReadiness";
 import { useHydrated } from "./useHydrated";
@@ -211,12 +212,7 @@ export default function Exercise({
           )}
         </aside>
         <section className="panel">
-          <div className="panel-heading">
-            <div>
-              <span className="panel-number">01</span>
-              <h2>{messages.outside}</h2>
-            </div>
-          </div>
+          <PanelHeading number="01" title={messages.outside} />
           <div className="statue-grid outside-board">
             {STATUES.map((statue) => {
               const pending = state.pending?.statue === statue;

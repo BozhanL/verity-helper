@@ -13,15 +13,17 @@ import { SwapInstruction } from "./Sequence";
 
 afterEach(cleanup);
 
+const ORDERED_STATUE_PAIRS = [
+  [0, 1],
+  [1, 0],
+  [0, 2],
+  [2, 0],
+  [1, 2],
+  [2, 1],
+] as const;
+
 describe("spatial swap diagrams", () => {
-  it.each([
-    [0, 1],
-    [1, 0],
-    [0, 2],
-    [2, 0],
-    [1, 2],
-    [2, 1],
-  ] as const)(
+  it.each(ORDERED_STATUE_PAIRS)(
     "keeps statues %i and %i directly markable with accessible names and checkmarks",
     (first, second) => {
       const swap: Swap = [
@@ -72,14 +74,7 @@ describe("spatial swap diagrams", () => {
     },
   );
 
-  it.each([
-    [0, 1],
-    [1, 0],
-    [0, 2],
-    [2, 0],
-    [1, 2],
-    [2, 1],
-  ] as const)(
+  it.each(ORDERED_STATUE_PAIRS)(
     "places cuts from statues %i and %i in fixed left-to-right slots",
     (first, second) => {
       const swap: Swap = [

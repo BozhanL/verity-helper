@@ -1,5 +1,5 @@
 import { describeExcise, getMessages } from "../../src/i18n/messages";
-import type { Swap } from "../../src/lib/verity";
+import { completeExercise } from "./exercise-helpers";
 import { expect, test } from "./fixtures";
 import { choose, chooseInside, chooseSelf, openTool } from "./helpers";
 
@@ -149,35 +149,7 @@ for (const locale of ["en", "zh"] as const) {
     await expect(
       page.getByRole("button", { name: messages.cancel, exact: true }),
     ).toHaveCount(0);
-    const swaps: readonly Swap[] = [
-      [
-        { statue: 0, shape: "circle" },
-        { statue: 1, shape: "triangle" },
-      ],
-      [
-        { statue: 0, shape: "circle" },
-        { statue: 2, shape: "square" },
-      ],
-      [
-        { statue: 1, shape: "triangle" },
-        { statue: 2, shape: "square" },
-      ],
-    ];
-    for (const swap of swaps) {
-      for (const selection of swap) {
-        await choose(
-          page,
-          messages.currentShape,
-          messages.shapes[selection.shape],
-        );
-        await page
-          .getByRole("button", {
-            name: describeExcise(locale, selection),
-            exact: true,
-          })
-          .tap();
-      }
-    }
+    await completeExercise(page, locale);
     await expect(
       page.getByRole("heading", { name: messages.won }),
     ).toBeVisible();

@@ -11,8 +11,9 @@ import {
   type Triple,
 } from "../lib/verity";
 import { MiniBoard, ShapeBudget, SolidDisplay } from "./Board";
-import { CONTROL_PROPS } from "./controlProps";
 import InsideInputs from "./InsideInputs";
+import PanelHeading from "./PanelHeading";
+import ResetButton from "./ResetButton";
 import Sequence from "./Sequence";
 import ShapeIcon from "./ShapeIcon";
 import ShapePicker from "./ShapePicker";
@@ -94,10 +95,7 @@ export default function Calculator({
   const [middleShape, setMiddleShape] = useState<Shape | null>(null);
   const [leftSolid, setLeftSolid] = useState<Solid | null>(null);
   const [middleSolid, setMiddleSolid] = useState<Solid | null>(null);
-  const inside =
-    leftShape !== null && middleShape !== null
-      ? inferInside(leftShape, middleShape)
-      : null;
+  const inside = inferInside(leftShape, middleShape);
   const outside =
     leftSolid !== null && middleSolid !== null
       ? inferOutside(leftSolid, middleSolid)
@@ -123,22 +121,14 @@ export default function Calculator({
       <ToolReadiness locale={locale} />
       <div className="calculator-inputs" id="dissection-inputs" tabIndex={-1}>
         <section className="panel">
-          <div className="panel-heading">
-            <div>
-              <span className="panel-number">01</span>
-              <h2>{messages.inside}</h2>
-            </div>
-            <button
-              {...CONTROL_PROPS}
-              className="text-button"
-              type="button"
-              aria-label={messages.resetInside}
+          <PanelHeading number="01" title={messages.inside}>
+            <ResetButton
+              locale={locale}
+              label={messages.resetInside}
               disabled={!hydrated}
               onClick={resetInside}
-            >
-              {messages.resetShort}
-            </button>
-          </div>
+            />
+          </PanelHeading>
           <InsideInputs
             locale={locale}
             left={leftShape}
@@ -158,22 +148,14 @@ export default function Calculator({
               : undefined
           }
         >
-          <div className="panel-heading">
-            <div>
-              <span className="panel-number">02</span>
-              <h2>{messages.outside}</h2>
-            </div>
-            <button
-              {...CONTROL_PROPS}
-              className="text-button"
-              type="button"
-              aria-label={messages.resetOutside}
+          <PanelHeading number="02" title={messages.outside}>
+            <ResetButton
+              locale={locale}
+              label={messages.resetOutside}
               disabled={!hydrated}
               onClick={resetOutside}
-            >
-              {messages.resetShort}
-            </button>
-          </div>
+            />
+          </PanelHeading>
           <ShapeBudget locale={locale} />
           <div className="statue-grid statue-grid--inputs">
             <ShapePicker
@@ -225,30 +207,25 @@ export default function Calculator({
         aria-atomic="false"
         aria-labelledby="dissection-heading"
       >
-        <div className="panel-heading">
-          <div>
-            <span className="panel-number">03</span>
-            <h2 id="dissection-heading">{messages.solution}</h2>
-          </div>
+        <PanelHeading
+          number="03"
+          title={messages.solution}
+          titleId="dissection-heading"
+        >
           <div className="result-actions">
             <a className="text-button" href="#dissection-inputs">
               {messages.editInputs}
             </a>
-            <button
-              {...CONTROL_PROPS}
-              className="text-button"
-              type="button"
-              aria-label={messages.reset}
+            <ResetButton
+              locale={locale}
               disabled={!hydrated}
               onClick={() => {
                 resetInside();
                 resetOutside();
               }}
-            >
-              {messages.resetShort}
-            </button>
+            />
           </div>
-        </div>
+        </PanelHeading>
         <Result
           locale={locale}
           inside={inside}

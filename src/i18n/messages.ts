@@ -113,7 +113,6 @@ const en = {
     closeAt: "Close at the {position} end plate",
     stayAt: "Stay at the {position} end plate to close",
     chooseClosing: "Enter two conductor callouts and your current resonance.",
-    loading: "Loading controls…",
     ready: "Controls ready.",
     reference: "Repository guide",
   },
@@ -146,7 +145,6 @@ const en = {
   soloGive: "Give",
   soloKeep: "Keep",
   soloYou: "You",
-  soloIncomplete: "Choose the statues, your position, and both room shapes.",
   soloResetRoom: "Reset room shapes",
   soloNothingToKeep: "Nothing to keep",
   soloNothingToSend: "Nothing to give",
@@ -341,7 +339,6 @@ const zh: typeof en = {
     closeAt: "前往{position}终点板关闭导体",
     stayAt: "留在{position}终点板关闭导体",
     chooseClosing: "请输入两个导体报点，并选择当前的共振。",
-    loading: "正在加载控件…",
     ready: "控件已就绪。",
     reference: "第三关指南",
   },
@@ -373,7 +370,6 @@ const zh: typeof en = {
   soloGive: "送出",
   soloKeep: "保留",
   soloYou: "你",
-  soloIncomplete: "请选择雕像图形、你的位置和房间内的两个图形。",
   soloResetRoom: "重置房间图形",
   soloNothingToKeep: "无需保留图形",
   soloNothingToSend: "无需送出图形",
@@ -464,7 +460,7 @@ const zh: typeof en = {
   },
 };
 
-export type Messages = typeof en;
+type Messages = typeof en;
 
 export function getMessages(locale: Locale): Messages {
   return locale === "zh" ? zh : en;

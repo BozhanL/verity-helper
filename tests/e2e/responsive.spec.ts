@@ -9,6 +9,7 @@ import {
   openPage,
   openTool,
   ROUTES,
+  setStoredTheme,
 } from "./helpers";
 
 test.use({ hasTouch: true });
@@ -348,9 +349,7 @@ for (const viewport of VIEWPORTS) {
           test(`${locale} ${String(viewport.width)}x${String(viewport.height)} ${theme} ${group}: all tools fit and remain usable`, async ({
             page,
           }, testInfo) => {
-            await page.addInitScript((value) => {
-              localStorage.setItem("verity-theme", value);
-            }, theme);
+            await setStoredTheme(page, theme);
             for (const route of ROUTES.filter(
               (route) =>
                 route.locale === locale &&
