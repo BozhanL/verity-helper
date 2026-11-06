@@ -167,7 +167,7 @@
 
 ## 本地开发
 
-项目使用 Astro、React、TypeScript 和 Tailwind CSS，通过 Remeda 处理数组辅助操作，并使用 Radix 构建无障碍选择控件。
+项目使用 Astro、React、TypeScript 和 Tailwind CSS，使用 Radix 构建无障碍选择控件。
 安装 Node.js 26 和 npm 11（11.20.0 或更高版本），然后在本地仓库目录中运行：
 
 ```sh
@@ -203,6 +203,9 @@ Noto Sans SC 可变字体，并随网站一同提供。中文字体仅包含翻�
 | `npm run format:fix`            | 格式化项目                            |
 | `npm run build`                 | 在 `dist/` 中生成静态站点             |
 | `npm run preview`               | 在本地预览生产构建                    |
+
+Tailwind 类名排序与检查统一使用 ESLint。`npm run format:fix` 先运行 ESLint 自动修复，
+再通过 Prettier 格式化 Astro 和 React 组件。
 
 运行 `npm run preview` 前，先运行 `npm run build`。
 

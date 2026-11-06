@@ -175,6 +175,58 @@ describe("dissection solver", () => {
     ).toThrow();
   });
 
+  it.each([
+    { random: 0, inside: SHAPES },
+    { random: 0.9, inside: ["square", "circle", "triangle"] as const },
+  ])(
+    "preserves the fixed-random puzzle layout ($random)",
+    ({ random, inside }) => {
+      vi.spyOn(Math, "random").mockReturnValue(random);
+      expect(generatePuzzle()).toEqual({
+        inside,
+        outside: inside.map((shape) => [shape, shape]),
+      });
+    },
+  );
+
+  it("generates every inside and extra-shape permutation independently without mutating inputs", () => {
+    const originalShapes = [...SHAPES];
+    const insideOrders = new Set<string>();
+    const extraOrders = new Set<string>();
+    const puzzles = new Set<string>();
+    const random = vi.spyOn(Math, "random");
+    for (const first of [0, 0.5, 0.999]) {
+      for (const second of [0, 0.999]) {
+        for (const third of [0, 0.5, 0.999]) {
+          for (const fourth of [0, 0.999]) {
+            random.mockReset();
+            random
+              .mockReturnValueOnce(first)
+              .mockReturnValueOnce(second)
+              .mockReturnValueOnce(0)
+              .mockReturnValueOnce(third)
+              .mockReturnValueOnce(fourth)
+              .mockReturnValueOnce(0);
+            const puzzle = generatePuzzle();
+            expect(isValidPuzzle(puzzle)).toBe(true);
+            expect(isSolved(puzzle)).toBe(false);
+            expect(puzzle.inside).not.toBe(SHAPES);
+            expect(puzzle.outside.map((pair) => pair[0])).toEqual(
+              puzzle.inside,
+            );
+            insideOrders.add(puzzle.inside.join(","));
+            extraOrders.add(puzzle.outside.map((pair) => pair[1]).join(","));
+            puzzles.add(JSON.stringify(puzzle));
+          }
+        }
+      }
+    }
+    expect(insideOrders.size).toBe(6);
+    expect(extraOrders.size).toBe(6);
+    expect(puzzles.size).toBe(36);
+    expect(SHAPES).toEqual(originalShapes);
+  });
+
   it("generates valid, unsolved rounds with each statue containing its own symbol", () => {
     for (const value of [0, 0.2, 0.49, 0.75, 0.999]) {
       vi.spyOn(Math, "random").mockReturnValue(value);
