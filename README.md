@@ -259,10 +259,17 @@ traces in `test-results/`. CI records traces only on the first retry, including
 when that retry passes; the initial attempt has no trace. Local runs have no
 retries and retain the initial failure trace. Run `npm run test:e2e:subdirectory`
 to test a subdirectory build. This script uses `cross-env` to set
-`BASE_PATH=/review-preview` on Windows, macOS, and Linux. CI runs both
-configurations in parallel matrix jobs on separate runners, with a 30-minute
-timeout per job. In a local workspace, run the root and subdirectory suites
-sequentially. Type, lint, formatting, and unit checks run in the `test` job.
+`BASE_PATH=/review-preview` on Windows, macOS, and Linux. CI runs each of the
+nine Playwright browser/device projects separately for both deployment paths:
+18 parallel matrix jobs on separate runners, with a 30-minute timeout per job.
+Each job installs only its required browser engine and uploads failure evidence
+named by deployment target and project. A failing job does not cancel the others.
+To run one project locally, use
+`npm run test:e2e -- --project="Mobile Safari"` (or use
+`test:e2e:subdirectory` for the subdirectory build).
+In a local workspace, run browser suites and individual projects sequentially
+because they share build output and report directories.
+Type, lint, formatting, and unit checks run in the `test` job.
 
 Pull requests receive one updated coverage comment from
 [Vitest Coverage Report Action](https://github.com/davelosert/vitest-coverage-report-action),

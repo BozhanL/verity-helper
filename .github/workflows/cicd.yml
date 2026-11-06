@@ -65,19 +65,40 @@ jobs:
     uses: ./.github/workflows/coverage-report.yml
 
   e2e:
-    name: e2e (${{ matrix.target }})
+    name: e2e (${{ matrix.target.name }}, ${{ matrix.project.name }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: read
 
     strategy:
+      fail-fast: false
       matrix:
-        include:
-          - target: production
+        target:
+          - name: production
             script: test:e2e
-          - target: subdirectory
+          - name: subdirectory
             script: test:e2e:subdirectory
+        # Keep project names and browser engines aligned with playwright.config.ts.
+        project:
+          - name: chromium
+            browser: chromium
+          - name: Desktop Chrome HiDPI
+            browser: chromium
+          - name: firefox
+            browser: firefox
+          - name: Desktop Firefox HiDPI
+            browser: firefox
+          - name: webkit
+            browser: webkit
+          - name: Mobile Chrome
+            browser: chromium
+          - name: Galaxy Z Fold 6
+            browser: chromium
+          - name: Galaxy Z Fold 6 Cover
+            browser: chromium
+          - name: Mobile Safari
+            browser: webkit
 
     steps:
       - name: 🏗 Checkout repository
@@ -94,16 +115,16 @@ jobs:
         run: npm ci --no-audit
 
       - name: 🌐 Install browser test engines
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: npx playwright install --with-deps ${{ matrix.project.browser }}
 
       - name: 🧪 Run E2E tests
-        run: npm run ${{ matrix.script }}
+        run: npm run ${{ matrix.target.script }} -- --project="${{ matrix.project.name }}"
 
       - name: 📦 Upload browser failure evidence
         if: ${{ failure() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: browser-test-results-${{ matrix.target }}
+          name: browser-test-results-${{ matrix.target.name }}-${{ matrix.project.name }}
           path: |
             test-results
             playwright-report
