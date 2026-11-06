@@ -70,9 +70,13 @@ and inspect representative phone/tablet screenshots in both themes.
 All browser projects must exercise hydrated controls.
 
 CI runs type, lint, formatting, and unit checks in `test`. Browser tests use an
-`e2e` matrix with separate root and subdirectory jobs, each with a 30-minute
-timeout. CI matrix jobs have isolated runner workspaces and may run in parallel.
-In a shared workspace, run root and subdirectory suites sequentially.
+`e2e` matrix crossing root/subdirectory targets with every Playwright project,
+each with a 30-minute timeout and `fail-fast: false`. Keep matrix project names
+and browser engines aligned with `playwright.config.ts`. Install only the matrix
+project's browser engine and pass its quoted name through `--project`. Include
+both target and project in failure artifact names. CI matrix jobs have isolated
+runner workspaces and may run in parallel. In a shared workspace, run browser
+suites and individual projects sequentially.
 Production deployment must wait for `test`, `e2e`, and `build`. The final CI
 result must include all jobs and fail if any dependency fails or is cancelled.
 
