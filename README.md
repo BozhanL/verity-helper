@@ -375,16 +375,17 @@ Astro builds the static pages, and React handles the interactive controls.
 Interactive controls stay disabled until React is ready, including when
 reloading in Firefox.
 
-| Location                               | Contents                       |
-| -------------------------------------- | ------------------------------ |
-| [pages/](src/pages/)                   | Astro page routes              |
-| [components/](src/components/)         | React tools and page content   |
-| [verity.ts](src/lib/verity.ts)         | Puzzle rules and solver        |
-| [repository.ts](src/lib/repository.ts) | Plate and resonance rules      |
-| [navigation.ts](src/lib/navigation.ts) | Page and encounter paths       |
-| [practice.ts](src/lib/practice.ts)     | Exercise rounds and timer      |
-| [messages.ts](src/i18n/messages.ts)    | English and Simplified Chinese |
-| [global.css](src/styles/global.css)    | Shared styles                  |
+| Location                               | Contents                         |
+| -------------------------------------- | -------------------------------- |
+| [pages/](src/pages/)                   | Astro page routes                |
+| [components/](src/components/)         | React tools and page content     |
+| [tests/](tests/)                       | Shared test helpers and fixtures |
+| [verity.ts](src/lib/verity.ts)         | Puzzle rules and solver          |
+| [repository.ts](src/lib/repository.ts) | Plate and resonance rules        |
+| [navigation.ts](src/lib/navigation.ts) | Page and encounter paths         |
+| [practice.ts](src/lib/practice.ts)     | Exercise rounds and timer        |
+| [messages.ts](src/i18n/messages.ts)    | English and Simplified Chinese   |
+| [global.css](src/styles/global.css)    | Shared styles                    |
 
 Vitest covers all 126 valid room configurations, invalid inputs, and exercise
 behavior, including cancellation, completion, reset, and timer expiry.

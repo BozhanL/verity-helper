@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { SHAPE_ORDERS } from "../../tests/verity-fixtures";
 import {
   getClosureTarget,
   getEndPlate,
@@ -9,21 +10,13 @@ import {
   type ConductorCallouts,
   type Plate,
 } from "./repository";
-import { SHAPES, type Shape, type Triple } from "./verity";
+import { SHAPES, type Triple } from "./verity";
 
 const wiring: Record<1 | 2 | 3, Triple<Plate>> = {
   1: [0, 1, 2],
   2: [1, 0, 2],
   3: [1, 2, 0],
 };
-const permutations: readonly Triple<Shape>[] = [
-  ["circle", "triangle", "square"],
-  ["circle", "square", "triangle"],
-  ["triangle", "circle", "square"],
-  ["triangle", "square", "circle"],
-  ["square", "circle", "triangle"],
-  ["square", "triangle", "circle"],
-];
 
 describe("Repository plate rules", () => {
   it.each(ROOMS)(
@@ -40,7 +33,7 @@ describe("Repository plate rules", () => {
   it.each(PLATES)(
     "infers conductor %i from either pair of other callouts",
     (missing) => {
-      for (const shapes of permutations) {
+      for (const shapes of SHAPE_ORDERS) {
         const callouts: ConductorCallouts = [
           missing === 0 ? null : shapes[0],
           missing === 1 ? null : shapes[1],
@@ -65,7 +58,7 @@ describe("Repository plate rules", () => {
     let checked = 0;
     for (const room of ROOMS) {
       for (const assignedStart of PLATES) {
-        for (const conductors of permutations) {
+        for (const conductors of SHAPE_ORDERS) {
           for (const held of SHAPES) {
             const target = getClosureTarget(room, conductors, held);
             const end = conductors.indexOf(held);

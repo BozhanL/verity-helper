@@ -7,19 +7,12 @@ import {
   within,
 } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
+import { choose } from "../../tests/component-helpers";
 import { getMessages, type Locale } from "../i18n/messages";
 import type { Shape } from "../lib/verity";
 import SoloCalculator from "./SoloCalculator";
 
 afterEach(cleanup);
-
-function choose(group: string, name: string): void {
-  fireEvent.click(
-    within(screen.getByRole("group", { name: group })).getByRole("radio", {
-      name,
-    }),
-  );
-}
 
 function chooseStatues(locale: Locale = "en"): void {
   const messages = getMessages(locale);

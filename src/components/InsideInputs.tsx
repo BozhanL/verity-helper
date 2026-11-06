@@ -18,8 +18,7 @@ export default function InsideInputs({
   onMiddleChange: (shape: Shape) => void;
 }>): ReactElement {
   const messages = getMessages(locale);
-  const inside =
-    left !== null && middle !== null ? inferInside(left, middle) : null;
+  const inside = inferInside(left, middle);
   return (
     <div className="statue-grid statue-grid--inputs">
       <ShapePicker

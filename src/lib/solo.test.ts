@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { SHAPE_ORDERS } from "../../tests/verity-fixtures";
 import {
   planSoloAfterTrades,
   planSoloTransfers,
@@ -10,15 +11,6 @@ import {
   type Statue,
   type Triple,
 } from "./verity";
-
-const ORDERS: readonly Triple<Shape>[] = [
-  ["circle", "triangle", "square"],
-  ["circle", "square", "triangle"],
-  ["triangle", "circle", "square"],
-  ["triangle", "square", "circle"],
-  ["square", "circle", "triangle"],
-  ["square", "triangle", "circle"],
-];
 
 function checkPlan(inside: Triple<Shape>, self: Statue, available: Pair): void {
   const original = JSON.stringify({ inside, available });
@@ -79,10 +71,10 @@ function distribute(
 }
 
 describe("smart solo-room distribution", () => {
-  it.each(ORDERS.map((inside) => ({ inside })))(
+  it.each(SHAPE_ORDERS.map((inside) => ({ inside })))(
     "finishes all normal starting distributions across the three rooms for $inside",
     ({ inside }) => {
-      for (const extras of ORDERS) {
+      for (const extras of SHAPE_ORDERS) {
         const opening: Pair[] = STATUES.map((self) => [
           inside[self],
           extras[self],
@@ -132,7 +124,7 @@ describe("smart solo-room distribution", () => {
       }
     },
   );
-  it.each(ORDERS.map((inside) => ({ inside })))(
+  it.each(SHAPE_ORDERS.map((inside) => ({ inside })))(
     "checks received pairs without sending away a completed key for $inside",
     ({ inside }) => {
       for (const self of STATUES) {
@@ -208,7 +200,7 @@ describe("smart solo-room distribution", () => {
     });
   });
 
-  it.each(ORDERS.map((inside) => ({ inside })))(
+  it.each(SHAPE_ORDERS.map((inside) => ({ inside })))(
     "conserves shapes and chooses eligible recipients for $inside",
     ({ inside }) => {
       let checked = 0;

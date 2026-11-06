@@ -13,6 +13,12 @@ export const ROUTES = (["en", "zh"] as const).flatMap((locale) =>
   })),
 );
 
+export async function setStoredTheme(page: Page, theme: string): Promise<void> {
+  await page.addInitScript((value) => {
+    localStorage.setItem("verity-theme", value);
+  }, theme);
+}
+
 export async function openPage(page: Page, path: string): Promise<void> {
   await page.goto(path || "./");
   await page.evaluate(async () => {

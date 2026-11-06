@@ -7,18 +7,11 @@ import {
   within,
 } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
+import { choose } from "../../tests/component-helpers";
 import { getMessages, type Locale } from "../i18n/messages";
 import Calculator from "./Calculator";
 
 afterEach(cleanup);
-
-function choose(group: string, shape: string): void {
-  fireEvent.click(
-    within(screen.getByRole("group", { name: group })).getByRole("radio", {
-      name: shape,
-    }),
-  );
-}
 
 function chooseInside(): void {
   choose("Left · Inside statues", "Circle");

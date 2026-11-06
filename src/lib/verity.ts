@@ -51,7 +51,13 @@ const STATUE_PAIRS: readonly (readonly [Statue, Statue])[] = [
   [1, 2],
 ];
 
-export function inferInside(left: Shape, middle: Shape): Triple<Shape> | null {
+export function inferInside(
+  left: Shape | null,
+  middle: Shape | null,
+): Triple<Shape> | null {
+  if (left === null || middle === null) {
+    return null;
+  }
   const right = SHAPES.find((shape) => shape !== left && shape !== middle);
   return left !== middle && right !== undefined ? [left, middle, right] : null;
 }
