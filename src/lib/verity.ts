@@ -212,7 +212,7 @@ export function generatePuzzle(): Puzzle {
   };
 }
 
-export interface SoloTransfer {
+interface SoloTransfer {
   readonly statue: Statue;
   readonly shape: Shape;
 }

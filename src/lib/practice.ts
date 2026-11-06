@@ -30,7 +30,7 @@ export interface PracticeState {
   readonly swaps: readonly Swap[];
 }
 
-export type PracticeAction =
+type PracticeAction =
   | { type: "start"; puzzle: Puzzle; now: number; mode?: PracticeMode }
   | { type: "retry"; now: number; mode?: PracticeMode }
   | { type: "tick"; now: number }
