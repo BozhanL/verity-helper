@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { SHAPE_ORDERS } from "../../tests/verity-fixtures";
 import {
   applySwap,
   generatePuzzle,
@@ -22,15 +23,6 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-const ORDERS: Triple<Shape>[] = [
-  ["circle", "triangle", "square"],
-  ["circle", "square", "triangle"],
-  ["triangle", "circle", "square"],
-  ["triangle", "square", "circle"],
-  ["square", "circle", "triangle"],
-  ["square", "triangle", "circle"],
-];
-
 function allBoards(): Board[] {
   const boards: Board[] = [];
   for (const left of SOLIDS) {
@@ -41,7 +33,7 @@ function allBoards(): Board[] {
           SOLID_SHAPES[middle],
           SOLID_SHAPES[right],
         ];
-        if (isValidPuzzle({ inside: ORDERS[0] ?? SHAPES, outside })) {
+        if (isValidPuzzle({ inside: SHAPE_ORDERS[0] ?? SHAPES, outside })) {
           boards.push(outside);
         }
       }
@@ -82,7 +74,7 @@ describe("dissection solver", () => {
     const boards = allBoards();
     expect(boards).toHaveLength(21);
     let checked = 0;
-    for (const inside of ORDERS) {
+    for (const inside of SHAPE_ORDERS) {
       for (const outside of boards) {
         const original = JSON.stringify(outside);
         const swaps = solve({ inside, outside });

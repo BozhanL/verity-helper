@@ -13,6 +13,8 @@ import {
 } from "../lib/repository";
 import { SHAPES, type Shape } from "../lib/verity";
 import { CONTROL_PROPS } from "./controlProps";
+import PanelHeading from "./PanelHeading";
+import ResetButton from "./ResetButton";
 import ShapeIcon from "./ShapeIcon";
 import ShapePicker from "./ShapePicker";
 import ToolReadiness from "./ToolReadiness";
@@ -253,22 +255,13 @@ export default function RepositoryHelper({
         <ToolReadiness locale={locale} />
       </div>
       <section className="panel" aria-labelledby="repository-setup-heading">
-        <div className="panel-heading">
-          <div>
-            <span className="panel-number">01</span>
-            <h2 id="repository-setup-heading">{text.setup}</h2>
-          </div>
-          <button
-            {...CONTROL_PROPS}
-            className="text-button"
-            type="button"
-            disabled={!hydrated}
-            onClick={reset}
-            aria-label={messages.reset}
-          >
-            {messages.resetShort}
-          </button>
-        </div>
+        <PanelHeading
+          number="01"
+          title={text.setup}
+          titleId="repository-setup-heading"
+        >
+          <ResetButton locale={locale} disabled={!hydrated} onClick={reset} />
+        </PanelHeading>
         <div className="calculator-inputs">
           <NumberPicker
             legend={text.startPlate}
@@ -312,12 +305,11 @@ export default function RepositoryHelper({
         id="repository-callouts"
         aria-labelledby="conductors-heading"
       >
-        <div className="panel-heading">
-          <div>
-            <span className="panel-number">02</span>
-            <h2 id="conductors-heading">{text.conductors}</h2>
-          </div>
-        </div>
+        <PanelHeading
+          number="02"
+          title={text.conductors}
+          titleId="conductors-heading"
+        />
         <p className="helper-note">{text.calloutsHint}</p>
         <ConductorInputs
           locale={locale}
@@ -339,12 +331,7 @@ export default function RepositoryHelper({
       </section>
       <div className="repository-closing">
         <section className="panel" aria-labelledby="held-heading">
-          <div className="panel-heading">
-            <div>
-              <span className="panel-number">03</span>
-              <h2 id="held-heading">{text.held}</h2>
-            </div>
-          </div>
+          <PanelHeading number="03" title={text.held} titleId="held-heading" />
           <ShapePicker
             legend={text.held}
             choices={SHAPES}
@@ -361,12 +348,11 @@ export default function RepositoryHelper({
           aria-labelledby="closing-heading"
           aria-live="polite"
         >
-          <div className="panel-heading">
-            <div>
-              <span className="panel-number">04</span>
-              <h2 id="closing-heading">{text.closing}</h2>
-            </div>
-          </div>
+          <PanelHeading
+            number="04"
+            title={text.closing}
+            titleId="closing-heading"
+          />
           <ClosingGuidance
             locale={locale}
             start={start}

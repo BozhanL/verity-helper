@@ -1,5 +1,5 @@
 import { describeExcise, getMessages } from "../../src/i18n/messages";
-import type { Swap } from "../../src/lib/verity";
+import { completeExercise, prepareFixedExercise } from "./exercise-helpers";
 import { expect, test } from "./fixtures";
 import { choose, openTool } from "./helpers";
 
@@ -11,11 +11,7 @@ for (const locale of ["en", "zh"] as const) {
       page,
     }, testInfo) => {
       const messages = getMessages(locale);
-      await page.addInitScript((value) => {
-        localStorage.setItem("verity-theme", value);
-        Math.random = (): number => 0;
-      }, theme);
-      await page.clock.install({ time: new Date("2026-01-01T00:00:00Z") });
+      await prepareFixedExercise(page, theme);
       await openTool(page, (locale === "zh" ? "zh/" : "") + "verity/exercise/");
       const timed = page.getByRole("radio", {
         name: messages.practiceModes.timed,
@@ -58,35 +54,7 @@ for (const locale of ["en", "zh"] as const) {
       await page
         .getByRole("button", { name: messages.cancel, exact: true })
         .tap();
-      const swaps: readonly Swap[] = [
-        [
-          { statue: 0, shape: "circle" },
-          { statue: 1, shape: "triangle" },
-        ],
-        [
-          { statue: 0, shape: "circle" },
-          { statue: 2, shape: "square" },
-        ],
-        [
-          { statue: 1, shape: "triangle" },
-          { statue: 2, shape: "square" },
-        ],
-      ];
-      for (const swap of swaps) {
-        for (const selection of swap) {
-          await choose(
-            page,
-            messages.currentShape,
-            messages.shapes[selection.shape],
-          );
-          await page
-            .getByRole("button", {
-              name: describeExcise(locale, selection),
-              exact: true,
-            })
-            .tap();
-        }
-      }
+      await completeExercise(page, locale);
       await expect(
         page.getByRole("heading", { name: messages.won }),
       ).toBeVisible();

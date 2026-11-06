@@ -6,6 +6,7 @@ import {
   chooseRepository,
   chooseSelf,
   openTool,
+  setStoredTheme,
 } from "./helpers";
 
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
@@ -18,9 +19,7 @@ for (const locale of ["en", "zh"] as const) {
     test(`${locale} ${theme}: Repository callouts, resonance, and closing fit together`, async ({
       page,
     }, testInfo) => {
-      await page.addInitScript((value) => {
-        localStorage.setItem("verity-theme", value);
-      }, theme);
+      await setStoredTheme(page, theme);
       await openTool(page, prefix + "repository/");
       await chooseRepository(page, locale);
       await page.locator("#repository-callouts").evaluate((element) => {

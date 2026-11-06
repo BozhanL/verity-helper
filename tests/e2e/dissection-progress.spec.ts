@@ -1,6 +1,6 @@
 import { getMessages } from "../../src/i18n/messages";
 import { expect, test } from "./fixtures";
-import { choose, chooseInside, openTool } from "./helpers";
+import { choose, chooseInside, openTool, setStoredTheme } from "./helpers";
 
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 
@@ -11,9 +11,7 @@ for (const locale of ["en", "zh"] as const) {
     }, testInfo) => {
       const messages = getMessages(locale);
       const route = (locale === "zh" ? "zh/" : "") + "verity/";
-      await page.addInitScript((value) => {
-        localStorage.setItem("verity-theme", value);
-      }, theme);
+      await setStoredTheme(page, theme);
       await openTool(page, route);
       const left = messages.positions[0] + " · " + messages.outside;
       const middle = messages.positions[1] + " · " + messages.outside;

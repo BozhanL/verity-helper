@@ -17,6 +17,8 @@ import {
 import { SolidDisplay } from "./Board";
 import { CONTROL_PROPS } from "./controlProps";
 import InsideInputs from "./InsideInputs";
+import PanelHeading from "./PanelHeading";
+import ResetButton from "./ResetButton";
 import ShapeIcon from "./ShapeIcon";
 import ShapePicker from "./ShapePicker";
 import ToolReadiness from "./ToolReadiness";
@@ -208,8 +210,7 @@ export default function SoloCalculator({
   const [first, setFirst] = useState<Shape | null>(null);
   const [second, setSecond] = useState<Shape | null>(null);
   const [phase, setPhase] = useState<SoloPhase>("opening");
-  const inside =
-    left !== null && middle !== null ? inferInside(left, middle) : null;
+  const inside = inferInside(left, middle);
   function resetInside(): void {
     setLeft(null);
     setMiddle(null);
@@ -232,22 +233,14 @@ export default function SoloCalculator({
       <ToolReadiness locale={locale} />
       <div className="calculator-inputs" id="solo-inputs" tabIndex={-1}>
         <section className="panel">
-          <div className="panel-heading">
-            <div>
-              <span className="panel-number">01</span>
-              <h2>{messages.inside}</h2>
-            </div>
-            <button
-              {...CONTROL_PROPS}
-              className="text-button"
-              type="button"
-              aria-label={messages.resetInside}
+          <PanelHeading number="01" title={messages.inside}>
+            <ResetButton
+              locale={locale}
+              label={messages.resetInside}
               disabled={!hydrated}
               onClick={resetInside}
-            >
-              {messages.resetShort}
-            </button>
-          </div>
+            />
+          </PanelHeading>
           <InsideInputs
             locale={locale}
             left={left}
@@ -294,22 +287,14 @@ export default function SoloCalculator({
           </fieldset>
         </section>
         <section className="panel">
-          <div className="panel-heading">
-            <div>
-              <span className="panel-number">02</span>
-              <h2>{messages.soloRoomShapes}</h2>
-            </div>
-            <button
-              {...CONTROL_PROPS}
-              className="text-button"
-              type="button"
-              aria-label={messages.soloResetRoom}
+          <PanelHeading number="02" title={messages.soloRoomShapes}>
+            <ResetButton
+              locale={locale}
+              label={messages.soloResetRoom}
               disabled={!hydrated}
               onClick={resetRoom}
-            >
-              {messages.resetShort}
-            </button>
-          </div>
+            />
+          </PanelHeading>
           <fieldset
             className="shape-picker solo-phase"
             aria-label={messages.soloPhase}
@@ -388,27 +373,22 @@ export default function SoloCalculator({
         aria-atomic="false"
         aria-labelledby="solo-distribution-heading"
       >
-        <div className="panel-heading">
-          <div>
-            <span className="panel-number">03</span>
-            <h2 id="solo-distribution-heading">{messages.soloDistribution}</h2>
-          </div>
+        <PanelHeading
+          number="03"
+          title={messages.soloDistribution}
+          titleId="solo-distribution-heading"
+        >
           <div className="result-actions">
             <a className="text-button" href="#solo-inputs">
               {messages.editInputs}
             </a>
-            <button
-              {...CONTROL_PROPS}
-              className="text-button"
-              type="button"
-              aria-label={messages.reset}
+            <ResetButton
+              locale={locale}
               disabled={!hydrated}
               onClick={resetAll}
-            >
-              {messages.resetShort}
-            </button>
+            />
           </div>
-        </div>
+        </PanelHeading>
         <SoloResult
           locale={locale}
           inside={inside}
