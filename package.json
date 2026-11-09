@@ -45,7 +45,7 @@
     "@astrojs/react": "7.1.2",
     "@radix-ui/react-radio-group": "1.5.1",
     "@tailwindcss/vite": "4.3.3",
-    "astro": "7.4.4",
+    "astro": "7.4.5",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "tailwindcss": "4.3.3"
@@ -60,7 +60,7 @@
     "@types/node": "24.19.2",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "@vitest/coverage-v8": "5.0.5",
+    "@vitest/coverage-v8": "5.1.0",
     "commitizen": "4.3.2",
     "concurrently": "10.0.6",
     "cross-env": "10.1.0",
@@ -79,6 +79,6 @@
     "prettier-plugin-organize-imports": "4.3.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.1",
-    "vitest": "5.0.5"
+    "vitest": "5.1.0"
   }
 }
