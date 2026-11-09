@@ -5,7 +5,9 @@
 The optional `.devcontainer/` environment installs Node.js 26,
 a compatible npm 11,
 GitHub CLI, editor extensions (including the Codex VS Code extension), and the
-project's Playwright browsers. The standalone Codex CLI is not installed. Keep
+project's Playwright browsers. Commitizen comes from the project's locked npm
+dependencies; do not install a second global copy. The standalone Codex CLI is
+not installed. Keep
 its tool versions aligned with `package.json` and its setup instructions in both
 README files. Container creation must not sign in, embed credentials, or mount
 host authentication directories; authentication remains a manual user step.
@@ -217,6 +219,9 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
   scripts delayed.
 - Add shared styles to `@layer components` in `src/styles/global.css` so the
   Tailwind lint configuration recognizes them.
+- Use `eslint-plugin-better-tailwindcss` for Tailwind class ordering and
+  correctness. `npm run format:fix` runs ESLint fixes before Prettier so both
+  Astro and React classes use one sorter; do not add a second Tailwind formatter.
 - Update relevant Vitest tests and both README files when behavior changes.
 
 ## Documentation

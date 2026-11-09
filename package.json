@@ -19,7 +19,7 @@
     "check-all": "npm run check-all:par -- -m 1",
     "check": "astro check --minimumFailingSeverity hint",
     "format": "prettier --check .",
-    "format:fix": "prettier --write .",
+    "format:fix": "npm run lint:fix && prettier --write .",
     "lint": "eslint --max-warnings 0 .",
     "lint:fix": "eslint --max-warnings 0 --fix .",
     "test": "vitest run",
@@ -48,7 +48,6 @@
     "astro": "7.4.4",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "remeda": "2.57.1",
     "tailwindcss": "4.3.3"
   },
   "devDependencies": {
@@ -78,7 +77,6 @@
     "prettier": "3.9.10",
     "prettier-plugin-astro": "1.1.2",
     "prettier-plugin-organize-imports": "4.3.0",
-    "prettier-plugin-tailwindcss": "0.8.1",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.1",
     "vitest": "5.0.5"

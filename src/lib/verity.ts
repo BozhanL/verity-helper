@@ -1,5 +1,3 @@
-import { countBy, shuffle, sortBy } from "remeda";
-
 export const SHAPES = ["circle", "triangle", "square"] as const;
 export const SOLIDS = [
   "sphere",
@@ -65,10 +63,10 @@ export function inferInside(
 export function inferOutside(left: Solid, middle: Solid): Board | null {
   const first = SOLID_SHAPES[left];
   const second = SOLID_SHAPES[middle];
-  const counts = countBy([...first, ...second], (shape) => shape);
+  const shapes = [...first, ...second];
   const remaining: Shape[] = [];
   for (const shape of SHAPES) {
-    const count = counts[shape] ?? 0;
+    const count = shapes.filter((candidate) => candidate === shape).length;
     if (count > 2) {
       return null;
     }
@@ -83,7 +81,9 @@ export function inferOutside(left: Solid, middle: Solid): Board | null {
 }
 
 function pairKey(pair: Pair): string {
-  return sortBy(pair, (shape) => SHAPES.indexOf(shape)).join(",");
+  return [...pair]
+    .sort((left, right) => SHAPES.indexOf(left) - SHAPES.indexOf(right))
+    .join(",");
 }
 
 function boardKey(board: Board): string {
@@ -108,13 +108,15 @@ function isValidInside(inside: Triple<Shape>): boolean {
 }
 
 export function isValidPuzzle(puzzle: Puzzle): boolean {
-  const counts = countBy(puzzle.outside.flat(), (shape) => shape);
+  const shapes = puzzle.outside.flat();
   return (
     isValidInside(puzzle.inside) &&
     puzzle.outside.every((pair) =>
       pair.every((shape) => SHAPES.includes(shape)),
     ) &&
-    SHAPES.every((shape) => counts[shape] === 2)
+    SHAPES.every(
+      (shape) => shapes.filter((candidate) => candidate === shape).length === 2,
+    )
   );
 }
 
@@ -204,10 +206,22 @@ export function solve(puzzle: Puzzle): readonly Swap[] | null {
   return null;
 }
 
+/** Fisher–Yates shuffle of a fresh tuple, preserving all three shapes. */
+function shuffleShapes(): [Shape, Shape, Shape] {
+  const shapes: [Shape, Shape, Shape] = [...SHAPES];
+  for (const index of STATUES) {
+    const remaining = SHAPES.length - index;
+    // eslint-disable-next-line sonarjs/pseudo-random -- Practice variety needs no cryptographic randomness.
+    const other = (index + Math.floor(Math.random() * remaining)) as Statue;
+    [shapes[index], shapes[other]] = [shapes[other], shapes[index]];
+  }
+  return shapes;
+}
+
 /** Every starting statue contains its own inside symbol, just like the exercise reference. */
 export function generatePuzzle(): Puzzle {
-  const inside = shuffle(SHAPES);
-  const extras = shuffle(SHAPES);
+  const inside = shuffleShapes();
+  const extras = shuffleShapes();
   return {
     inside,
     outside: [
