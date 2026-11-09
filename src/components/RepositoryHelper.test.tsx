@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import {
+  act,
   cleanup,
   fireEvent,
   render,
@@ -39,6 +40,34 @@ function callout(
     messages.repositoryTool.resonances[shape],
   );
 }
+
+it("rejects duplicate callouts queued before disabled choices can update", () => {
+  render(<RepositoryHelper locale="en" />);
+  setup();
+  act(() => {
+    callout(0, "circle");
+    callout(1, "circle");
+  });
+  const text = getMessages("en").repositoryTool;
+  expect(
+    within(
+      screen.getByRole("radiogroup", { name: "Middle · " + text.conductor }),
+    ).queryAllByRole("radio", { checked: true }),
+  ).toHaveLength(0);
+  callout(1, "triangle");
+  expect(
+    screen.getByRole("img", {
+      name:
+        "Right · " +
+        text.conductor +
+        ": " +
+        text.resonances.square +
+        " (" +
+        getMessages("en").inferred +
+        ")",
+    }),
+  ).toBeDefined();
+});
 
 it("server-renders disabled inputs and exposes visible readiness after hydration", () => {
   const html = renderToString(<RepositoryHelper locale="en" />);

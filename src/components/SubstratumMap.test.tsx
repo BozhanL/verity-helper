@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import {
+  act,
   cleanup,
   fireEvent,
   render,
@@ -12,6 +13,25 @@ import { MARKERS, type Marker } from "../lib/substratum";
 import SubstratumMap from "./SubstratumMap";
 
 afterEach(cleanup);
+
+it("places a marker selected in the same batch using the latest selection", () => {
+  const text = getMessages("en").substratumTool;
+  render(<SubstratumMap locale="en" />);
+  act(() => {
+    fireEvent.click(screen.getByRole("radio", { name: text.markers.senderA }));
+    fireEvent.click(screen.getByRole("radio", { name: text.rooms.vase }));
+  });
+  expect(
+    within(screen.getByRole("radio", { name: text.markers.senderA })).getByText(
+      text.rooms.vase,
+    ),
+  ).toBeDefined();
+  expect(
+    within(screen.getByRole("radio", { name: text.markers.you })).getByText(
+      text.unset,
+    ),
+  ).toBeDefined();
+});
 
 it.each(["en", "zh"] as const)(
   "%s: places, moves and clears roles without losing other markers",

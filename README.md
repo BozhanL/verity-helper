@@ -208,6 +208,12 @@ landscape. Restart remains available as a secondary action during a round.
 
 ## Local development
 
+The [app state-machine map](docs/state-machines.md) documents each workflow,
+its events, reset behavior and tests. Tool transitions use typed pure reducers,
+so queued selections are checked against the latest state. This prevents
+duplicate symbol/callout inputs and keeps map placement attached to the selected
+marker even when events arrive before the controls redraw.
+
 The project uses Astro, React, TypeScript, and Tailwind CSS, with Radix for
 accessible selection controls. Install Node.js 26
 and npm 11 (version 11.20.0 or later), then run these commands from your local clone:

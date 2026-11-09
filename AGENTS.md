@@ -119,6 +119,15 @@ or the vendor-neutral `ai/` — so the branch records who wrote it.
 
 ## Project structure and UI
 
+- The application state inventory and transition/reset contracts are in
+  `docs/state-machines.md`. Keep it aligned when adding or changing state.
+  Coupled tool state belongs in typed pure reducers in `src/lib/`; validate
+  events against the current state, not only disabled UI controls. Keep derived
+  results derived, and preserve native disclosure, navigation and focus behavior.
+  Exercise controls and round state share `practiceReducer`; mode selection must
+  remain separate from the active round's mode. Include queued-event and reset
+  regressions when changing these boundaries.
+
 - Use Astro for routes and layouts, and React islands for interactive tools.
 - Reuse `PanelHeading.tsx` for numbered tool headings and `ResetButton.tsx`
   for short reset controls. Callers retain reset logic and readiness state.

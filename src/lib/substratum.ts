@@ -29,6 +29,38 @@ export function emptyMarkers(): MapMarkers {
   };
 }
 
+export interface SubstratumState {
+  readonly selected: Marker;
+  readonly markers: MapMarkers;
+}
+
+export type SubstratumAction =
+  | { type: "select"; marker: Marker }
+  | { type: "place"; room: string | null }
+  | { type: "reset" };
+
+export function createSubstratumState(): SubstratumState {
+  return { selected: "you", markers: emptyMarkers() };
+}
+
+export function substratumReducer(
+  state: SubstratumState,
+  action: SubstratumAction,
+): SubstratumState {
+  switch (action.type) {
+    case "select":
+      return state.selected === action.marker
+        ? state
+        : { ...state, selected: action.marker };
+    case "place": {
+      const markers = placeMarker(state.markers, state.selected, action.room);
+      return markers === state.markers ? state : { ...state, markers };
+    }
+    case "reset":
+      return createSubstratumState();
+  }
+}
+
 export function isMapRoom(value: string): value is MapRoom {
   return MAP_ROOMS.some((room) => room === value);
 }

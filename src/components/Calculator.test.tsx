@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import {
+  act,
   cleanup,
   fireEvent,
   render,
@@ -33,6 +34,19 @@ function selectionMark(
 }
 
 describe("calculator controls", () => {
+  it("rejects duplicate inside symbols even when clicks arrive in one batch", () => {
+    render(<Calculator locale="en" />);
+    act(() => {
+      choose("Left · Inside statues", "Circle");
+      choose("Middle · Inside statues", "Circle");
+    });
+    expect(screen.getAllByRole("radio", { checked: true })).toHaveLength(1);
+    choose("Middle · Inside statues", "Triangle");
+    choose("Left · Outside solids", "Sphere");
+    choose("Middle · Outside solids", "Pyramid");
+    expect(screen.getByText("3 swaps")).toBeDefined();
+  });
+
   it.each(["en", "zh"] as const)(
     "%s: records either selection, ignores repeated marks, and restores partial progress when undoing a shortcut",
     (locale) => {

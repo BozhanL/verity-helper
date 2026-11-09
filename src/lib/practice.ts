@@ -3,6 +3,7 @@ import {
   isSolved,
   type Excise,
   type Puzzle,
+  type Shape,
   type Swap,
 } from "./verity";
 
@@ -20,6 +21,8 @@ export const PREVIEW_PUZZLE: Puzzle = {
 };
 
 export interface PracticeState {
+  readonly selectedShape: Shape;
+  readonly nextMode: PracticeMode;
   readonly mode: PracticeMode;
   readonly initialPuzzle: Puzzle | null;
   readonly puzzle: Puzzle;
@@ -30,15 +33,19 @@ export interface PracticeState {
   readonly swaps: readonly Swap[];
 }
 
-type PracticeAction =
+export type PracticeAction =
   | { type: "start"; puzzle: Puzzle; now: number; mode?: PracticeMode }
   | { type: "retry"; now: number; mode?: PracticeMode }
   | { type: "tick"; now: number }
   | { type: "excise"; selection: Excise; now: number }
+  | { type: "select-shape"; shape: Shape }
+  | { type: "select-mode"; mode: PracticeMode }
   | { type: "cancel" };
 
 export function createPracticeState(): PracticeState {
   return {
+    selectedShape: "circle",
+    nextMode: "timed",
     mode: "timed",
     initialPuzzle: null,
     puzzle: PREVIEW_PUZZLE,
@@ -56,6 +63,8 @@ function startPractice(
   now: number,
 ): PracticeState {
   return {
+    selectedShape: "circle",
+    nextMode: mode,
     mode,
     initialPuzzle: puzzle,
     puzzle,
@@ -115,13 +124,17 @@ export function practiceReducer(
 ): PracticeState {
   switch (action.type) {
     case "start":
-      return startPractice(action.puzzle, action.mode ?? "timed", action.now);
+      return startPractice(
+        action.puzzle,
+        action.mode ?? state.nextMode,
+        action.now,
+      );
     case "retry":
       return state.initialPuzzle === null
         ? state
         : startPractice(
             state.initialPuzzle,
-            action.mode ?? state.mode,
+            action.mode ?? state.nextMode,
             action.now,
           );
     case "tick":
@@ -129,7 +142,15 @@ export function practiceReducer(
     case "excise":
       return excise(updateClock(state, action.now), action.selection);
     case "cancel":
-      return { ...state, pending: null };
+      return state.pending === null ? state : { ...state, pending: null };
+    case "select-shape":
+      return state.selectedShape === action.shape
+        ? state
+        : { ...state, selectedShape: action.shape };
+    case "select-mode":
+      return state.nextMode === action.mode
+        ? state
+        : { ...state, nextMode: action.mode };
   }
 }
 

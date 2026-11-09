@@ -1,6 +1,7 @@
 import * as RadioGroup from "@radix-ui/react-radio-group";
-import { useState, type ReactElement } from "react";
+import { useReducer, type ReactElement } from "react";
 import { getMessages, type Locale } from "../i18n/messages";
+import { createSoloState, soloReducer } from "../lib/solo";
 import {
   inferInside,
   planSoloAfterTrades,
@@ -204,28 +205,22 @@ export default function SoloCalculator({
 }: Readonly<{ locale: Locale }>): ReactElement {
   const messages = getMessages(locale);
   const hydrated = useHydrated();
-  const [left, setLeft] = useState<Shape | null>(null);
-  const [middle, setMiddle] = useState<Shape | null>(null);
-  const [self, setSelf] = useState<Statue | null>(null);
-  const [first, setFirst] = useState<Shape | null>(null);
-  const [second, setSecond] = useState<Shape | null>(null);
-  const [phase, setPhase] = useState<SoloPhase>("opening");
+  const [{ left, middle, self, first, second, phase }, dispatch] = useReducer(
+    soloReducer,
+    undefined,
+    createSoloState,
+  );
   const inside = inferInside(left, middle);
   function resetInside(): void {
-    setLeft(null);
-    setMiddle(null);
-    setSelf(null);
+    dispatch({ type: "reset-inside" });
   }
 
   function resetRoom(): void {
-    setFirst(null);
-    setSecond(null);
+    dispatch({ type: "reset-room" });
   }
 
   function resetAll(): void {
-    resetInside();
-    resetRoom();
-    setPhase("opening");
+    dispatch({ type: "reset" });
   }
 
   return (
@@ -245,8 +240,12 @@ export default function SoloCalculator({
             locale={locale}
             left={left}
             middle={middle}
-            onLeftChange={setLeft}
-            onMiddleChange={setMiddle}
+            onLeftChange={(shape) => {
+              dispatch({ type: "inside", position: "left", shape });
+            }}
+            onMiddleChange={(shape) => {
+              dispatch({ type: "inside", position: "middle", shape });
+            }}
           />
           <fieldset
             className="shape-picker solo-identity"
@@ -263,7 +262,7 @@ export default function SoloCalculator({
                   (candidate) => String(candidate) === value,
                 );
                 if (statue !== undefined) {
-                  setSelf(statue);
+                  dispatch({ type: "self", statue });
                 }
               }}
             >
@@ -311,8 +310,7 @@ export default function SoloCalculator({
                   (candidate) => candidate === value,
                 );
                 if (next !== undefined) {
-                  setPhase(next);
-                  resetRoom();
+                  dispatch({ type: "phase", phase: next });
                 }
               }}
             >
@@ -345,14 +343,18 @@ export default function SoloCalculator({
               choices={SHAPES}
               value={first}
               locale={locale}
-              onChange={setFirst}
+              onChange={(shape) => {
+                dispatch({ type: "room-shape", position: "first", shape });
+              }}
             />
             <ShapePicker
               legend={messages.soloSecondShape}
               choices={SHAPES}
               value={second}
               locale={locale}
-              onChange={setSecond}
+              onChange={(shape) => {
+                dispatch({ type: "room-shape", position: "second", shape });
+              }}
             />
           </div>
         </section>

@@ -1,11 +1,13 @@
 import * as RadioGroup from "@radix-ui/react-radio-group";
-import { useState, type ReactElement } from "react";
+import { useReducer, type ReactElement } from "react";
 import { getMessages, type Locale } from "../i18n/messages";
 import {
+  createRepositoryState,
   getClosureTarget,
   getEndPlate,
   inferConductors,
   PLATES,
+  repositoryReducer,
   ROOMS,
   type ConductorCallouts,
   type Plate,
@@ -214,38 +216,24 @@ export default function RepositoryHelper({
   const text = getMessages(locale).repositoryTool;
   const messages = getMessages(locale);
   const hydrated = useHydrated();
-  const [start, setStart] = useState<Plate | null>(null);
-  const [room, setRoom] = useState<Room | null>(null);
-  const [callouts, setCallouts] = useState<ConductorCallouts>([
-    null,
-    null,
-    null,
-  ]);
-  const [held, setHeld] = useState<Shape | null>(null);
+  const [{ start, room, callouts, held }, dispatch] = useReducer(
+    repositoryReducer,
+    undefined,
+    createRepositoryState,
+  );
   const setupReady = start !== null && room !== null;
   const end = setupReady ? getEndPlate(room, start) : null;
 
   function changeRoom(next: Room): void {
-    if (next !== room) {
-      setRoom(next);
-      setCallouts([null, null, null]);
-      setHeld(null);
-    }
+    dispatch({ type: "room", room: next });
   }
 
   function changeCallout(plate: Plate, shape: Shape | null): void {
-    setCallouts((previous) => [
-      plate === 0 ? shape : previous[0],
-      plate === 1 ? shape : previous[1],
-      plate === 2 ? shape : previous[2],
-    ]);
+    dispatch({ type: "callout", plate, shape });
   }
 
   function reset(): void {
-    setStart(null);
-    setRoom(null);
-    setCallouts([null, null, null]);
-    setHeld(null);
+    dispatch({ type: "reset" });
   }
 
   return (
@@ -271,7 +259,9 @@ export default function RepositoryHelper({
               value: plate,
               label: messages.positions[plate],
             }))}
-            onChange={setStart}
+            onChange={(plate) => {
+              dispatch({ type: "start", plate });
+            }}
           />
           <NumberPicker
             legend={text.room}
@@ -339,7 +329,9 @@ export default function RepositoryHelper({
             locale={locale}
             accessibleNames={text.resonances}
             disabled={!setupReady}
-            onChange={setHeld}
+            onChange={(shape) => {
+              dispatch({ type: "held", shape });
+            }}
           />
           <p className="helper-note">{text.heldHint}</p>
         </section>
