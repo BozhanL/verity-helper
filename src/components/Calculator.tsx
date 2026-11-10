@@ -1,5 +1,6 @@
-import { useState, type ReactElement } from "react";
+import { useReducer, type ReactElement } from "react";
 import { getMessages, type Locale } from "../i18n/messages";
+import { calculatorReducer, createCalculatorState } from "../lib/calculator";
 import {
   inferInside,
   inferOutside,
@@ -91,10 +92,8 @@ export default function Calculator({
 }: Readonly<{ locale: Locale }>): ReactElement {
   const messages = getMessages(locale);
   const hydrated = useHydrated();
-  const [leftShape, setLeftShape] = useState<Shape | null>(null);
-  const [middleShape, setMiddleShape] = useState<Shape | null>(null);
-  const [leftSolid, setLeftSolid] = useState<Solid | null>(null);
-  const [middleSolid, setMiddleSolid] = useState<Solid | null>(null);
+  const [{ leftShape, middleShape, leftSolid, middleSolid }, dispatch] =
+    useReducer(calculatorReducer, undefined, createCalculatorState);
   const inside = inferInside(leftShape, middleShape);
   const outside =
     leftSolid !== null && middleSolid !== null
@@ -107,13 +106,11 @@ export default function Calculator({
       : messages.chooseTwo;
 
   function resetInside(): void {
-    setLeftShape(null);
-    setMiddleShape(null);
+    dispatch({ type: "reset-inside" });
   }
 
   function resetOutside(): void {
-    setLeftSolid(null);
-    setMiddleSolid(null);
+    dispatch({ type: "reset-outside" });
   }
 
   return (
@@ -133,8 +130,12 @@ export default function Calculator({
             locale={locale}
             left={leftShape}
             middle={middleShape}
-            onLeftChange={setLeftShape}
-            onMiddleChange={setMiddleShape}
+            onLeftChange={(shape) => {
+              dispatch({ type: "inside", position: "leftShape", shape });
+            }}
+            onMiddleChange={(shape) => {
+              dispatch({ type: "inside", position: "middleShape", shape });
+            }}
           />
         </section>
         <section
@@ -165,7 +166,9 @@ export default function Calculator({
               solids
               value={leftSolid}
               locale={locale}
-              onChange={setLeftSolid}
+              onChange={(solid) => {
+                dispatch({ type: "outside", position: "leftSolid", solid });
+              }}
             />
             <ShapePicker
               legend={messages.positions[1] + " · " + messages.outside}
@@ -174,7 +177,9 @@ export default function Calculator({
               solids
               value={middleSolid}
               locale={locale}
-              onChange={setMiddleSolid}
+              onChange={(solid) => {
+                dispatch({ type: "outside", position: "middleSolid", solid });
+              }}
             />
             <div className="inferred-statue">
               <span className="position-label">{messages.positions[2]}</span>
@@ -220,8 +225,7 @@ export default function Calculator({
               locale={locale}
               disabled={!hydrated}
               onClick={() => {
-                resetInside();
-                resetOutside();
+                dispatch({ type: "reset" });
               }}
             />
           </div>

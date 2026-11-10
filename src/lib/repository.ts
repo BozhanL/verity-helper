@@ -6,6 +6,81 @@ export type Plate = (typeof PLATES)[number];
 export type Room = (typeof ROOMS)[number];
 export type ConductorCallouts = Triple<Shape | null>;
 
+export interface RepositoryState {
+  readonly start: Plate | null;
+  readonly room: Room | null;
+  readonly callouts: ConductorCallouts;
+  readonly held: Shape | null;
+}
+
+export type RepositoryAction =
+  | { type: "start"; plate: Plate }
+  | { type: "room"; room: Room }
+  | { type: "callout"; plate: Plate; shape: Shape | null }
+  | { type: "held"; shape: Shape }
+  | { type: "reset" };
+
+export function createRepositoryState(): RepositoryState {
+  return { start: null, room: null, callouts: [null, null, null], held: null };
+}
+
+function changeCallout(
+  state: RepositoryState,
+  plate: Plate,
+  shape: Shape | null,
+): RepositoryState {
+  const { callouts } = state;
+  if (
+    state.start === null ||
+    state.room === null ||
+    callouts[plate] === shape ||
+    (shape !== null &&
+      (callouts.some((other, index) => index !== plate && other === shape) ||
+        (callouts[plate] === null && inferConductors(callouts) !== null)))
+  ) {
+    return state;
+  }
+  return {
+    ...state,
+    callouts: [
+      plate === 0 ? shape : callouts[0],
+      plate === 1 ? shape : callouts[1],
+      plate === 2 ? shape : callouts[2],
+    ],
+  };
+}
+
+export function repositoryReducer(
+  state: RepositoryState,
+  action: RepositoryAction,
+): RepositoryState {
+  switch (action.type) {
+    case "start":
+      return state.start === action.plate
+        ? state
+        : { ...state, start: action.plate };
+    case "room":
+      return state.room === action.room
+        ? state
+        : {
+            ...state,
+            room: action.room,
+            callouts: [null, null, null],
+            held: null,
+          };
+    case "callout":
+      return changeCallout(state, action.plate, action.shape);
+    case "held":
+      return state.start === null ||
+        state.room === null ||
+        state.held === action.shape
+        ? state
+        : { ...state, held: action.shape };
+    case "reset":
+      return createRepositoryState();
+  }
+}
+
 // Start -> end, viewed from the entrance toward the exit.
 // https://www.destructoid.com/destiny-2-salvations-edge-third-encounter-raid-guide-repository/
 const CONNECTIONS: Record<Room, Triple<Plate>> = {

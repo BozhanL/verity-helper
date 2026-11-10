@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   canPlaceMarker,
+  createSubstratumState,
   DOOR_LINKS,
   emptyMarkers,
   ENDPOINTS,
@@ -8,9 +9,33 @@ import {
   isMarker,
   MAP_ROOMS,
   placeMarker,
+  substratumReducer,
 } from "./substratum";
 
 describe("Substratum room markers", () => {
+  it("applies queued placement to the latest selection, guards collisions, and resets selection with markers", () => {
+    const initial = createSubstratumState();
+    const selected = substratumReducer(initial, {
+      type: "select",
+      marker: "senderA",
+    });
+    const placed = substratumReducer(selected, { type: "place", room: "vase" });
+    expect(placed.markers).toEqual({ ...initial.markers, senderA: "vase" });
+    const other = substratumReducer(placed, {
+      type: "select",
+      marker: "closerB",
+    });
+    for (const room of ["vase", "main", "unknown"]) {
+      expect(substratumReducer(other, { type: "place", room })).toBe(other);
+    }
+    const moved = substratumReducer(other, { type: "place", room: "glyph" });
+    expect(substratumReducer(moved, { type: "place", room: null })).toEqual(
+      other,
+    );
+    expect(substratumReducer(moved, { type: "reset" })).toEqual(initial);
+    expect(placed.markers.senderA).toBe("vase");
+  });
+
   it("keeps both pairs independent and lets You share any role's room", () => {
     const start = emptyMarkers();
     const senderA = placeMarker(start, "senderA", "vase");

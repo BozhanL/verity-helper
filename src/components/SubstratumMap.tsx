@@ -1,17 +1,16 @@
 import * as RadioGroup from "@radix-ui/react-radio-group";
-import { useState, type ReactElement } from "react";
+import { useReducer, type ReactElement } from "react";
 import { getMessages, type Locale } from "../i18n/messages";
 import {
   canPlaceMarker,
+  createSubstratumState,
   DOOR_LINKS,
-  emptyMarkers,
   isMarker,
   MAP_ROOMS,
   MARKERS,
-  placeMarker,
   ROOM_LAYOUT,
+  substratumReducer,
   type MapRoom,
-  type Marker,
 } from "../lib/substratum";
 import { CONTROL_PROPS } from "./controlProps";
 import ToolReadiness from "./ToolReadiness";
@@ -45,8 +44,11 @@ export default function SubstratumMap({
 }: Readonly<{ locale: Locale }>): ReactElement {
   const text = getMessages(locale).substratumTool;
   const hydrated = useHydrated();
-  const [selected, setSelected] = useState<Marker>("you");
-  const [markers, setMarkers] = useState(emptyMarkers);
+  const [{ selected, markers }, dispatch] = useReducer(
+    substratumReducer,
+    undefined,
+    createSubstratumState,
+  );
   const hasMarkers = MARKERS.some((marker) => markers[marker] !== null);
   const summary = MARKERS.map(
     (marker) =>
@@ -63,7 +65,7 @@ export default function SubstratumMap({
         disabled={!hydrated}
         onValueChange={(value) => {
           if (isMarker(value)) {
-            setSelected(value);
+            dispatch({ type: "select", marker: value });
           }
         }}
       >
@@ -133,7 +135,7 @@ export default function SubstratumMap({
             value={markers[selected] ?? ""}
             disabled={!hydrated}
             onValueChange={(room) => {
-              setMarkers((previous) => placeMarker(previous, selected, room));
+              dispatch({ type: "place", room });
             }}
           >
             {MAP_ROOMS.map((room) => {
@@ -190,7 +192,7 @@ export default function SubstratumMap({
             className="button"
             disabled={!hydrated || markers[selected] === null}
             onClick={() => {
-              setMarkers((previous) => placeMarker(previous, selected, null));
+              dispatch({ type: "place", room: null });
             }}
           >
             {text.clear}
@@ -201,8 +203,7 @@ export default function SubstratumMap({
             className="button"
             disabled={!hydrated || !hasMarkers}
             onClick={() => {
-              setMarkers(emptyMarkers());
-              setSelected("you");
+              dispatch({ type: "reset" });
             }}
           >
             {text.reset}

@@ -1,5 +1,5 @@
 import * as RadioGroup from "@radix-ui/react-radio-group";
-import { useEffect, useReducer, useState, type ReactElement } from "react";
+import { useEffect, useReducer, type ReactElement } from "react";
 import { describeExcise, getMessages, type Locale } from "../i18n/messages";
 import {
   canExcise,
@@ -8,10 +8,9 @@ import {
   PRACTICE_MODES,
   practiceReducer,
   ROUND_SECONDS,
-  type PracticeMode,
   type PracticeState,
 } from "../lib/practice";
-import { generatePuzzle, SHAPES, STATUES, type Shape } from "../lib/verity";
+import { generatePuzzle, SHAPES, STATUES } from "../lib/verity";
 import { InsideBoard, SolidDisplay } from "./Board";
 import { CONTROL_PROPS } from "./controlProps";
 import PanelHeading from "./PanelHeading";
@@ -56,8 +55,7 @@ export default function Exercise({
     undefined,
     createPracticeState,
   );
-  const [selectedShape, setSelectedShape] = useState<Shape>("circle");
-  const [nextMode, setNextMode] = useState<PracticeMode>("timed");
+  const { selectedShape, nextMode } = state;
   const running = state.phase === "running";
   const timed = (state.phase === "ready" ? nextMode : state.mode) === "timed";
 
@@ -74,18 +72,15 @@ export default function Exercise({
   }, [running, timed]);
 
   function startRound(): void {
-    setSelectedShape("circle");
     dispatch({
       type: "start",
       puzzle: generatePuzzle(),
       now: Date.now(),
-      mode: nextMode,
     });
   }
 
   function retryRound(): void {
-    setSelectedShape("circle");
-    dispatch({ type: "retry", now: Date.now(), mode: nextMode });
+    dispatch({ type: "retry", now: Date.now() });
   }
 
   return (
@@ -108,7 +103,7 @@ export default function Exercise({
                 (candidate) => candidate === value,
               );
               if (mode !== undefined) {
-                setNextMode(mode);
+                dispatch({ type: "select-mode", mode });
               }
             }}
           >
@@ -190,7 +185,9 @@ export default function Exercise({
             choices={SHAPES}
             value={selectedShape}
             locale={locale}
-            onChange={setSelectedShape}
+            onChange={(shape) => {
+              dispatch({ type: "select-shape", shape });
+            }}
           />
           {state.pending !== null && (
             <div className="selection-feedback" role="status">

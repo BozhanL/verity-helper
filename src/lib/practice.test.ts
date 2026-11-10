@@ -22,6 +22,56 @@ function start(): PracticeState {
 }
 
 describe("practice round", () => {
+  it("stages mode changes without disturbing a pending cut and resets controls atomically on retry", () => {
+    const pending = practiceReducer(start(), {
+      type: "excise",
+      selection: FIRST,
+      now: 1000,
+    });
+    const selected = practiceReducer(pending, {
+      type: "select-shape",
+      shape: "square",
+    });
+    const staged = practiceReducer(selected, {
+      type: "select-mode",
+      mode: "untimed",
+    });
+    expect(staged).toEqual({
+      ...pending,
+      selectedShape: "square",
+      nextMode: "untimed",
+    });
+    expect(
+      practiceReducer(staged, { type: "select-mode", mode: "untimed" }),
+    ).toBe(staged);
+    const retried = practiceReducer(staged, { type: "retry", now: 5000 });
+    expect(retried).toMatchObject({
+      selectedShape: "circle",
+      nextMode: "untimed",
+      mode: "untimed",
+      deadline: null,
+      pending: null,
+      swaps: [],
+      puzzle: PREVIEW_PUZZLE,
+    });
+    const timed = practiceReducer(retried, {
+      type: "select-mode",
+      mode: "timed",
+    });
+    expect(
+      practiceReducer(timed, {
+        type: "start",
+        now: 7000,
+        puzzle: PREVIEW_PUZZLE,
+      }),
+    ).toMatchObject({
+      mode: "timed",
+      deadline: 217000,
+      selectedShape: "circle",
+    });
+    expect(practiceReducer(retried, { type: "cancel" })).toBe(retried);
+  });
+
   it("ignores retry before starting and restores the initial puzzle after swaps and a pending cut", () => {
     const ready = createPracticeState();
     expect(practiceReducer(ready, { type: "retry", now: 1000 })).toBe(ready);

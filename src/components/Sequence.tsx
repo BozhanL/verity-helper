@@ -1,5 +1,11 @@
-import { useState, type ReactElement } from "react";
+import { useReducer, type ReactElement } from "react";
 import { describeExcise, getMessages, type Locale } from "../i18n/messages";
+import {
+  createSequenceState,
+  currentProgress,
+  sequenceReducer,
+  type Progress,
+} from "../lib/sequence";
 import {
   applySwap,
   STATUES,
@@ -12,13 +18,6 @@ import { MiniBoard } from "./Board";
 import { CONTROL_PROPS } from "./controlProps";
 import ShapeIcon from "./ShapeIcon";
 import { useHydrated } from "./useHydrated";
-
-interface Progress {
-  readonly completed: number;
-  readonly selections: readonly [boolean, boolean];
-}
-
-const EMPTY_PROGRESS: Progress = { completed: 0, selections: [false, false] };
 
 interface SelectionControls {
   readonly step: number;
@@ -163,29 +162,15 @@ export default function Sequence({
 }>): ReactElement {
   const messages = getMessages(locale);
   const hydrated = useHydrated();
-  const [history, setHistory] = useState<readonly Progress[]>([EMPTY_PROGRESS]);
-  const { completed, selections } = history.at(-1) ?? EMPTY_PROGRESS;
+  const [state, dispatch] = useReducer(
+    sequenceReducer,
+    swaps.length,
+    createSequenceState,
+  );
+  const { completed, selections } = currentProgress(state);
 
   function mark(swapIndex: number, selection: 0 | 1 | "both"): void {
-    setHistory((previous) => {
-      const latest = previous.at(-1) ?? EMPTY_PROGRESS;
-      if (
-        swapIndex !== latest.completed ||
-        (selection !== "both" && latest.selections[selection])
-      ) {
-        return previous;
-      }
-      const next: Progress["selections"] = [
-        selection === "both" || selection === 0 || latest.selections[0],
-        selection === "both" || selection === 1 || latest.selections[1],
-      ];
-      return [
-        ...previous,
-        next.every(Boolean)
-          ? { completed: latest.completed + 1, selections: [false, false] }
-          : { completed: latest.completed, selections: next },
-      ];
-    });
+    dispatch({ type: "mark", swap: swapIndex, selection });
   }
 
   let current = board;
@@ -202,11 +187,9 @@ export default function Sequence({
           type="button"
           className="text-button"
           aria-label={messages.undoSwapMark}
-          disabled={!hydrated || history.length === 1}
+          disabled={!hydrated || state.history.length === 1}
           onClick={() => {
-            setHistory((previous) =>
-              previous.length > 1 ? previous.slice(0, -1) : previous,
-            );
+            dispatch({ type: "undo" });
           }}
         >
           <span aria-hidden="true">↶ </span>
