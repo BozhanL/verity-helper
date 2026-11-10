@@ -44,11 +44,11 @@
   "dependencies": {
     "@astrojs/react": "7.1.2",
     "@radix-ui/react-radio-group": "1.5.1",
-    "@tailwindcss/vite": "4.3.3",
+    "@tailwindcss/vite": "4.3.4",
     "astro": "7.4.5",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "tailwindcss": "4.3.3"
+    "tailwindcss": "4.3.4"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.12",
