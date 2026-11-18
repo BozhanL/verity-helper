@@ -1,0 +1,1 @@
+import{i as e,n as t,t as n}from"./controlProps._1eh11Cb.js";var r=t();function i({locale:t,label:i,disabled:a,onClick:o}){let s=e(t);return(0,r.jsx)(`button`,{...n,className:`text-button`,type:`button`,"aria-label":i??s.reset,disabled:a,onClick:o,children:s.resetShort})}export{i as t};
